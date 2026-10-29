@@ -9,4 +9,4 @@ getwd()
 library(shiny)
 
 # Launch Shiny Application
-runApp(".", launch.browser = TRUE)
+runApp("/home/kawe/GitHub/multilevel-meta-analysis", launch.browser = TRUE)
