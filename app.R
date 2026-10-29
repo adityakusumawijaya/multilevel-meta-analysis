@@ -9,7 +9,7 @@ library(esc)
 library(DT)
 library(ggplot2)
 
-# Benchmark Dataset Generator
+# Benchmark Dataset Generator (k = 14 RCT Trials in Clinical Psychology)
 create_benchmark_data <- function() {
   data.frame(
     Study = c("Beck et al.", "Clark & Wells", "Cuijpers et al.", "Hofmann et al.", 
@@ -36,7 +36,7 @@ create_benchmark_data <- function() {
   )
 }
 
-# Compiled Calculator Batch Generator
+# Sample Batch Generator for Calculator (k = 5)
 create_calc_sample_batch <- function() {
   data.frame(
     Study = c("Cuijpers et al. (Trial A)", "Hofmann & Smits", "Linehan et al. (Pre-Post)", "Beck & Freeman", "Andersson et al. (iCBT)"),
@@ -62,12 +62,15 @@ create_calc_sample_batch <- function() {
 
 # UI Definition
 ui <- page_navbar(
+  id = "main_navbar",
   title = tags$div(
-    class = "d-flex align-items-center",
-    tags$img(src = "kawe-logo-transparent.png", height = "38px", class = "me-2", style = "filter: drop-shadow(0 1px 3px rgba(101,9,21,0.15));"),
+    class = "kawe-brand-horizontal",
+    tags$img(src = "kawe-icon-transparent.png", alt = "KAWE Icon", class = "kawe-icon"),
+    tags$div(class = "kawe-divider"),
     tags$div(
-      tags$span(class = "brand-title-nav", "KAWE"),
-      tags$span(class = "brand-subtitle-nav", "QUANTITATIVE & PSYCHOMETRIC RESEARCH")
+      class = "kawe-text-group",
+      tags$span(class = "kawe-title", "KAWE"),
+      tags$span(class = "kawe-subtitle", "QUANTITATIVE & PSYCHOMETRIC RESEARCH")
     )
   ),
   theme = bs_theme(
@@ -86,20 +89,20 @@ ui <- page_navbar(
       tags$link(rel = "shortcut icon", href = "favicon.svg", type = "image/svg+xml"),
       tags$style(HTML("
         /* Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
         :root {
-          /* Palet Warna Exact dari Logo KAWE */
-          --kawe-maroon: #650915;       /* Warna merah marun gelap pada huruf KAWE & kurva */
-          --kawe-maroon-deep: #4A050D;  /* Untuk efek hover tombol */
-          --kawe-maroon-light: #7E0D1B; /* Aksen marun terang */
-          --kawe-gold: #C5A059;         /* Warna Antique Gold pada bayangan Psi & kurva */
-          --kawe-gold-light: #E5D3B3;   /* Untuk garis batas (border) tipis */
-          --kawe-gold-trans: rgba(197, 160, 89, 0.40); /* Transparan 40% */
-          --kawe-bg-white: #FFFFFF;     /* Latar belakang utama */
-          --kawe-bg-paper: #FAF8F5;     /* Latar sekunder (nuansa kertas buku / ivory) */
-          --kawe-text-main: #231618;    /* Warna teks paragraf (dark espresso) */
-          --kawe-text-muted: #5A4B4C;   /* Warna sub-teks */
+          /* Palet Warna KAWE Academic Press */
+          --kawe-maroon: #650915;
+          --kawe-maroon-deep: #4A050D;
+          --kawe-maroon-light: #7E0D1B;
+          --kawe-gold: #C5A059;
+          --kawe-gold-light: #E5D3B3;
+          --kawe-gold-trans: rgba(197, 160, 89, 0.35);
+          --kawe-bg-white: #FFFFFF;
+          --kawe-bg-paper: #FAF8F5;
+          --kawe-text-main: #231618;
+          --kawe-text-muted: #5A4B4C;
 
           /* Tipografi */
           --font-logo: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
@@ -112,7 +115,9 @@ ui <- page_navbar(
           background-color: var(--kawe-bg-white);
           color: var(--kawe-text-main);
           font-family: var(--font-sans);
-          line-height: 1.7;
+          line-height: 1.65;
+          scrollbar-width: thin;
+          scrollbar-color: var(--kawe-gold) var(--kawe-bg-paper);
         }
 
         /* Headings */
@@ -120,24 +125,23 @@ ui <- page_navbar(
           font-family: var(--font-logo) !important;
           color: var(--kawe-maroon) !important;
           text-transform: uppercase;
-          letter-spacing: 0.20em;
+          letter-spacing: 0.18em;
           font-weight: 600;
         }
 
         h4, h5, h6 {
           font-family: var(--font-serif) !important;
           color: var(--kawe-maroon) !important;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.06em;
           font-weight: 600;
         }
 
-        /* Subtitles & Taglines */
         .brand-subtitle {
           font-family: var(--font-serif) !important;
           color: var(--kawe-gold) !important;
           text-transform: uppercase;
-          letter-spacing: 0.16em;
-          font-size: 0.90rem;
+          letter-spacing: 0.15em;
+          font-size: 0.88rem;
           font-weight: 600;
         }
 
@@ -145,8 +149,8 @@ ui <- page_navbar(
         hr, .gold-divider {
           border: 0 !important;
           border-top: 1px solid var(--kawe-gold) !important;
-          opacity: 0.55;
-          margin: 1.5rem 0;
+          opacity: 0.45;
+          margin: 1.25rem 0;
         }
 
         /* Top Academic Press Banner */
@@ -154,45 +158,81 @@ ui <- page_navbar(
           background-color: var(--kawe-maroon);
           color: #FAF8F5;
           border-bottom: 1px solid var(--kawe-gold);
-          font-size: 0.74rem;
+          font-size: 0.72rem;
         }
 
-        /* Navbar Custom Styling */
+        /* Navbar Layout & Non-wrapping Protection */
         .navbar {
           background-color: #FFFFFF !important;
           border-bottom: 2px solid var(--kawe-maroon) !important;
-          box-shadow: 0 2px 10px rgba(101, 9, 21, 0.05);
-          padding: 0.5rem 1.25rem !important;
+          box-shadow: 0 2px 8px rgba(101, 9, 21, 0.06);
+          padding: 0.35rem 1rem !important;
         }
 
-        .brand-title-nav {
-          font-family: var(--font-logo);
-          color: var(--kawe-maroon);
-          font-size: 1.22rem;
-          font-weight: 700;
-          letter-spacing: 0.22em;
-          line-height: 1.1;
-          display: block;
+        /* Navbar Brand Horizontal (Icon Left, Divider, Text Right) */
+        .kawe-brand-horizontal {
+          display: inline-flex;
+          align-items: center;
+          gap: 1.15rem; /* Jarak antara ikon di kiri dan teks di kanan */
+          padding: 0.25rem 0.6rem;
+          background-color: transparent;
         }
 
-        .brand-subtitle-nav {
-          font-family: var(--font-serif);
-          color: var(--kawe-gold);
-          font-size: 0.65rem;
-          letter-spacing: 0.16em;
+        .kawe-icon {
+          height: 52px; /* Disesuaikan tinggi ikon agar serasi dengan navbar */
+          width: auto;
+          object-fit: contain;
+          filter: drop-shadow(0 1px 3px rgba(101, 9, 21, 0.15));
+        }
+
+        .kawe-divider {
+          height: 40px;
+          width: 1px;
+          background-color: #C5A059; /* Antique Gold */
+          opacity: 0.55;
+        }
+
+        .kawe-text-group {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: left;
+        }
+
+        .kawe-title {
+          font-family: 'Cinzel', 'Cormorant Garamond', serif;
+          font-size: 1.85rem;
+          font-weight: 500;
+          color: #650915; /* Flat Maroon sesuai logo */
+          letter-spacing: 0.24em;
+          line-height: 1.05;
+          margin-bottom: 0.12rem;
+        }
+
+        .kawe-subtitle {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 0.72rem;
           font-weight: 600;
+          color: #2B181A;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
-          display: block;
-          margin-top: 1px;
+          white-space: nowrap;
+        }
+
+        .navbar-nav {
+          flex-wrap: nowrap !important;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch;
         }
 
         .navbar .nav-link {
           font-family: var(--font-sans);
-          font-size: 0.84rem;
+          font-size: 0.80rem !important;
           font-weight: 500;
           color: var(--kawe-text-main) !important;
-          padding: 0.55rem 0.80rem !important;
+          padding: 0.50rem 0.62rem !important;
           border-bottom: 2px solid transparent;
+          white-space: nowrap !important;
           transition: all 0.2s ease;
         }
 
@@ -205,7 +245,8 @@ ui <- page_navbar(
           color: var(--kawe-maroon) !important;
           font-weight: 600;
           border-bottom: 2px solid var(--kawe-maroon) !important;
-          background-color: rgba(101, 9, 21, 0.03) !important;
+          background-color: rgba(101, 9, 21, 0.04) !important;
+          border-radius: 3px 3px 0 0;
         }
 
         /* Cards & Containers */
@@ -222,7 +263,78 @@ ui <- page_navbar(
           color: var(--kawe-maroon) !important;
           font-family: var(--font-serif);
           font-weight: 600;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.04em;
+          padding: 0.65rem 1rem !important;
+        }
+
+        /* Value Boxes Academic Press Theming */
+        .bslib-value-box, .value-box {
+          border: 1px solid var(--kawe-gold-trans) !important;
+          border-radius: 4px !important;
+          box-shadow: none !important;
+        }
+
+        .bslib-value-box.bg-primary {
+          background-color: var(--kawe-maroon) !important;
+          color: #FAF8F5 !important;
+        }
+
+        .bslib-value-box.bg-primary .value-box-title {
+          color: #E5D3B3 !important;
+          font-family: var(--font-serif) !important;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-size: 0.72rem;
+        }
+
+        .bslib-value-box.bg-primary .value-box-value {
+          color: #FAF8F5 !important;
+          font-family: var(--font-logo) !important;
+          font-weight: 600;
+        }
+
+        .bslib-value-box.bg-secondary, .bslib-value-box.bg-info, .bslib-value-box.bg-warning, .bslib-value-box.bg-success {
+          background-color: #FFFFFF !important;
+          border: 1px solid var(--kawe-gold-trans) !important;
+          color: var(--kawe-maroon) !important;
+        }
+
+        .bslib-value-box.bg-secondary .value-box-title,
+        .bslib-value-box.bg-info .value-box-title,
+        .bslib-value-box.bg-warning .value-box-title,
+        .bslib-value-box.bg-success .value-box-title {
+          color: var(--kawe-gold) !important;
+          font-family: var(--font-serif) !important;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-size: 0.72rem;
+          font-weight: 600;
+        }
+
+        .bslib-value-box.bg-secondary .value-box-value,
+        .bslib-value-box.bg-info .value-box-value,
+        .bslib-value-box.bg-warning .value-box-value,
+        .bslib-value-box.bg-success .value-box-value {
+          color: var(--kawe-maroon) !important;
+          font-family: var(--font-logo) !important;
+          font-weight: 600;
+        }
+
+        .value-box-showcase i {
+          color: rgba(197, 160, 89, 0.65) !important;
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+          border: 1px solid #D6C2A0 !important;
+          border-radius: 4px;
+          font-size: 0.88rem;
+          color: var(--kawe-text-main);
+        }
+
+        .form-control:focus, .form-select:focus {
+          border-color: var(--kawe-maroon) !important;
+          box-shadow: 0 0 0 0.2rem rgba(101, 9, 21, 0.15) !important;
         }
 
         /* Buttons */
@@ -231,7 +343,7 @@ ui <- page_navbar(
           border: 1px solid var(--kawe-gold) !important;
           color: #FFFFFF !important;
           font-weight: 500;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.03em;
           border-radius: 4px;
           transition: all 0.2s ease;
         }
@@ -239,7 +351,7 @@ ui <- page_navbar(
         .btn-primary:hover, .btn-primary:focus {
           background-color: var(--kawe-maroon-deep) !important;
           border-color: #FFFFFF !important;
-          box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.25);
+          box-shadow: 0 0 0 0.15rem rgba(197, 160, 89, 0.35);
         }
 
         .btn-outline-primary {
@@ -254,94 +366,37 @@ ui <- page_navbar(
           color: #FFFFFF !important;
         }
 
-        .btn-success {
-          background-color: var(--kawe-maroon) !important;
-          border: 1px solid var(--kawe-gold) !important;
+        .btn-outline-secondary {
+          color: var(--kawe-text-muted) !important;
+          border-color: var(--kawe-gold) !important;
+          background-color: transparent !important;
+        }
+
+        .btn-outline-secondary:hover {
+          background-color: var(--kawe-gold) !important;
           color: #FFFFFF !important;
-          border-radius: 4px;
         }
 
-        .btn-success:hover {
-          background-color: var(--kawe-maroon-deep) !important;
-        }
-
-        /* Value Boxes */
-        .value-box {
-          border: 1px solid var(--kawe-gold-trans) !important;
-          border-radius: 4px !important;
-        }
-
-        .value-box.bg-primary {
-          background-color: var(--kawe-maroon) !important;
-          color: #FAF8F5 !important;
-        }
-
-        .value-box.bg-secondary, .value-box.bg-info, .value-box.bg-warning {
-          background-color: var(--kawe-bg-paper) !important;
-          color: var(--kawe-maroon) !important;
-          border: 1px solid var(--kawe-gold) !important;
-        }
-
-        .value-box-title {
-          font-family: var(--font-serif) !important;
-          text-transform: uppercase;
-          letter-spacing: 0.1em;
-          font-size: 0.74rem;
-          color: var(--kawe-gold) !important;
-        }
-
-        .value-box-value {
-          font-family: var(--font-logo) !important;
-          font-weight: 600;
-          color: #FAF8F5 !important;
-        }
-
-        .value-box.bg-secondary .value-box-value, 
-        .value-box.bg-info .value-box-value,
-        .value-box.bg-warning .value-box-value {
-          color: var(--kawe-maroon) !important;
-        }
-
-        /* Badges */
-        .badge.bg-primary {
-          background-color: var(--kawe-maroon) !important;
-          color: #FFFFFF !important;
-          border: 1px solid var(--kawe-gold);
-        }
-
-        .badge.bg-secondary {
-          background-color: #FAF8F5 !important;
-          color: var(--kawe-maroon) !important;
-          border: 1px solid var(--kawe-gold);
-        }
-
-        /* Code & Pre */
-        code, pre {
-          font-family: var(--font-mono);
-          background-color: #F4EFEB;
-          color: var(--kawe-maroon);
-          border-radius: 3px;
-        }
-
-        /* Tables */
+        /* Tables & DataTables */
         table.dataTable thead th {
           background-color: var(--kawe-maroon) !important;
           color: #FFFFFF !important;
           font-family: var(--font-serif) !important;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.04em;
           border-bottom: 2px solid var(--kawe-gold) !important;
+          font-size: 0.86rem;
         }
 
         table.dataTable tbody tr:hover {
-          background-color: #F7F3EE !important;
+          background-color: #F8F4EE !important;
         }
 
-        /* Research Portal Specific Styling */
+        /* Hero & Pillar Cards */
         .kawe-hero-card {
           background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);
           border: 1px solid var(--kawe-gold-trans);
           border-radius: 4px;
-          padding: 2.5rem 2rem;
+          padding: 2.2rem 1.8rem;
           text-align: center;
         }
 
@@ -350,57 +405,85 @@ ui <- page_navbar(
           border: 1px solid var(--kawe-gold-trans);
           border-top: 3px solid var(--kawe-maroon);
           border-radius: 4px;
-          padding: 1.5rem;
+          padding: 1.35rem;
           height: 100%;
           transition: all 0.25s ease;
         }
 
         .kawe-pillar-card:hover {
           border-top-color: var(--kawe-gold);
-          box-shadow: 0 4px 14px rgba(101, 9, 21, 0.08);
+          box-shadow: 0 3px 12px rgba(101, 9, 21, 0.08);
+        }
+
+        .active-data-pill {
+          background-color: #4A050D;
+          border: 1px solid #C5A059;
+          color: #FAF8F5;
+          padding: 0.2rem 0.6rem;
+          border-radius: 3px;
+          font-size: 0.70rem;
+          letter-spacing: 0.05em;
         }
       "))
     ),
     tags$div(
-      class = "kawe-top-banner py-1 px-4 d-flex justify-content-between align-items-center",
+      class = "kawe-top-banner py-1 px-3 d-flex justify-content-between align-items-center flex-wrap",
       tags$div(
-        tags$span(class = "text-uppercase fw-semibold me-2", style = "letter-spacing: 0.15em; font-size: 0.72rem; color: #C5A059;", "Evidence Synthesis & Psychometrics Laboratory"),
-        tags$span(style = "font-size: 0.72rem; color: #E5D3B3;", "| Universitas Sanata Dharma · Universitas Gadjah Mada")
+        class = "d-flex align-items-center",
+        tags$span(class = "text-uppercase fw-semibold me-2", style = "letter-spacing: 0.12em; font-size: 0.70rem; color: #C5A059;", "Evidence Synthesis & Psychometrics Laboratory"),
+        tags$span(class = "d-none d-md-inline", style = "font-size: 0.70rem; color: #E5D3B3;", "| Universitas Sanata Dharma · Universitas Gadjah Mada")
       ),
       tags$div(
-        tags$span(style = "font-size: 0.72rem; letter-spacing: 0.1em; color: #FAF8F5;", "Aditya Kusumawijaya, S.Psi — Principal Investigator")
+        class = "d-flex align-items-center",
+        tags$span(class = "active-data-pill me-3", uiOutput("top_active_data_pill", inline = TRUE)),
+        tags$span(style = "font-size: 0.70rem; letter-spacing: 0.08em; color: #FAF8F5;", "Aditya Kusumawijaya, S.Psi — Principal Investigator")
       )
     )
   ),
   
   # Tab 1: Research Hub & Academic Portal
   nav_panel(
+    value = "tab_hub",
     icon = icon("university"),
-    title = "Research Hub & Portal",
+    title = "Research Hub",
     withMathJax(),
     
     # Hero Section
     div(
       class = "kawe-hero-card my-3",
-      img(src = "kawe-logo-transparent.png", style = "max-height: 150px; margin-bottom: 1.5rem; filter: drop-shadow(0 2px 8px rgba(101, 9, 21, 0.08));"),
-      h1(class = "brand-title display-5 mb-2", "KAWE"),
-      div(class = "brand-subtitle mb-3", "QUANTITATIVE & PSYCHOMETRIC RESEARCH"),
+      div(
+        class = "kawe-brand-horizontal mx-auto mb-3",
+        style = "gap: 1.5rem; justify-content: center;",
+        img(src = "kawe-icon-transparent.png", alt = "KAWE Icon", style = "height: 80px; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(101, 9, 21, 0.12));"),
+        div(class = "kawe-divider", style = "height: 60px;"),
+        div(
+          class = "kawe-text-group",
+          span(class = "kawe-title", style = "font-size: 2.6rem;", "KAWE"),
+          span(class = "kawe-subtitle", style = "font-size: 0.90rem;", "QUANTITATIVE & PSYCHOMETRIC RESEARCH")
+        )
+      ),
       div(
         class = "text-uppercase fw-semibold",
         style = "letter-spacing: 0.18em; font-size: 0.85rem; color: #231618;",
         "Aditya Kusumawijaya, S.Psi — Principal Investigator"
       ),
       div(
-        style = "font-family: var(--font-serif); font-size: 1rem; color: #5A4B4C; font-style: italic; margin-top: 0.25rem;",
+        style = "font-family: var(--font-serif); font-size: 0.95rem; color: #5A4B4C; font-style: italic; margin-top: 0.2rem;",
         "Universitas Sanata Dharma · Universitas Gadjah Mada"
       ),
-      div(class = "gold-divider w-50 mx-auto my-4"),
+      div(class = "gold-divider w-50 mx-auto my-3"),
       p(
         class = "lead mx-auto text-dark",
-        style = "max-width: 860px; font-size: 1.05rem; line-height: 1.8;",
+        style = "max-width: 860px; font-size: 1.02rem; line-height: 1.75;",
         "Laboratorium riset independen yang mendedikasikan diri pada pengembangan metodologi psikometrika terapan, pemodelan variabel laten tingkat lanjut, evaluasi invariansi pengukuran, serta sintesis bukti klinis berpresisi tinggi (",
         tags$em("Individual Participant Data & Multilevel Meta-Analysis"),
         ") guna memajukan praktik berbasis bukti (", tags$em("Evidence-Based Practice"), ") yang terbebas dari distorsi pengukuran."
+      ),
+      div(
+        class = "mt-4 d-flex justify-content-center flex-wrap gap-2",
+        actionButton("hero_btn_calc", "Mulai Ekstraksi: Kalkulator Effect Size", class = "btn-primary px-3 py-2", icon = icon("calculator")),
+        actionButton("hero_btn_data", "Buka Dataset & Pemodelan Sintesis", class = "btn-outline-primary px-3 py-2", icon = icon("chart-pie")),
+        actionButton("hero_btn_subgroup", "Jelajahi Analisis Subkelompok & Forest Plot", class = "btn-outline-secondary px-3 py-2", icon = icon("tree"))
       )
     ),
     
@@ -421,20 +504,20 @@ ui <- page_navbar(
             sliderInput("demo_sigma", "Standar Deviasi (σ):", min = 0.5, max = 2.0, value = 1.0, step = 0.1),
             checkboxInput("demo_show_zones", "Tampilkan Zona Standar Deviasi (±1σ & ±2σ)", value = TRUE),
             checkboxInput("demo_show_scales", "Tampilkan Skala Penyetaraan (z, T-score, IQ)", value = TRUE),
-            hr(class = "my-3"),
+            hr(class = "my-2"),
             h6("Fungsi Kerapatan Probabilitas Normal (PDF):", class = "fw-bold text-dark"),
             div(
-              class = "p-3 bg-white rounded border",
-              style = "border-color: #E5D3B3 !important; font-size: 0.95rem;",
+              class = "p-2 bg-white rounded border",
+              style = "border-color: #E5D3B3 !important; font-size: 0.90rem;",
               "$$f(x) = \\frac{1}{\\sigma \\sqrt{2\\pi}} \\exp\\left( -\\frac{1}{2}\\left( \\frac{x - \\mu}{\\sigma} \\right)^2 \\right)$$"
             ),
             p(
               class = "text-muted small mt-2",
-              "Kurva normal bell-curve di atas menjadi fondasi teoritis penyetaraan skor laten (", tags$em("latent trait theta"), ") pada pemodelan IRT dan metrik besaran efek terstandarisasi (", tags$em("Hedges' g"), ")."
+              "Kurva normal bell-curve di atas menjadi fondasi teoretis penyetaraan skor laten (", tags$em("latent trait theta"), ") pada pemodelan IRT dan metrik besaran efek terstandarisasi (", tags$em("Hedges' g"), ")."
             )
           ),
           div(
-            plotOutput("kawe_normal_demo_plot", height = "390px")
+            plotOutput("kawe_normal_demo_plot", height = "380px")
           )
         )
       )
@@ -444,7 +527,7 @@ ui <- page_navbar(
     div(
       class = "mb-4",
       div(
-        class = "text-center mb-4",
+        class = "text-center mb-3",
         h3("Pilar Keunggulan Riset & Paradigma Keilmuan", class = "brand-title"),
         div(class = "brand-subtitle", "RESEARCH PILLARS & METHODOLOGICAL FOUNDATIONS")
       ),
@@ -497,7 +580,7 @@ ui <- page_navbar(
           class = "table-responsive",
           tags$table(
             class = "table table-hover align-middle",
-            style = "font-size: 0.9rem;",
+            style = "font-size: 0.88rem;",
             tags$thead(
               tags$tr(
                 tags$th(style = "width: 25%;", "Modul Studio"),
@@ -518,12 +601,12 @@ ui <- page_navbar(
               ),
               tags$tr(
                 tags$td(strong(icon("table"), " Dataset Sintesis Bukti")),
-                tags$td("Memuat benchmark 14 uji klinis acak (RCT) atau mengunggah data mandiri (.csv/.xlsx) lengkap dengan variabel moderator psikologi."),
-                tags$td(span(class = "badge bg-secondary", "Matriks Data Primer Aktif"))
+                tags$td("Pusat data aktif: pilih antara Benchmark 14 RCT, Kompilasi Kalkulator, atau Unggah CSV/Excel mandiri."),
+                tags$td(span(class = "badge bg-secondary", "Single Source of Truth"))
               ),
               tags$tr(
                 tags$td(strong(icon("chart-pie"), " Pemodelan Meta-Analisis")),
-                tags$td("Estimasi model efek acak (REML, DL, ML, PM), uji heterogenitas Cochran Q, tau^2, I^2, dan 95% Prediction Interval."),
+                tags$td("Estimasi model efek acak (REML, DL, ML, PM), uji heterogenitas Cochran Q, tau^2, I^2, Prediction Interval, dan Meta-Regresi kontinu."),
                 tags$td(span(class = "badge bg-primary", "Pooled Effect & Prediksi Klinis"))
               ),
               tags$tr(
@@ -558,7 +641,7 @@ ui <- page_navbar(
       style = "border-color: #E5D3B3 !important;",
       div(
         class = "brand-title text-muted mb-1",
-        style = "font-size: 0.95rem; letter-spacing: 0.2em;",
+        style = "font-size: 0.90rem; letter-spacing: 0.18em;",
         "KAWE | QUANTITATIVE & PSYCHOMETRIC RESEARCH"
       ),
       div(
@@ -572,370 +655,376 @@ ui <- page_navbar(
   
   # Tab 2: Kalkulator Effect Size
   nav_panel(
+    value = "tab_calc",
     icon = icon("calculator"),
     title = "Kalkulator Effect Size",
-    layout_sidebar(
-      sidebar = sidebar(
-        width = 380,
-        title = "Parameter Konversi Data Primer",
-        
-        selectInput(
-          "input_type",
-          "Bentuk Laporan Data Studi Primer:",
-          choices = c(
-            "Pre-Post Eksperimen vs Kontrol (esc_mean_gain)" = "mean_gain",
-            "Rata-rata & Standar Deviasi Pascates (Means & SDs)" = "mean_sd",
-            "Rata-rata & Standar Error (Means & SE)" = "mean_se",
-            "Uji-t Dua Kelompok Independen" = "t_test",
-            "Nilai p Dua Kelompok & Sampel" = "p_val",
-            "Uji-F Satu Arah (2 Kelompok)" = "f_test",
-            "Tabel Kontingensi 2x2 (Biner/Proporsi)" = "table_2x2",
-            "Koefisien Korelasi (r)" = "correlation"
+    layout_columns(
+      col_widths = c(7, 5),
+      
+      # Left Column: Input Form (Structured 2-card layout)
+      div(
+        card(
+          class = "mb-3",
+          card_header(
+            span(icon("calculator"), " 1. Format & Parameter Numerik Studi Primer")
           ),
-          selected = "mean_gain"
+          card_body(
+            selectInput(
+              "input_type",
+              "Bentuk Laporan Data Studi Primer:",
+              choices = c(
+                "Pre-Post Eksperimen vs Kontrol (esc_mean_gain)" = "mean_gain",
+                "Rata-rata & Standar Deviasi Pascates (Means & SDs)" = "mean_sd",
+                "Rata-rata & Standar Error (Means & SE)" = "mean_se",
+                "Uji-t Dua Kelompok Independen" = "t_test",
+                "Nilai p Dua Kelompok & Sampel" = "p_val",
+                "Uji-F Satu Arah (2 Kelompok)" = "f_test",
+                "Tabel Kontingensi 2x2 (Biner/Proporsi)" = "table_2x2",
+                "Koefisien Korelasi (r)" = "correlation"
+              ),
+              selected = "mean_gain"
+            ),
+            
+            # Sub-panel for esc_mean_gain
+            conditionalPanel(
+              condition = "input.input_type == 'mean_gain'",
+              layout_columns(
+                col_widths = c(6, 6),
+                radioButtons(
+                  "gain_sub_type",
+                  "Pola Pelaporan Data Studi:",
+                  choices = c(
+                    "Pre & Post Lengkap" = "pre_post_full",
+                    "Gain Score Langsung" = "gain_direct"
+                  ),
+                  selected = "pre_post_full"
+                ),
+                selectInput(
+                  "gain_outcome_dir",
+                  "Orientasi Efektivitas Klinis:",
+                  choices = c(
+                    "Skor Menurun = Membaik (Depresi/Cemas)" = "decrease_better",
+                    "Skor Meningkat = Membaik (Resiliensi/Efikasi)" = "increase_better"
+                  )
+                )
+              ),
+              
+              conditionalPanel(
+                condition = "input.gain_sub_type == 'pre_post_full'",
+                h6("Kelompok Eksperimen / Intervensi (Treatment):", class = "text-primary fw-bold mt-2"),
+                layout_columns(
+                  col_widths = c(4, 4, 4),
+                  numericInput("pre1_m", "Pre Mean", value = 28.4, step = 0.1),
+                  numericInput("pre1_sd", "Pre SD", value = 5.2, min = 0.01, step = 0.1),
+                  numericInput("pre1_n", "Ukuran n1", value = 40, min = 2, step = 1)
+                ),
+                layout_columns(
+                  col_widths = c(6, 6),
+                  numericInput("post1_m", "Post Mean", value = 16.2, step = 0.1),
+                  numericInput("post1_sd", "Post SD", value = 4.8, min = 0.01, step = 0.1)
+                ),
+                h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
+                layout_columns(
+                  col_widths = c(4, 4, 4),
+                  numericInput("pre2_m", "Pre Mean", value = 27.9, step = 0.1),
+                  numericInput("pre2_sd", "Pre SD", value = 5.0, min = 0.01, step = 0.1),
+                  numericInput("pre2_n", "Ukuran n2", value = 40, min = 2, step = 1)
+                ),
+                layout_columns(
+                  col_widths = c(6, 6),
+                  numericInput("post2_m", "Post Mean", value = 24.1, step = 0.1),
+                  numericInput("post2_sd", "Post SD", value = 5.1, min = 0.01, step = 0.1)
+                )
+              ),
+              
+              conditionalPanel(
+                condition = "input.gain_sub_type == 'gain_direct'",
+                h6("Kelompok Eksperimen / Intervensi (Treatment):", class = "text-primary fw-bold mt-2"),
+                layout_columns(
+                  col_widths = c(4, 4, 4),
+                  numericInput("gain1_m", "Gain Mean", value = 12.2, step = 0.1),
+                  numericInput("gain1_sd", "Gain SD", value = 4.5, min = 0.01, step = 0.1),
+                  numericInput("gain1_n", "Ukuran n1", value = 40, min = 2, step = 1)
+                ),
+                h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
+                layout_columns(
+                  col_widths = c(4, 4, 4),
+                  numericInput("gain2_m", "Gain Mean", value = 3.8, step = 0.1),
+                  numericInput("gain2_sd", "Gain SD", value = 4.2, min = 0.01, step = 0.1),
+                  numericInput("gain2_n", "Ukuran n2", value = 40, min = 2, step = 1)
+                )
+              ),
+              
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("gain_r", "Korelasi Pre-Post (r):", value = 0.50, min = -0.99, max = 0.99, step = 0.05),
+                div(class = "small text-muted pt-3", "Asumsi Rosenthal r = 0.50 bila artikel primer tidak melaporkan.")
+              )
+            ),
+            
+            # Means & SDs
+            conditionalPanel(
+              condition = "input.input_type == 'mean_sd'",
+              h6("Kelompok Intervensi (Treatment):", class = "text-primary fw-bold"),
+              layout_columns(
+                col_widths = c(4, 4, 4),
+                numericInput("grp1m_sd", "Mean", value = 14.5, step = 0.1),
+                numericInput("grp1sd_sd", "SD", value = 3.8, min = 0.01, step = 0.1),
+                numericInput("grp1n_sd", "n", value = 50, min = 2, step = 1)
+              ),
+              h6("Kelompok Kontrol:", class = "text-secondary fw-bold mt-2"),
+              layout_columns(
+                col_widths = c(4, 4, 4),
+                numericInput("grp2m_sd", "Mean", value = 18.2, step = 0.1),
+                numericInput("grp2sd_sd", "SD", value = 4.1, min = 0.01, step = 0.1),
+                numericInput("grp2n_sd", "n", value = 48, min = 2, step = 1)
+              )
+            ),
+            
+            # Means & SE
+            conditionalPanel(
+              condition = "input.input_type == 'mean_se'",
+              h6("Kelompok Intervensi (Treatment):", class = "text-primary fw-bold"),
+              layout_columns(
+                col_widths = c(4, 4, 4),
+                numericInput("grp1m_se", "Mean", value = 14.5, step = 0.1),
+                numericInput("grp1se_se", "SE", value = 0.54, min = 0.001, step = 0.01),
+                numericInput("grp1n_se", "n", value = 50, min = 2, step = 1)
+              ),
+              h6("Kelompok Kontrol:", class = "text-secondary fw-bold mt-2"),
+              layout_columns(
+                col_widths = c(4, 4, 4),
+                numericInput("grp2m_se", "Mean", value = 18.2, step = 0.1),
+                numericInput("grp2se_se", "SE", value = 0.59, min = 0.001, step = 0.01),
+                numericInput("grp2n_se", "n", value = 48, min = 2, step = 1)
+              )
+            ),
+            
+            # t-test
+            conditionalPanel(
+              condition = "input.input_type == 't_test'",
+              numericInput("t_val", "Nilai Statistik Uji-t:", value = 2.85, step = 0.01),
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("t_n1", "n Intervensi", value = 45, min = 2, step = 1),
+                numericInput("t_n2", "n Kontrol", value = 45, min = 2, step = 1)
+              )
+            ),
+            
+            # p-value
+            conditionalPanel(
+              condition = "input.input_type == 'p_val'",
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("p_value", "Nilai p Dua Arah:", value = 0.015, min = 0.0001, max = 0.9999, step = 0.005),
+                selectInput("p_direction", "Arah Besaran Efek:", choices = c("Memihak Intervensi" = "pos", "Memihak Kontrol" = "neg"))
+              ),
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("p_n1", "n Intervensi", value = 50, min = 2, step = 1),
+                numericInput("p_n2", "n Kontrol", value = 50, min = 2, step = 1)
+              )
+            ),
+            
+            # F-test
+            conditionalPanel(
+              condition = "input.input_type == 'f_test'",
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("f_val", "Nilai Uji-F (df1 = 1):", value = 7.42, min = 0.001, step = 0.1),
+                selectInput("f_direction", "Arah Besaran Efek:", choices = c("Memihak Intervensi" = "pos", "Memihak Kontrol" = "neg"))
+              ),
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("f_n1", "n Intervensi", value = 50, min = 2, step = 1),
+                numericInput("f_n2", "n Kontrol", value = 50, min = 2, step = 1)
+              )
+            ),
+            
+            # 2x2 table
+            conditionalPanel(
+              condition = "input.input_type == 'table_2x2'",
+              h6("Kelompok Intervensi:", class = "text-primary fw-bold"),
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("tab_e1", "Respons Positif (Event)", value = 35, min = 0, step = 1),
+                numericInput("tab_n1", "Total Sampel n1", value = 50, min = 1, step = 1)
+              ),
+              h6("Kelompok Kontrol:", class = "text-secondary fw-bold mt-2"),
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("tab_e2", "Respons Positif (Event)", value = 18, min = 0, step = 1),
+                numericInput("tab_n2", "Total Sampel n2", value = 50, min = 1, step = 1)
+              )
+            ),
+            
+            # Correlation
+            conditionalPanel(
+              condition = "input.input_type == 'correlation'",
+              layout_columns(
+                col_widths = c(6, 6),
+                numericInput("corr_r", "Koefisien Korelasi (r):", value = 0.35, min = -0.999, max = 0.999, step = 0.01),
+                numericInput("corr_n", "Total Ukuran Sampel (N):", value = 90, min = 4, step = 1)
+              )
+            )
+          )
         ),
         
-        hr(),
-        
-        # Panel Input: Pre-Post Control-Experiment (esc_mean_gain)
-        conditionalPanel(
-          condition = "input.input_type == 'mean_gain'",
-          radioButtons(
-            "gain_sub_type",
-            "Pola Pelaporan Data Studi:",
-            choices = c(
-              "Nilai Pre & Post Lengkap (Mean & SD per Fase)" = "pre_post_full",
-              "Skor Perubahan / Gain Score Langsung (Mean & SD Gain)" = "gain_direct"
-            ),
-            selected = "pre_post_full"
+        card(
+          card_header(
+            span(icon("tag"), " 2. Identitas Studi & Moderator Klinis Psikologi")
           ),
-          selectInput(
-            "gain_outcome_dir",
-            "Orientasi Pengukuran Efektivitas Klinis:",
-            choices = c(
-              "Skor Menurun = Perbaikan (Depresi, Kecemasan, Stres)" = "decrease_better",
-              "Skor Meningkat = Perbaikan (Kesejahteraan, Efikasi, Resiliensi)" = "increase_better"
-            )
-          ),
-          
-          # Sub-panel 1: Full Pre & Post
-          conditionalPanel(
-            condition = "input.gain_sub_type == 'pre_post_full'",
-            h6("Kelompok Eksperimen / Intervensi (Treatment):", class = "text-primary fw-bold"),
+          card_body(
             layout_columns(
-              col_widths = c(4, 4, 4),
-              numericInput("pre1_m", "Pre Mean", value = 28.4, step = 0.1),
-              numericInput("pre1_sd", "Pre SD", value = 5.2, min = 0.01, step = 0.1),
-              numericInput("pre1_n", "Ukuran n1", value = 40, min = 2, step = 1)
+              col_widths = c(8, 4),
+              textInput("study_name", "Nama Peneliti / Studi:", value = "Studi Baru et al."),
+              numericInput("study_year", "Tahun:", value = 2024, min = 1950, max = 2035, step = 1)
             ),
             layout_columns(
               col_widths = c(6, 6),
-              numericInput("post1_m", "Post Mean", value = 16.2, step = 0.1),
-              numericInput("post1_sd", "Post SD", value = 4.8, min = 0.01, step = 0.1)
-            ),
-            h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
-            layout_columns(
-              col_widths = c(4, 4, 4),
-              numericInput("pre2_m", "Pre Mean", value = 27.9, step = 0.1),
-              numericInput("pre2_sd", "Pre SD", value = 5.0, min = 0.01, step = 0.1),
-              numericInput("pre2_n", "Ukuran n2", value = 40, min = 2, step = 1)
+              selectInput("study_interv", "Pendekatan Terapi:", choices = c("CBT", "ACT", "BA", "iCBT", "Mindfulness", "IPT", "Psychodynamic", "Lainnya")),
+              selectInput("study_format", "Format Penghantaran:", choices = c("Individual", "Group", "Guided Digital", "Unguided Self-Help"))
             ),
             layout_columns(
               col_widths = c(6, 6),
-              numericInput("post2_m", "Post Mean", value = 24.1, step = 0.1),
-              numericInput("post2_sd", "Post SD", value = 5.1, min = 0.01, step = 0.1)
-            )
-          ),
-          
-          # Sub-panel 2: Direct Gain Score
-          conditionalPanel(
-            condition = "input.gain_sub_type == 'gain_direct'",
-            h6("Kelompok Eksperimen / Intervensi (Treatment):", class = "text-primary fw-bold"),
-            layout_columns(
-              col_widths = c(4, 4, 4),
-              numericInput("gain1_m", "Gain Mean", value = 12.2, step = 0.1),
-              numericInput("gain1_sd", "Gain SD", value = 4.5, min = 0.01, step = 0.1),
-              numericInput("gain1_n", "Ukuran n1", value = 40, min = 2, step = 1)
+              selectInput("study_ctrl", "Tipe Kelompok Kontrol:", choices = c("Waitlist", "TAU", "Placebo", "Active Control")),
+              conditionalPanel(
+                condition = "input.study_ctrl == 'Active Control'",
+                textInput("study_active_comparator", "Terapi Pembanding:", value = "Supportive Counseling", placeholder = "Misal: Relaxation, Edukasi")
+              ),
+              conditionalPanel(
+                condition = "input.study_ctrl != 'Active Control'",
+                p(class = "small text-muted pt-4 mb-0", "Komparator standar tanpa terapi aktif spesifik.")
+              )
             ),
-            h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
+            layout_columns(
+              col_widths = c(6, 6),
+              selectInput("study_pop", "Populasi Sasaran:", choices = c("Clinical (MDD)", "Clinical (Anxiety)", "Clinical (PTSD / Trauma)", "Subclinical", "Community")),
+              selectInput("study_age", "Kelompok Usia:", choices = c("Adults", "Adolescents", "Older Adults"))
+            ),
             layout_columns(
               col_widths = c(4, 4, 4),
-              numericInput("gain2_m", "Gain Mean", value = 3.8, step = 0.1),
-              numericInput("gain2_sd", "Gain SD", value = 4.2, min = 0.01, step = 0.1),
-              numericInput("gain2_n", "Ukuran n2", value = 40, min = 2, step = 1)
-            )
-          ),
-          
-          numericInput(
-            "gain_r",
-            "Estimasi Korelasi Pre-Post (r):",
-            value = 0.50,
-            min = -0.99,
-            max = 0.99,
-            step = 0.05
-          ),
-          div(
-            class = "text-muted small mb-2",
-            "Korelasi pre-post diasumsikan r = 0.50 secara default (standar Rosenthal / Cochrane Handbook jika tidak dilaporkan pada artikel primer)."
-          )
-        ),
-        
-        # Panel Input: Means & SDs
-        conditionalPanel(
-          condition = "input.input_type == 'mean_sd'",
-          h6("Kelompok Intervensi (Treatment):", class = "text-primary fw-bold"),
-          layout_columns(
-            col_widths = c(4, 4, 4),
-            numericInput("grp1m_sd", "Mean", value = 14.5, step = 0.1),
-            numericInput("grp1sd_sd", "SD", value = 3.8, min = 0.01, step = 0.1),
-            numericInput("grp1n_sd", "n", value = 50, min = 2, step = 1)
-          ),
-          h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
-          layout_columns(
-            col_widths = c(4, 4, 4),
-            numericInput("grp2m_sd", "Mean", value = 18.2, step = 0.1),
-            numericInput("grp2sd_sd", "SD", value = 4.1, min = 0.01, step = 0.1),
-            numericInput("grp2n_sd", "n", value = 48, min = 2, step = 1)
-          )
-        ),
-        
-        # Panel Input: Means & SE
-        conditionalPanel(
-          condition = "input.input_type == 'mean_se'",
-          h6("Kelompok Intervensi (Treatment):", class = "text-primary fw-bold"),
-          layout_columns(
-            col_widths = c(4, 4, 4),
-            numericInput("grp1m_se", "Mean", value = 14.5, step = 0.1),
-            numericInput("grp1se_se", "SE", value = 0.54, min = 0.001, step = 0.01),
-            numericInput("grp1n_se", "n", value = 50, min = 2, step = 1)
-          ),
-          h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
-          layout_columns(
-            col_widths = c(4, 4, 4),
-            numericInput("grp2m_se", "Mean", value = 18.2, step = 0.1),
-            numericInput("grp2se_se", "SE", value = 0.59, min = 0.001, step = 0.01),
-            numericInput("grp2n_se", "n", value = 48, min = 2, step = 1)
-          )
-        ),
-        
-        # Panel Input: Independent t-test
-        conditionalPanel(
-          condition = "input.input_type == 't_test'",
-          numericInput("t_val", "Nilai Statistik Uji-t:", value = 2.85, step = 0.01),
-          layout_columns(
-            col_widths = c(6, 6),
-            numericInput("t_n1", "n Intervensi", value = 45, min = 2, step = 1),
-            numericInput("t_n2", "n Kontrol", value = 45, min = 2, step = 1)
-          )
-        ),
-        
-        # Panel Input: p-value
-        conditionalPanel(
-          condition = "input.input_type == 'p_val'",
-          numericInput("p_value", "Nilai p Dua Arah (Two-Tailed):", value = 0.015, min = 0.00001, max = 0.9999, step = 0.005),
-          layout_columns(
-            col_widths = c(6, 6),
-            numericInput("p_n1", "n Intervensi", value = 50, min = 2, step = 1),
-            numericInput("p_n2", "n Kontrol", value = 50, min = 2, step = 1)
-          ),
-          selectInput(
-            "p_direction",
-            "Arah Besaran Efek:",
-            choices = c(
-              "Memihak Intervensi (Intervensi Lebih Baik)" = "pos",
-              "Memihak Kontrol (Kontrol Lebih Baik)" = "neg"
+              selectInput("study_therapist", "Kualifikasi Terapis:", choices = c("Licensed Clinician", "Supervised Trainee", "Automated Digital")),
+              selectInput("study_rob", "Risiko Bias:", choices = c("Low Risk", "Some Concerns", "High Risk")),
+              numericInput("study_dur", "Durasi (Minggu):", value = 12, min = 1, step = 1)
+            ),
+            layout_columns(
+              col_widths = c(6, 6),
+              numericInput("study_sessions", "Total Sesi Terapi:", value = 12, min = 1, step = 1),
+              radioButtons(
+                "es_metric",
+                "Metrik Estimasi:",
+                choices = c("Hedges' g (Unbiased)" = "g", "Cohen's d" = "d"),
+                selected = "g",
+                inline = TRUE
+              )
+            ),
+            
+            hr(class = "my-2"),
+            
+            checkboxInput("calc_auto_push_active", "Otomatis gabungkan juga ke Dataset Sintesis Utama", value = TRUE),
+            
+            div(
+              class = "d-flex gap-2 mt-2",
+              actionButton("btn_calculate", "Hitung Parameter Efek", class = "btn-outline-primary flex-grow-1", icon = icon("calculator")),
+              actionButton("btn_append_study", "Simpan & Masukkan ke Gabungan", class = "btn-primary flex-grow-1", icon = icon("plus-circle")),
+              actionButton("btn_reset_calc_form", "Reset", class = "btn-outline-secondary", icon = icon("redo"))
             )
           )
-        ),
-        
-        # Panel Input: F-test
-        conditionalPanel(
-          condition = "input.input_type == 'f_test'",
-          numericInput("f_val", "Nilai Uji-F (df1 = 1):", value = 7.42, min = 0.001, step = 0.1),
-          layout_columns(
-            col_widths = c(6, 6),
-            numericInput("f_n1", "n Intervensi", value = 50, min = 2, step = 1),
-            numericInput("f_n2", "n Kontrol", value = 50, min = 2, step = 1)
-          ),
-          selectInput(
-            "f_direction",
-            "Arah Besaran Efek:",
-            choices = c(
-              "Memihak Intervensi (Intervensi Lebih Baik)" = "pos",
-              "Memihak Kontrol (Kontrol Lebih Baik)" = "neg"
-            )
-          )
-        ),
-        
-        # Panel Input: 2x2 Contingency Table
-        conditionalPanel(
-          condition = "input.input_type == 'table_2x2'",
-          h6("Kelompok Intervensi:", class = "text-primary fw-bold"),
-          layout_columns(
-            col_widths = c(6, 6),
-            numericInput("tab_e1", "Jumlah Respons Positif", value = 35, min = 0, step = 1),
-            numericInput("tab_n1", "Total Sampel n1", value = 50, min = 1, step = 1)
-          ),
-          h6("Kelompok Kontrol:", class = "text-secondary fw-bold mt-2"),
-          layout_columns(
-            col_widths = c(6, 6),
-            numericInput("tab_e2", "Jumlah Respons Positif", value = 18, min = 0, step = 1),
-            numericInput("tab_n2", "Total Sampel n2", value = 50, min = 1, step = 1)
-          )
-        ),
-        
-        # Panel Input: Correlation
-        conditionalPanel(
-          condition = "input.input_type == 'correlation'",
-          numericInput("corr_r", "Koefisien Korelasi (r):", value = 0.35, min = -0.999, max = 0.999, step = 0.01),
-          numericInput("corr_n", "Total Ukuran Sampel (N):", value = 90, min = 4, step = 1)
-        ),
-        
-        hr(),
-        
-        h6("Identitas & Moderator Studi Psikologi:", class = "fw-bold text-dark"),
-        textInput("study_name", "Nama Peneliti / Studi:", value = "Studi Baru et al."),
-        layout_columns(
-          col_widths = c(6, 6),
-          numericInput("study_year", "Tahun Publikasi:", value = 2024, min = 1950, max = 2035, step = 1),
-          selectInput("study_interv", "Pendekatan Terapi:", choices = c("CBT", "ACT", "BA", "iCBT", "Mindfulness", "IPT", "Psychodynamic", "Lainnya"))
-        ),
-        layout_columns(
-          col_widths = c(6, 6),
-          selectInput("study_format", "Format Penghantaran:", choices = c("Individual", "Group", "Guided Digital", "Unguided Self-Help")),
-          selectInput("study_ctrl", "Tipe Kelompok Kontrol:", choices = c("Waitlist", "TAU", "Placebo", "Active Control"))
-        ),
-        conditionalPanel(
-          condition = "input.study_ctrl == 'Active Control'",
-          textInput(
-            "study_active_comparator",
-            "Nama Terapi Pembanding (Active Comparator):",
-            value = "Supportive Counseling",
-            placeholder = "Misal: Supportive Counseling, Psikoedukasi, Terapi Relaksasi"
-          )
-        ),
-        layout_columns(
-          col_widths = c(6, 6),
-          selectInput("study_pop", "Populasi Sasaran:", choices = c("Clinical (MDD)", "Clinical (Anxiety)", "Clinical (PTSD / Trauma)", "Subclinical", "Community")),
-          selectInput("study_therapist", "Kualifikasi Terapis:", choices = c("Licensed Clinician", "Supervised Trainee", "Automated Digital"))
-        ),
-        layout_columns(
-          col_widths = c(4, 4, 4),
-          selectInput("study_rob", "Risiko Bias:", choices = c("Low Risk", "Some Concerns", "High Risk")),
-          numericInput("study_dur", "Durasi (Minggu):", value = 12, min = 1, step = 1),
-          numericInput("study_sessions", "Total Sesi:", value = 12, min = 1, step = 1)
-        ),
-        selectInput("study_age", "Kelompok Usia:", choices = c("Adults", "Adolescents", "Older Adults")),
-        
-        radioButtons(
-          "es_metric",
-          "Metrik Estimasi Besaran Efek:",
-          choices = c(
-            "Hedges' g (Koreksi Bias Sampel Kecil)" = "g",
-            "Cohen's d (Estimasi Baku)" = "d"
-          ),
-          selected = "g"
-        ),
-        
-        actionButton(
-          "btn_calculate",
-          "Hitung Effect Size",
-          class = "btn-primary w-100 mb-2",
-          icon = icon("calculator")
-        ),
-        actionButton(
-          "btn_append_study",
-          "Tambahkan ke Dataset Aktif",
-          class = "btn-success w-100",
-          icon = icon("plus-circle")
         )
       ),
       
-      card(
-        card_header(
-          class = "bg-light d-flex justify-content-between align-items-center",
-          span(class = "fw-bold text-primary", icon("chart-line"), " Hasil Estimasi Parameter Besaran Efek Intervensi"),
-          span(class = "badge bg-primary", "Paket esc & Formula Hedges")
-        ),
-        card_body(
-          layout_columns(
-            col_widths = c(4, 4, 4),
-            value_box(
-              title = "Besaran Efek (Hedges' g / d)",
-              value = textOutput("vb_calc_es"),
-              showcase = icon("balance-scale"),
-              theme = "primary"
-            ),
-            value_box(
-              title = "Varians Sampling (vi)",
-              value = textOutput("vb_calc_var"),
-              showcase = icon("wave-square"),
-              theme = "secondary"
-            ),
-            value_box(
-              title = "Standar Error (SE)",
-              value = textOutput("vb_calc_se"),
-              showcase = icon("arrows-alt-h"),
-              theme = "info"
-            )
+      # Right Column: Output & Realtime History
+      div(
+        card(
+          class = "mb-3",
+          card_header(
+            class = "d-flex justify-content-between align-items-center",
+            span(icon("chart-line"), " Parameter Besaran Efek Terkini"),
+            span(class = "badge bg-primary", "Formula Hedges' g")
           ),
-          
-          hr(),
-          
-          h6("Rincian Interval Kepercayaan & Pembobotan:", class = "fw-bold text-dark"),
-          tableOutput("calc_summary_table"),
-          
-          div(
-            class = "alert alert-light border mt-3",
-            h6(class = "fw-bold text-primary", icon("info-circle"), " Landasan Psikometrika & Metodologi:"),
-            p(
-              "Pada studi intervensi dengan ukuran sampel kecil hingga sedang, penyekoran ",
-              tags$em("Cohen's d"), " memiliki tendensi bias ke atas (", tags$em("upward bias"), "). ",
-              "Paket ", tags$code("esc"), " mengaplikasikan faktor koreksi eksak ", tags$em("J"), " (Hedges, 1981): ",
-              tags$code("J(df) = 1 - (3 / (4*df - 1))"), " dengan derajat kebebasan ",
-              tags$code("df = n1 + n2 - 2"), " guna menghasilkan ", tags$em("Hedges' g"),
-              " sebagai estimator besaran efek yang tidak bias (", tags$em("unbiased estimator"), ")."
+          card_body(
+            layout_columns(
+              col_widths = c(4, 4, 4),
+              value_box(
+                title = "Besaran Efek",
+                value = textOutput("vb_calc_es"),
+                showcase = icon("balance-scale"),
+                theme = "primary"
+              ),
+              value_box(
+                title = "Varians (vi)",
+                value = textOutput("vb_calc_var"),
+                showcase = icon("wave-square"),
+                theme = "secondary"
+              ),
+              value_box(
+                title = "Standar Error",
+                value = textOutput("vb_calc_se"),
+                showcase = icon("arrows-alt-h"),
+                theme = "info"
+              )
             ),
-            p(
-              strong("Desain Eksperimen-Kontrol Pretest-Posttest (esc_mean_gain): "),
-              "Pada desain pengukuran berulang (", tags$em("mixed within-between design"), "), varians perubahan skor sangat bergantung pada korelasi antar-waktu (", tags$em("pre-post correlation r"), "). ",
-              "Fungsi ", tags$code("esc_mean_gain()"), " menghitung selisih perolehan rata-rata terstandarisasi (", tags$em("standardized mean gain difference"), ") ",
-              "yang disesuaikan dengan korelasi pre-post ", tags$code("r"), " (standar Morris, 2008 / Becker, 1988), ",
-              "sehingga varians sampling ", tags$code("vi"), " terestimasi secara presisi tanpa distorsi kovarians residual."
+            
+            hr(class = "my-2"),
+            
+            h6("Interval Kepercayaan & Pembobotan:", class = "fw-bold text-dark"),
+            tableOutput("calc_summary_table"),
+            
+            div(
+              class = "alert alert-light border mt-2 p-2 small",
+              tags$strong("Aksioma Pengukuran (Morris, 2008): "),
+              "Fungsi ", tags$code("esc_mean_gain()"), " menghitung selisih perubahan rata-rata terstandarisasi yang disesuaikan dengan korelasi pre-post ",
+              tags$code("r"), ", memastikan varians sampling ", tags$code("vi"), " terestimasi tanpa distorsi kovarians residual."
             )
+          )
+        ),
+        
+        card(
+          card_header(
+            class = "d-flex justify-content-between align-items-center",
+            span(icon("history"), " Pratinjau Studi Tersimpan di Gabungan"),
+            uiOutput("calc_saved_count_badge")
+          ),
+          card_body(
+            p(class = "small text-muted mb-2", "Berikut adalah daftar studi yang telah terkumpul dalam matriks kompilasi kalkulator sesi ini:"),
+            tableOutput("table_calc_recent_preview"),
+            actionButton("btn_goto_compiled", "Buka Matriks Gabungan Kalkulator Lengkap →", class = "btn-sm btn-outline-primary w-100 mt-2", icon = icon("arrow-right"))
           )
         )
       )
     )
   ),
   
-  # Tab 2: Gabungan Hasil Kalkulator
+  # Tab 3: Gabungan Hasil Kalkulator
   nav_panel(
+    value = "tab_compiled",
     icon = icon("layer-group"),
-    title = "Gabungan Hasil Kalkulator",
+    title = "Gabungan Kalkulator",
     card(
       card_header(
-        class = "bg-light d-flex justify-content-between align-items-center",
-        span(class = "fw-bold text-primary", icon("layer-group"), " Matriks Studi Hasil Kompilasi Kalkulator Effect Size"),
+        class = "bg-light d-flex justify-content-between align-items-center flex-wrap gap-2",
+        span(class = "fw-bold text-primary", icon("layer-group"), " Matriks Studi Hasil Kompilasi Kalkulator"),
         div(
-          actionButton("btn_push_calc_to_active", "Kirim & Timpa ke Meta-Analisis", class = "btn-sm btn-primary me-2", icon = icon("share-square")),
-          actionButton("btn_append_calc_to_active", "Gabungkan ke Dataset Aktif", class = "btn-sm btn-outline-primary me-2", icon = icon("plus")),
-          actionButton("btn_load_calc_sample", "Muat Contoh Batch Kalkulator", class = "btn-sm btn-outline-secondary me-2", icon = icon("magic")),
-          actionButton("btn_clear_calc_compiled", "Kosongkan Gabungan", class = "btn-sm btn-outline-danger me-2", icon = icon("trash")),
-          downloadButton("btn_download_calc_csv", "Unduh CSV Kompilasi", class = "btn-sm btn-outline-success")
+          class = "d-flex gap-1 flex-wrap",
+          actionButton("btn_use_calc_as_active", "Jadikan Dataset Analisis Utama", class = "btn-sm btn-primary", icon = icon("check-circle")),
+          actionButton("btn_append_calc_to_active", "Gabungkan ke Data Aktif", class = "btn-sm btn-outline-primary", icon = icon("plus")),
+          actionButton("btn_load_calc_sample", "Muat Contoh Batch (k=5)", class = "btn-sm btn-outline-secondary", icon = icon("magic")),
+          actionButton("btn_clear_calc_compiled", "Kosongkan", class = "btn-sm btn-outline-danger", icon = icon("trash")),
+          downloadButton("btn_download_calc_csv", "Unduh CSV", class = "btn-sm btn-outline-success")
         )
       ),
       card_body(
         layout_columns(
           col_widths = c(3, 3, 3, 3),
           value_box(
-            title = "Studi Terkompilasi (k)",
+            title = "Studi Terkompilasi",
             value = textOutput("vb_calc_comp_k"),
             showcase = icon("database"),
             theme = "primary"
           ),
           value_box(
-            title = "Rata-rata Effect Size (g)",
+            title = "Rata-rata Effect Size",
             value = textOutput("vb_calc_comp_mean_g"),
             showcase = icon("chart-bar"),
             theme = "info"
@@ -947,80 +1036,88 @@ ui <- page_navbar(
             theme = "secondary"
           ),
           value_box(
-            title = "Total Sampel Terkumpul",
+            title = "Total Partisipan",
             value = textOutput("vb_calc_comp_n"),
             showcase = icon("users"),
             theme = "success"
           )
         ),
         
-        div(
-          class = "alert alert-light border my-3 d-flex align-items-center justify-content-between",
-          div(
-            icon("check-circle", class = "text-success me-2 fs-5"),
-            span("Seluruh studi yang Anda hitung pada formulir kalkulator (termasuk konversi ", tags$em("esc_mean_gain"), ") secara otomatis terkumpul di tabel ini. Klik ", tags$strong("Kirim & Timpa ke Meta-Analisis"), " untuk langsung melakukan pemodelan penuh, analisis subkelompok, forest plot, dan uji bias publikasi.")
-          )
-        ),
+        uiOutput("calc_compiled_status_alert"),
         
         DTOutput("table_calc_compiled")
       )
     )
   ),
   
-  # Tab 3: Dataset Meta-Analisis
+  # Tab 4: Dataset Sintesis Bukti
   nav_panel(
+    value = "tab_data",
     icon = icon("table"),
-    title = "Dataset Sintesis Bukti",
+    title = "Dataset Sintesis",
     card(
       card_header(
-        class = "bg-light d-flex justify-content-between align-items-center",
-        span(class = "fw-bold text-primary", icon("table"), " Matriks Data Studi Primer & Parameter Efek"),
+        class = "bg-light d-flex justify-content-between align-items-center flex-wrap gap-2",
+        span(class = "fw-bold text-primary", icon("table"), " Pusat Manajemen Dataset Analisis Utama (Single Source of Truth)"),
         div(
-          actionButton("btn_load_benchmark", "Muat Data Benchmark Intervensi (k=14)", class = "btn-sm btn-outline-primary me-2", icon = icon("database")),
-          actionButton("btn_clear_data", "Reset Dataset", class = "btn-sm btn-outline-danger me-2", icon = icon("trash")),
+          class = "d-flex gap-1 flex-wrap",
+          actionButton("btn_load_benchmark", "Pilih Data Benchmark (k=14)", class = "btn-sm btn-outline-primary", icon = icon("database")),
+          actionButton("btn_clear_data", "Reset Dataset", class = "btn-sm btn-outline-danger", icon = icon("trash")),
           downloadButton("btn_download_csv", "Unduh CSV", class = "btn-sm btn-outline-success")
         )
       ),
       card_body(
         layout_columns(
-          col_widths = c(6, 6),
-          fileInput(
-            "upload_file",
-            "Unggah Berkas Data Kustom (.csv / .xlsx):",
-            accept = c(".csv", ".xlsx", ".xls"),
-            placeholder = "Pilih berkas CSV atau Excel..."
+          col_widths = c(5, 7),
+          div(
+            h6("Pilih Sumber Dataset Aktif:", class = "fw-bold text-primary mb-2"),
+            radioButtons(
+              "dataset_source_choice",
+              NULL,
+              choices = c(
+                "Benchmark 14 Uji Klinis Acak (RCT Psikologi)" = "benchmark",
+                "Kompilasi Hasil Kalkulator Effect Size" = "calculator",
+                "Unggah Berkas Mandiri (.csv / .xlsx)" = "upload"
+              ),
+              selected = "benchmark"
+            ),
+            conditionalPanel(
+              condition = "input.dataset_source_choice == 'upload'",
+              fileInput("upload_file", "Pilih Berkas (.csv / .xlsx):", accept = c(".csv", ".xlsx", ".xls"))
+            )
           ),
           div(
             class = "p-3 bg-light rounded border",
-            strong("Ketentuan Kolom Unggah Mandiri:"),
+            strong("Ketentuan Kolom Data Sintesis Bukti:"),
             tags$ul(
               class = "mb-0 ps-3 small text-muted",
-              tags$li("Wajib memiliki kolom besaran efek: ", tags$code("yi"), " atau ", tags$code("es"), " atau ", tags$code("g")),
-              tags$li("Wajib memiliki kolom varians: ", tags$code("vi"), " atau standar error: ", tags$code("sei")),
-              tags$li("Kolom opsional: ", tags$code("Study"), ", ", tags$code("Year"), ", ", tags$code("Format"), ", ", tags$code("Duration_Weeks"))
+              tags$li("Kolom besaran efek wajib: ", tags$code("yi"), " (atau ", tags$code("es"), ", ", tags$code("hedges_g"), ")"),
+              tags$li("Kolom presisi wajib: ", tags$code("vi"), " (varians) atau ", tags$code("sei"), " (standar error)"),
+              tags$li("Kolom moderator psikologi: ", tags$code("Control_Type"), ", ", tags$code("Format"), ", ", tags$code("Intervention"), ", ", tags$code("Population"), ", ", tags$code("Duration_Weeks"))
             )
           )
         ),
         
-        hr(),
+        hr(class = "my-3"),
         
         DTOutput("table_active_dataset")
       )
     )
   ),
   
-  # Tab 3: Pemodelan Meta-Analisis
+  # Tab 5: Pemodelan Meta-Analisis
   nav_panel(
+    value = "tab_model",
     icon = icon("chart-pie"),
     title = "Pemodelan Meta-Analisis",
     layout_sidebar(
       sidebar = sidebar(
-        width = 340,
+        width = 320,
         title = "Spesifikasi Model Sintesis",
         
         selectInput(
           "meta_estimator",
-          "Estimator Varians Antarstudi (tau^2):",
+          "Estimator Varians (tau^2):",
           choices = c(
             "Restricted Maximum Likelihood (REML) [Baku Emas]" = "REML",
             "DerSimonian-Laird (DL)" = "DL",
@@ -1042,16 +1139,17 @@ ui <- page_navbar(
         
         hr(),
         
-        h6("Analisis Moderator / Meta-Regresi:", class = "fw-bold"),
+        h6("Meta-Regresi Kovariat Kontinu:", class = "fw-bold text-dark"),
         selectInput(
-          "mod_variable",
-          "Variabel Moderator (Kovariat):",
-          choices = c("Tanpa Moderator (Overall Pooled)" = "none")
+          "meta_continuous_covar",
+          "Pilih Kovariat Kontinu:",
+          choices = c("Tanpa Kovariat Kontinu" = "none")
         ),
         
         div(
-          class = "small text-muted",
-          "Pemodelan efek acak (", tags$em("random-effects model"), ") mengasumsikan variasi besaran efek antarstudi merefleksikan variabilitas populasi sejati dan kesalahan sampling."
+          class = "small text-muted mt-2",
+          "Untuk analisis moderator kategoris (Tipe Kontrol, Format, Intervensi, RoB), gunakan tab khusus ",
+          tags$strong("Analisis Subkelompok"), "."
         )
       ),
       
@@ -1064,7 +1162,7 @@ ui <- page_navbar(
           layout_columns(
             col_widths = c(3, 3, 3, 3),
             value_box(
-              title = "Pooled Effect (Hedges' g)",
+              title = "Pooled Effect (g)",
               value = textOutput("vb_pooled_es"),
               showcase = icon("bullseye"),
               theme = "primary"
@@ -1089,7 +1187,7 @@ ui <- page_navbar(
             )
           ),
           
-          hr(),
+          hr(class = "my-3"),
           
           navset_card_tab(
             nav_panel(
@@ -1097,12 +1195,12 @@ ui <- page_navbar(
               verbatimTextOutput("meta_model_summary")
             ),
             nav_panel(
-              title = "Interpretasi Ilmiah Akademis",
+              title = "Sintesis Naratif Ilmiah (APA 7th)",
               uiOutput("meta_interpretation_text")
             ),
             nav_panel(
-              title = "Analisis Moderator & Subkelompok (Meta-Regresi)",
-              uiOutput("meta_moderator_ui")
+              title = "Meta-Regresi Kovariat Kontinu",
+              uiOutput("meta_continuous_covar_ui")
             )
           )
         )
@@ -1110,18 +1208,19 @@ ui <- page_navbar(
     )
   ),
   
-  # Tab 5: Analisis Subkelompok (Subgroup Analysis)
+  # Tab 6: Analisis Subkelompok (Subgroup Analysis)
   nav_panel(
+    value = "tab_subgroup",
     icon = icon("object-group"),
     title = "Analisis Subkelompok",
     layout_sidebar(
       sidebar = sidebar(
-        width = 340,
+        width = 330,
         title = "Konfigurasi Subkelompok",
         
         selectInput(
           "subgroup_var_select",
-          "Pilih Variabel Subkelompok Klinis:",
+          "Variabel Subkelompok Klinis:",
           choices = c(
             "Tipe Kelompok Kontrol (Control_Type)" = "Control_Type",
             "Format Penghantaran (Format)" = "Format",
@@ -1134,12 +1233,12 @@ ui <- page_navbar(
           selected = "Control_Type"
         ),
         
-        sliderInput("subgroup_forest_cex", "Skala Ukuran Teks / Titik:", min = 0.7, max = 1.3, value = 0.92, step = 0.05),
+        sliderInput("subgroup_forest_cex", "Skala Ukuran Teks / Titik:", min = 0.7, max = 1.3, value = 0.90, step = 0.05),
         
         hr(),
         
-        downloadButton("btn_dl_subgroup_png", "Unduh Subgroup Forest Plot (PNG)", class = "btn-primary w-100 mb-2"),
-        downloadButton("btn_dl_subgroup_pdf", "Unduh Subgroup Forest Plot (PDF)", class = "btn-secondary w-100")
+        downloadButton("btn_dl_subgroup_png", "Unduh Subgroup Plot (PNG)", class = "btn-primary w-100 mb-2"),
+        downloadButton("btn_dl_subgroup_pdf", "Unduh Format Vektor (PDF)", class = "btn-secondary w-100")
       ),
       
       card(
@@ -1176,7 +1275,7 @@ ui <- page_navbar(
             )
           ),
           
-          hr(),
+          hr(class = "my-3"),
           
           navset_card_tab(
             nav_panel(
@@ -1197,13 +1296,14 @@ ui <- page_navbar(
     )
   ),
   
-  # Tab 6: Forest Plot
+  # Tab 7: Forest Plot Publikasi
   nav_panel(
+    value = "tab_forest",
     icon = icon("tree"),
     title = "Forest Plot",
     layout_sidebar(
       sidebar = sidebar(
-        width = 340,
+        width = 330,
         title = "Konfigurasi Visual Forest Plot",
         
         selectInput(
@@ -1225,10 +1325,10 @@ ui <- page_navbar(
         checkboxInput("forest_show_pi", "Tampilkan Prediction Interval (Intan Biru)", value = TRUE),
         checkboxInput("forest_show_weights", "Tampilkan Kolom Bobot Studi (%)", value = TRUE),
         
-        textInput("forest_label_left", "Label Sumbu Kiri (Kontrol Lebih Baik):", value = "Memihak Kontrol"),
-        textInput("forest_label_right", "Label Sumbu Kanan (Intervensi Lebih Baik):", value = "Memihak Intervensi"),
+        textInput("forest_label_left", "Label Sumbu Kiri (Kontrol Unggul):", value = "Memihak Kontrol"),
+        textInput("forest_label_right", "Label Sumbu Kanan (Intervensi Unggul):", value = "Memihak Intervensi"),
         
-        sliderInput("forest_cex", "Skala Ukuran Teks / Titik:", min = 0.7, max = 1.3, value = 0.95, step = 0.05),
+        sliderInput("forest_cex", "Skala Ukuran Teks / Titik:", min = 0.7, max = 1.3, value = 0.92, step = 0.05),
         
         hr(),
         
@@ -1248,28 +1348,29 @@ ui <- page_navbar(
     )
   ),
   
-  # Tab 5: Bias Publikasi
+  # Tab 8: Diagnostik Bias Corong
   nav_panel(
+    value = "tab_bias",
     icon = icon("shield-alt"),
-    title = "Diagnostik Bias & Funnel Plot",
+    title = "Diagnostik Bias",
     layout_sidebar(
       sidebar = sidebar(
-        width = 340,
-        title = "Pengaturan Plot Corong (Funnel Plot)",
+        width = 330,
+        title = "Pengaturan Plot Corong",
         
         radioButtons(
           "funnel_type",
           "Jenis Funnel Plot:",
           choices = c(
-            "Standard Funnel Plot (Pseudo 95% CI)" = "standard",
-            "Contour-Enhanced Funnel Plot (Area Signifikansi)" = "contour"
+            "Contour-Enhanced (Zona Signifikansi)" = "contour",
+            "Standard Funnel Plot (Pseudo 95% CI)" = "standard"
           ),
           selected = "contour"
         ),
         
         div(
           class = "small text-muted mb-3",
-          tags$em("Contour-enhanced funnel plot"), " menampilkan zona signifikansi statistik (p < 0.10, p < 0.05, p < 0.01) untuk mengidentifikasi apakah asimetri didorong oleh preferensi publikasi atau heterogenitas sejati."
+          tags$em("Contour-enhanced funnel plot"), " menampilkan zona signifikansi statistik (p < 0.10, p < 0.05, p < 0.01) guna membedakan asimetri akibat bias publikasi versus heterogenitas substantif sejati."
         ),
         
         hr(),
@@ -1286,25 +1387,24 @@ ui <- page_navbar(
             plotOutput("funnel_plot_display", height = "520px")
           )
         ),
-        
         card(
-          card_header(class = "bg-light fw-bold text-primary", icon("shield-alt"), " Uji Asimetri & Analisis Trim-and-Fill"),
+          card_header(class = "bg-light fw-bold text-primary", icon("shield-alt"), " Uji Asimetri & Imputasi Trim-and-Fill"),
           card_body(
             h6("1. Uji Regresi Linier Egger (Egger's Test):", class = "fw-bold text-dark"),
             tableOutput("table_egger_test"),
             
-            hr(),
+            hr(class = "my-2"),
             
             h6("2. Uji Korelasi Peringkat Begg & Mazumdar:", class = "fw-bold text-dark"),
             tableOutput("table_begg_test"),
             
-            hr(),
+            hr(class = "my-2"),
             
             h6("3. Analisis Imputasi Trim and Fill (Duval & Tweedie):", class = "fw-bold text-dark"),
             tableOutput("table_trimfill_summary"),
             
             div(
-              class = "alert alert-light border mt-3 small",
+              class = "alert alert-light border mt-2 small",
               "Metode ", tags$em("Trim and Fill"), " mengestimasi jumlah studi yang hilang akibat bias publikasi dan mere-estimasi besaran efek gabungan yang telah disesuaikan."
             )
           )
@@ -1313,8 +1413,9 @@ ui <- page_navbar(
     )
   ),
   
-  # Tab 6: Pedoman Konseptual
+  # Tab 9: Pedoman Metodologis
   nav_panel(
+    value = "tab_guide",
     icon = icon("book"),
     title = "Pedoman Metodologis",
     card(
@@ -1332,7 +1433,7 @@ ui <- page_navbar(
               "Dalam sintesis bukti klinis berbasis pedoman Cochrane dan PRISMA 2020, penggunaan ",
               tags$em("Hedges' g"), " merupakan konvensi baku emas yang wajib diutamakan."
             ),
-            h5("2. Model Efek Tetap (FE) vs Efek Acak (RE)", class = "text-primary fw-bold mt-4"),
+            h5("2. Model Efek Tetap (FE) vs Efek Acak (RE)", class = "text-primary fw-bold mt-3"),
             p(
               "Model Efek Tetap (", tags$em("Fixed-Effect"), ") mengasumsikan bahwa semua studi membagikan satu besaran efek sejati tunggal (", tags$code("theta"), "). ",
               "Asumsi ini hampir selalu terlanggar pada uji coba intervensi psikologis di mana karakteristik partisipan, kualifikasi terapis, format sesi, dan durasi terapi bervariasi. ",
@@ -1347,7 +1448,7 @@ ui <- page_navbar(
               "Nilai ", tags$em("I^2"), " sangat dipengaruhi oleh ukuran sampel studi primer (presisi sampling). ",
               "Oleh karena itu, ", tags$code("tau^2"), " dan ", tags$em("Prediction Interval"), " (Borenstein et al., 2017) wajib dilaporkan untuk menggambarkan rentang efektivitas intervensi yang sesungguhnya pada populasi klinis masa depan."
             ),
-            h5("4. Evaluasi Bias Publikasi & Efek Sampel Kecil", class = "text-primary fw-bold mt-4"),
+            h5("4. Evaluasi Bias Publikasi & Efek Sampel Kecil", class = "text-primary fw-bold mt-3"),
             p(
               "Asimetri pada ", tags$em("funnel plot"), " tidak selalu identik dengan bias publikasi; asimetri dapat mencerminkan heterogenitas metodologis atau efek sampel kecil (", tags$em("small-study effects"), "). ",
               tags$em("Contour-enhanced funnel plot"), " dan uji formal Egger memfasilitasi pembuktian apakah studi-studi kecil yang hilang terkonsentrasi secara selektif pada area ketidaksignifikanan statistik (", tags$code("p > 0.05"), ")."
@@ -1362,7 +1463,37 @@ ui <- page_navbar(
 # Server Logic
 server <- function(input, output, session) {
   
-  # Tab 1: Research Hub Normal Distribution Engine
+  # Reactive Data Storage
+  benchmark_storage <- reactiveVal(create_benchmark_data())
+  calc_compiled_data <- reactiveVal(data.frame()) # starts clean, users can load sample or compute
+  active_data <- reactiveVal(create_benchmark_data())
+  active_source_label <- reactiveVal("Benchmark RCT (k = 14)")
+  calc_result <- reactiveVal(NULL)
+  
+  # Top Header Dynamic Pill
+  output$top_active_data_pill <- renderUI({
+    df <- active_data()
+    k_val <- nrow(df)
+    src <- active_source_label()
+    est <- input$meta_estimator
+    span(paste0("🟢 DATA AKTIF: ", src, " (k = ", k_val, ") · Model: ", est))
+  })
+  
+  # Hero CTA Navigation Buttons
+  observeEvent(input$hero_btn_calc, {
+    nav_select("main_navbar", "tab_calc")
+  })
+  observeEvent(input$hero_btn_data, {
+    nav_select("main_navbar", "tab_data")
+  })
+  observeEvent(input$hero_btn_subgroup, {
+    nav_select("main_navbar", "tab_subgroup")
+  })
+  observeEvent(input$btn_goto_compiled, {
+    nav_select("main_navbar", "tab_compiled")
+  })
+  
+  # Tab 1: Normal Distribution Engine Plot
   output$kawe_normal_demo_plot <- renderPlot({
     mu_val <- input$demo_mu
     sigma_val <- input$demo_sigma
@@ -1372,7 +1503,7 @@ server <- function(input, output, session) {
     x <- seq(mu_val - 4 * sigma_val, mu_val + 4 * sigma_val, length.out = 500)
     y <- dnorm(x, mean = mu_val, sd = sigma_val)
     
-    par(mar = c(4.8, 4.5, 2.8, 1.5), bg = "#FFFFFF")
+    par(mar = c(4.8, 4.5, 2.5, 1.5), bg = "#FFFFFF")
     plot(
       x, y, type = "n",
       xlab = "Psychometric Theta Scale / Latent Metric (x)",
@@ -1389,314 +1520,135 @@ server <- function(input, output, session) {
     grid(col = "#E5D3B3", lty = 3)
     
     if (isTRUE(show_zones)) {
-      # +/- 2 sigma
       idx2 <- x >= (mu_val - 2 * sigma_val) & x <= (mu_val + 2 * sigma_val)
-      polygon(
-        c(x[idx2], rev(x[idx2])),
-        c(y[idx2], rep(0, sum(idx2))),
-        col = rgb(197/255, 160/255, 89/255, 0.20),
-        border = NA
-      )
-      # +/- 1 sigma
+      polygon(c(x[idx2], rev(x[idx2])), c(y[idx2], rep(0, sum(idx2))), col = rgb(197/255, 160/255, 89/255, 0.20), border = NA)
       idx1 <- x >= (mu_val - 1 * sigma_val) & x <= (mu_val + 1 * sigma_val)
-      polygon(
-        c(x[idx1], rev(x[idx1])),
-        c(y[idx1], rep(0, sum(idx1))),
-        col = rgb(197/255, 160/255, 89/255, 0.45),
-        border = NA
-      )
+      polygon(c(x[idx1], rev(x[idx1])), c(y[idx1], rep(0, sum(idx1))), col = rgb(197/255, 160/255, 89/255, 0.45), border = NA)
     }
     
-    # Main curve in Flat Maroon
     lines(x, y, col = "#650915", lwd = 3.2)
-    # Center line in Antique Gold
     abline(v = mu_val, col = "#C5A059", lty = 2, lwd = 1.8)
     
-    # Annotations
     usr <- par("usr")
-    text(
-      mu_val, usr[4] * 0.92,
-      sprintf("mu = %.2f, sigma = %.2f", mu_val, sigma_val),
-      col = "#650915",
-      font = 2,
-      pos = 4
-    )
+    text(mu_val, usr[4] * 0.92, sprintf("mu = %.2f, sigma = %.2f", mu_val, sigma_val), col = "#650915", font = 2, pos = 4)
     
     if (isTRUE(show_scales)) {
-      text(
-        usr[1] + 0.2, usr[4] * 0.85,
-        "Standard Psychometric Equivalences:\n• z-score = (x - mu) / sigma\n• T-score = 50 + 10z\n• Wechsler IQ = 100 + 15z",
-        adj = c(0, 1),
-        cex = 0.85,
-        col = "#5A4B4C",
-        font = 3
-      )
+      text(usr[1] + 0.2, usr[4] * 0.85, "Standard Psychometric Equivalences:\n• z-score = (x - mu) / sigma\n• T-score = 50 + 10z\n• Wechsler IQ = 100 + 15z", adj = c(0, 1), cex = 0.82, col = "#5A4B4C", font = 3)
     }
   })
-
   
-  # Reactive Data Storage
-  active_data <- reactiveVal(create_benchmark_data())
-  calc_result <- reactiveVal(NULL)
-  calc_compiled_data <- reactiveVal(create_calc_sample_batch())
-  
-  # Observe Load Benchmark Button
-  observeEvent(input$btn_load_benchmark, {
-    active_data(create_benchmark_data())
-    showNotification("Data benchmark intervensi klinis (k = 14) berhasil dimuat.", type = "message")
-  })
-  
-  # Observe Clear Data Button
-  observeEvent(input$btn_clear_data, {
-    empty_df <- data.frame(
-      Study = character(0),
-      Year = numeric(0),
-      Intervention = character(0),
-      Format = character(0),
-      Duration_Weeks = numeric(0),
-      N_Intervention = numeric(0),
-      N_Control = numeric(0),
-      yi = numeric(0),
-      vi = numeric(0),
-      sei = numeric(0),
-      stringsAsFactors = FALSE
-    )
-    active_data(empty_df)
-    showNotification("Dataset telah direset.", type = "warning")
-  })
-  
-  # Observe File Upload
-  observeEvent(input$upload_file, {
-    req(input$upload_file)
-    file_path <- input$upload_file$datapath
-    ext <- tools::file_ext(file_path)
+  # Core Function to Compute Effect Size from Inputs
+  compute_current_es <- function() {
+    itype <- input$input_type
+    metric <- input$es_metric
     
-    tryCatch({
-      if (ext == "csv") {
-        df_uploaded <- read.csv(file_path, stringsAsFactors = FALSE)
-      } else if (ext %in% c("xlsx", "xls")) {
-        if (!requireNamespace("readxl", quietly = TRUE)) {
-          stop("Paket 'readxl' diperlukan untuk membaca berkas Excel.")
+    if (itype == "mean_gain") {
+      gsub <- input$gain_sub_type
+      gdir <- input$gain_outcome_dir
+      r_val <- input$gain_r
+      
+      if (gsub == "pre_post_full") {
+        p1_m <- input$pre1_m
+        p1_sd <- input$pre1_sd
+        po1_m <- input$post1_m
+        po1_sd <- input$post1_sd
+        n1 <- input$pre1_n
+        
+        p2_m <- input$pre2_m
+        p2_sd <- input$pre2_sd
+        po2_m <- input$post2_m
+        po2_sd <- input$post2_sd
+        n2 <- input$pre2_n
+        
+        if (gdir == "decrease_better") {
+          g1_m <- p1_m - po1_m
+          g2_m <- p2_m - po2_m
+        } else {
+          g1_m <- po1_m - p1_m
+          g2_m <- po2_m - p2_m
         }
-        df_uploaded <- as.data.frame(readxl::read_excel(file_path))
+        
+        res <- esc_mean_gain(
+          pre1mean = p1_m,
+          pre1sd = p1_sd,
+          post1mean = po1_m,
+          post1sd = po1_sd,
+          gain1mean = g1_m,
+          grp1n = n1,
+          pre2mean = p2_m,
+          pre2sd = p2_sd,
+          post2mean = po2_m,
+          post2sd = po2_sd,
+          gain2mean = g2_m,
+          grp2n = n2,
+          r = r_val,
+          es.type = metric
+        )
       } else {
-        stop("Format berkas tidak didukung. Harap unggah format .csv atau .xlsx.")
+        g1_m <- input$gain1_m
+        g1_sd <- input$gain1_sd
+        n1 <- input$gain1_n
+        
+        g2_m <- input$gain2_m
+        g2_sd <- input$gain2_sd
+        n2 <- input$gain2_n
+        
+        res <- esc_mean_gain(
+          gain1mean = g1_m,
+          gain1sd = g1_sd,
+          grp1n = n1,
+          gain2mean = g2_m,
+          gain2sd = g2_sd,
+          grp2n = n2,
+          grp1r = r_val,
+          grp2r = r_val,
+          r = r_val,
+          es.type = metric
+        )
       }
-      
-      # Standardize Column Names
-      colnames_lower <- tolower(colnames(df_uploaded))
-      
-      # Detect yi
-      yi_col <- which(colnames_lower %in% c("yi", "es", "hedges_g", "cohen_d", "effectsize", "g", "d"))[1]
-      if (is.na(yi_col)) {
-        stop("Kolom estimasi besaran efek (yi / es / g) tidak ditemukan.")
+    } else if (itype == "mean_sd") {
+      res <- esc_mean_sd(
+        grp1m = input$grp1m_sd, grp1sd = input$grp1sd_sd, grp1n = input$grp1n_sd,
+        grp2m = input$grp2m_sd, grp2sd = input$grp2sd_sd, grp2n = input$grp2n_sd,
+        es.type = metric
+      )
+    } else if (itype == "mean_se") {
+      res <- esc_mean_se(
+        grp1m = input$grp1m_se, grp1se = input$grp1se_se, grp1n = input$grp1n_se,
+        grp2m = input$grp2m_se, grp2se = input$grp2se_se, grp2n = input$grp2n_se,
+        es.type = metric
+      )
+    } else if (itype == "t_test") {
+      res <- esc_t(t = input$t_val, grp1n = input$t_n1, grp2n = input$t_n2, es.type = metric)
+    } else if (itype == "p_val") {
+      df_deg <- input$p_n1 + input$p_n2 - 2
+      t_equiv <- qt(1 - (input$p_value / 2), df_deg)
+      if (input$p_direction == "neg") t_equiv <- -t_equiv
+      res <- esc_t(t = t_equiv, grp1n = input$p_n1, grp2n = input$p_n2, es.type = metric)
+    } else if (itype == "f_test") {
+      res <- esc_f(f = input$f_val, grp1n = input$f_n1, grp2n = input$f_n2, es.type = metric)
+      if (input$f_direction == "neg") {
+        res$es <- -abs(res$es)
+        temp_lo <- -res$ci.hi
+        res$ci.hi <- -res$ci.lo
+        res$ci.lo <- temp_lo
       }
-      df_uploaded$yi <- as.numeric(df_uploaded[[yi_col]])
-      
-      # Detect vi or sei
-      vi_col <- which(colnames_lower %in% c("vi", "var", "variance", "samp_var"))[1]
-      sei_col <- which(colnames_lower %in% c("sei", "se", "standarderror", "std_err"))[1]
-      
-      if (!is.na(vi_col)) {
-        df_uploaded$vi <- as.numeric(df_uploaded[[vi_col]])
-        df_uploaded$sei <- sqrt(df_uploaded$vi)
-      } else if (!is.na(sei_col)) {
-        df_uploaded$sei <- as.numeric(df_uploaded[[sei_col]])
-        df_uploaded$vi <- (df_uploaded$sei)^2
-      } else {
-        stop("Kolom varians (vi) atau standard error (sei) wajib tersedia.")
-      }
-      
-      # Detect Study Label
-      study_col <- which(colnames_lower %in% c("study", "author", "author_year", "peneliti", "label"))[1]
-      if (!is.na(study_col)) {
-        df_uploaded$Study <- as.character(df_uploaded[[study_col]])
-      } else {
-        df_uploaded$Study <- paste("Study", seq_len(nrow(df_uploaded)))
-      }
-      
-      # Filter complete cases for analysis
-      df_valid <- df_uploaded[!is.na(df_uploaded$yi) & !is.na(df_uploaded$vi) & df_uploaded$vi > 0, ]
-      
-      if (nrow(df_valid) == 0) {
-        stop("Tidak ditemukan baris data yang valid (yi numerik dan vi > 0).")
-      }
-      
-      active_data(df_valid)
-      showNotification(paste("Berhasil memuat", nrow(df_valid), "studi dari berkas unggahan."), type = "message")
-    }, error = function(e) {
-      showNotification(paste("Gagal memuat berkas:", e$message), type = "error")
-    })
-  })
-  
-  # Dynamic Moderator Choices
-  observe({
-    df <- active_data()
-    if (nrow(df) > 0) {
-      potential_mods <- setdiff(colnames(df), c("Study", "yi", "vi", "sei"))
-      valid_mods <- potential_mods[sapply(df[potential_mods], function(x) length(unique(x)) > 1 && length(unique(x)) < nrow(df))]
-      if (length(valid_mods) > 0) {
-        mod_labels <- sapply(valid_mods, function(v) {
-          switch(
-            v,
-            "Control_Type" = "Tipe Kelompok Kontrol (Waitlist vs TAU vs Placebo)",
-            "Format" = "Format Penghantaran (Individual vs Group vs Digital)",
-            "Intervention" = "Pendekatan Terapi (CBT vs ACT vs BA vs iCBT)",
-            "Population" = "Populasi Sasaran (Klinis vs Subklinis)",
-            "Therapist_Level" = "Kualifikasi Terapis (Klinisi vs Trainee vs Digital)",
-            "Risk_of_Bias" = "Risiko Bias Metodologis (RoB 2.0)",
-            "Age_Group" = "Kelompok Usia (Dewasa vs Remaja vs Lansia)",
-            "Duration_Weeks" = "Durasi Terapi (Minggu - Kontinu)",
-            "Total_Sessions" = "Jumlah Total Sesi Terapi (Kontinu)",
-            v
-          )
-        })
-        choices <- c("Tanpa Moderator (Overall Pooled)" = "none", setNames(valid_mods, mod_labels))
-      } else {
-        choices <- c("Tanpa Moderator (Overall Pooled)" = "none")
-      }
-      updateSelectInput(session, "mod_variable", choices = choices)
+    } else if (itype == "table_2x2") {
+      res <- esc_2x2(
+        grp1yes = input$tab_e1, grp1no = input$tab_n1 - input$tab_e1,
+        grp2yes = input$tab_e2, grp2no = input$tab_n2 - input$tab_e2,
+        es.type = metric
+      )
+    } else if (itype == "correlation") {
+      res <- esc_rpb(r = input$corr_r, totaln = input$corr_n, es.type = metric)
     }
-  })
+    res
+  }
   
-  # Calculate Effect Size using esc
+  # Observe Calculate Button
   observeEvent(input$btn_calculate, {
     tryCatch({
-      itype <- input$input_type
-      metric <- input$es_metric
-      
-      if (itype == "mean_gain") {
-        gsub <- input$gain_sub_type
-        gdir <- input$gain_outcome_dir
-        r_val <- input$gain_r
-        
-        if (gsub == "pre_post_full") {
-          p1_m <- input$pre1_m
-          p1_sd <- input$pre1_sd
-          po1_m <- input$post1_m
-          po1_sd <- input$post1_sd
-          n1 <- input$pre1_n
-          
-          p2_m <- input$pre2_m
-          p2_sd <- input$pre2_sd
-          po2_m <- input$post2_m
-          po2_sd <- input$post2_sd
-          n2 <- input$pre2_n
-          
-          if (gdir == "decrease_better") {
-            # Reduksi simtom: pre - post adalah arah kemajuan positif
-            g1_m <- p1_m - po1_m
-            g2_m <- p2_m - po2_m
-          } else {
-            # Peningkatan atribut: post - pre adalah arah kemajuan positif
-            g1_m <- po1_m - p1_m
-            g2_m <- po2_m - p2_m
-          }
-          
-          res <- esc_mean_gain(
-            pre1mean = p1_m,
-            pre1sd = p1_sd,
-            post1mean = po1_m,
-            post1sd = po1_sd,
-            gain1mean = g1_m,
-            grp1n = n1,
-            pre2mean = p2_m,
-            pre2sd = p2_sd,
-            post2mean = po2_m,
-            post2sd = po2_sd,
-            gain2mean = g2_m,
-            grp2n = n2,
-            r = r_val,
-            es.type = metric
-          )
-        } else {
-          g1_m <- input$gain1_m
-          g1_sd <- input$gain1_sd
-          n1 <- input$gain1_n
-          
-          g2_m <- input$gain2_m
-          g2_sd <- input$gain2_sd
-          n2 <- input$gain2_n
-          
-          res <- esc_mean_gain(
-            gain1mean = g1_m,
-            gain1sd = g1_sd,
-            grp1n = n1,
-            gain2mean = g2_m,
-            gain2sd = g2_sd,
-            grp2n = n2,
-            grp1r = r_val,
-            grp2r = r_val,
-            r = r_val,
-            es.type = metric
-          )
-        }
-      } else if (itype == "mean_sd") {
-        res <- esc_mean_sd(
-          grp1m = input$grp1m_sd,
-          grp1sd = input$grp1sd_sd,
-          grp1n = input$grp1n_sd,
-          grp2m = input$grp2m_sd,
-          grp2sd = input$grp2sd_sd,
-          grp2n = input$grp2n_sd,
-          es.type = metric
-        )
-      } else if (itype == "mean_se") {
-        res <- esc_mean_se(
-          grp1m = input$grp1m_se,
-          grp1se = input$grp1se_se,
-          grp1n = input$grp1n_se,
-          grp2m = input$grp2m_se,
-          grp2se = input$grp2se_se,
-          grp2n = input$grp2n_se,
-          es.type = metric
-        )
-      } else if (itype == "t_test") {
-        res <- esc_t(
-          t = input$t_val,
-          grp1n = input$t_n1,
-          grp2n = input$t_n2,
-          es.type = metric
-        )
-      } else if (itype == "p_val") {
-        df_deg <- input$p_n1 + input$p_n2 - 2
-        t_equiv <- qt(1 - (input$p_value / 2), df_deg)
-        if (input$p_direction == "neg") t_equiv <- -t_equiv
-        res <- esc_t(
-          t = t_equiv,
-          grp1n = input$p_n1,
-          grp2n = input$p_n2,
-          es.type = metric
-        )
-      } else if (itype == "f_test") {
-        res <- esc_f(
-          f = input$f_val,
-          grp1n = input$f_n1,
-          grp2n = input$f_n2,
-          es.type = metric
-        )
-        if (input$f_direction == "neg") {
-          res$es <- -abs(res$es)
-          temp_ci_lo <- -res$ci.hi
-          res$ci.hi <- -res$ci.lo
-          res$ci.lo <- temp_ci_lo
-        }
-      } else if (itype == "table_2x2") {
-        res <- esc_2x2(
-          grp1yes = input$tab_e1,
-          grp1no = input$tab_n1 - input$tab_e1,
-          grp2yes = input$tab_e2,
-          grp2no = input$tab_n2 - input$tab_e2,
-          es.type = metric
-        )
-      } else if (itype == "correlation") {
-        res <- esc_rpb(
-          r = input$corr_r,
-          totaln = input$corr_n,
-          es.type = metric
-        )
-      }
-      
+      res <- compute_current_es()
       calc_result(res)
       showNotification("Estimasi besaran efek berhasil dihitung.", type = "message")
     }, error = function(e) {
@@ -1704,15 +1656,18 @@ server <- function(input, output, session) {
     })
   })
   
-  # Append Calculated Study to Active Dataset
+  # Observe Append Study Button (Smart auto-compute + add)
   observeEvent(input$btn_append_study, {
     res <- calc_result()
     if (is.null(res)) {
-      showNotification("Silakan klik 'Hitung Effect Size' terlebih dahulu.", type = "warning")
-      return()
+      res <- tryCatch(compute_current_es(), error = function(e) NULL)
+      if (is.null(res)) {
+        showNotification("Gagal menghitung besaran efek. Periksa kembali input numerik.", type = "error")
+        return()
+      }
+      calc_result(res)
     }
     
-    current_df <- active_data()
     itype <- input$input_type
     n1_val <- 50
     n2_val <- 50
@@ -1746,7 +1701,7 @@ server <- function(input, output, session) {
       n1_val <- round(input$corr_n / 2)
       n2_val <- round(input$corr_n / 2)
     }
-
+    
     active_comp_val <- if (input$study_ctrl == "Active Control") {
       input$study_active_comparator
     } else if (input$study_ctrl == "Waitlist") {
@@ -1758,7 +1713,7 @@ server <- function(input, output, session) {
     } else {
       "-"
     }
-
+    
     new_row <- data.frame(
       Study = input$study_name,
       Year = input$study_year,
@@ -1780,98 +1735,91 @@ server <- function(input, output, session) {
       stringsAsFactors = FALSE
     )
     
-    active_data(rbind(current_df, new_row))
+    # Append to compiled calculator batch
     comp_df <- calc_compiled_data()
     calc_compiled_data(rbind(comp_df, new_row))
-    showNotification(paste("Studi '", input$study_name, "' berhasil ditambahkan ke dataset aktif dan gabungan hasil kalkulator."), type = "message")
-  })
-  
-  # Tab 2: Gabungan Hasil Kalkulator Server Handlers
-  
-  # Push and Overwrite to Active Dataset
-  observeEvent(input$btn_push_calc_to_active, {
-    df_calc <- calc_compiled_data()
-    if (nrow(df_calc) == 0) {
-      showNotification("Matriks kompilasi kalkulator masih kosong.", type = "warning")
-      return()
+    
+    # If auto-push is checked, also append to active analysis dataset
+    if (isTRUE(input$calc_auto_push_active)) {
+      curr_act <- active_data()
+      active_data(rbind(curr_act, new_row))
     }
-    active_data(df_calc)
-    showNotification(paste("Berhasil mengirim", nrow(df_calc), "studi hasil kalkulator ke dataset aktif meta-analisis."), type = "message")
+    
+    showNotification(paste0("Studi '", input$study_name, "' berhasil disimpan ke matriks gabungan kalkulator."), type = "message")
   })
   
-  # Append to Active Dataset
-  observeEvent(input$btn_append_calc_to_active, {
-    df_calc <- calc_compiled_data()
-    if (nrow(df_calc) == 0) {
-      showNotification("Matriks kompilasi kalkulator masih kosong.", type = "warning")
-      return()
+  # Reset Calculator Form Button
+  observeEvent(input$btn_reset_calc_form, {
+    updateTextInput(session, "study_name", value = paste("Studi Baru", nrow(calc_compiled_data()) + 1))
+    calc_result(NULL)
+    showNotification("Formulir telah disiapkan untuk entri studi berikutnya.", type = "default")
+  })
+  
+  # Calculator Outputs
+  output$vb_calc_es <- renderText({
+    res <- calc_result()
+    if (is.null(res)) return("-")
+    sprintf("%.4f", res$es)
+  })
+  output$vb_calc_var <- renderText({
+    res <- calc_result()
+    if (is.null(res)) return("-")
+    sprintf("%.5f", res$var)
+  })
+  output$vb_calc_se <- renderText({
+    res <- calc_result()
+    if (is.null(res)) return("-")
+    sprintf("%.4f", res$se)
+  })
+  
+  output$calc_summary_table <- renderTable({
+    res <- calc_result()
+    if (is.null(res)) {
+      return(data.frame(Status = "Masukkan parameter numerik dan klik 'Hitung Parameter Efek'."))
     }
-    current_df <- active_data()
-    active_data(rbind(current_df, df_calc))
-    showNotification(paste("Berhasil menggabungkan", nrow(df_calc), "studi kompilasi ke dataset aktif."), type = "message")
-  })
-  
-  # Load Sample Batch
-  observeEvent(input$btn_load_calc_sample, {
-    calc_compiled_data(create_calc_sample_batch())
-    showNotification("Contoh batch studi kalkulator (k = 5) berhasil dimuat.", type = "message")
-  })
-  
-  # Clear Compiled Data
-  observeEvent(input$btn_clear_calc_compiled, {
-    empty_df <- data.frame(
-      Study = character(0),
-      Year = numeric(0),
-      Intervention = character(0),
-      Format = character(0),
-      Control_Type = character(0),
-      Active_Comparator = character(0),
-      Population = character(0),
-      Age_Group = character(0),
-      Therapist_Level = character(0),
-      Risk_of_Bias = character(0),
-      Duration_Weeks = numeric(0),
-      Total_Sessions = numeric(0),
-      N_Intervention = numeric(0),
-      N_Control = numeric(0),
-      yi = numeric(0),
-      vi = numeric(0),
-      sei = numeric(0),
-      stringsAsFactors = FALSE
+    data.frame(
+      Parameter = c("Metrik Besaran Efek", "Batas Bawah 95% CI", "Batas Atas 95% CI", "Bobot Varians Terbalik (wi)", "Kategori Efek (Cohen)"),
+      Nilai = c(
+        ifelse(input$es_metric == "g", "Hedges' g (Unbiased)", "Cohen's d"),
+        sprintf("%.4f", res$ci.lo),
+        sprintf("%.4f", res$ci.hi),
+        sprintf("%.2f", res$w),
+        ifelse(abs(res$es) < 0.2, "Dapat Diabaikan (< 0.20)",
+               ifelse(abs(res$es) < 0.5, "Kecil (0.20 - 0.49)",
+                      ifelse(abs(res$es) < 0.8, "Sedang (0.50 - 0.79)", "Besar (>= 0.80)")))
+      )
     )
-    calc_compiled_data(empty_df)
-    showNotification("Matriks gabungan hasil kalkulator telah dikosongkan.", type = "warning")
+  }, striped = TRUE, hover = TRUE, bordered = TRUE)
+  
+  output$calc_saved_count_badge <- renderUI({
+    df <- calc_compiled_data()
+    span(class = "badge bg-primary", paste(nrow(df), "Studi Tersimpan"))
   })
   
-  # Download Compiled Calculator CSV
-  output$btn_download_calc_csv <- downloadHandler(
-    filename = function() {
-      paste0("Compiled_Calculator_Effects_", Sys.Date(), ".csv")
-    },
-    content = function(file) {
-      write.csv(calc_compiled_data(), file, row.names = FALSE)
+  output$table_calc_recent_preview <- renderTable({
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) {
+      return(data.frame(Status = "Belum ada studi yang disimpan pada sesi kalkulator ini."))
     }
-  )
+    tail(df[, c("Study", "Year", "Intervention", "Control_Type", "yi", "sei")], 5)
+  }, striped = TRUE, hover = TRUE, bordered = TRUE)
   
-  # Value Boxes in Compiled Calculator Tab
+  # Tab 3: Gabungan Hasil Kalkulator Server Handlers
   output$vb_calc_comp_k <- renderText({
     df <- calc_compiled_data()
     if (nrow(df) == 0) return("0")
     paste(nrow(df), "Studi")
   })
-  
   output$vb_calc_comp_mean_g <- renderText({
     df <- calc_compiled_data()
     if (nrow(df) == 0) return("-")
     sprintf("%.3f", mean(df$yi, na.rm = TRUE))
   })
-  
   output$vb_calc_comp_range_g <- renderText({
     df <- calc_compiled_data()
     if (nrow(df) == 0) return("-")
     sprintf("%.3f s/d %.3f", min(df$yi, na.rm = TRUE), max(df$yi, na.rm = TRUE))
   })
-  
   output$vb_calc_comp_n <- renderText({
     df <- calc_compiled_data()
     if (nrow(df) == 0) return("0")
@@ -1879,145 +1827,237 @@ server <- function(input, output, session) {
     sprintf("%s Partisipan", format(total_n, big.mark = "."))
   })
   
-  # Compiled Calculator DT Table
+  output$calc_compiled_status_alert <- renderUI({
+    df <- calc_compiled_data()
+    act <- active_data()
+    is_active <- nrow(df) > 0 && identical(df$Study, act$Study)
+    if (is_active) {
+      div(
+        class = "alert alert-success border my-2 py-2 d-flex align-items-center",
+        icon("check-circle", class = "me-2 fs-5"),
+        span("Matriks kalkulator ini saat ini ", strong("SEDANG AKTIF DIGUNAKAN"), " sebagai data analisis utama pada modul Meta-Analisis, Subgroup, dan Forest Plot.")
+      )
+    } else {
+      div(
+        class = "alert alert-light border my-2 py-2 d-flex align-items-center justify-content-between",
+        div(
+          icon("info-circle", class = "text-primary me-2 fs-5"),
+          span("Studi hasil kalkulator terkumpul di sini. Klik ", strong("Jadikan Dataset Analisis Utama"), " untuk menganalisis batch ini secara langsung.")
+        )
+      )
+    }
+  })
+  
+  observeEvent(input$btn_use_calc_as_active, {
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) {
+      showNotification("Matriks kalkulator masih kosong. Silakan hitung studi terlebih dahulu.", type = "warning")
+      return()
+    }
+    active_data(df)
+    active_source_label(paste0("Kompilasi Kalkulator (k = ", nrow(df), ")"))
+    updateRadioButtons(session, "dataset_source_choice", selected = "calculator")
+    showNotification("Matriks kalkulator berhasil ditetapkan sebagai dataset analisis utama.", type = "message")
+  })
+  
+  observeEvent(input$btn_append_calc_to_active, {
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) {
+      showNotification("Matriks kalkulator masih kosong.", type = "warning")
+      return()
+    }
+    curr <- active_data()
+    # avoid exact study name duplicates
+    new_studies <- df[!(df$Study %in% curr$Study), ]
+    if (nrow(new_studies) == 0) {
+      showNotification("Semua studi dalam matriks kalkulator sudah ada dalam dataset aktif.", type = "warning")
+      return()
+    }
+    combined <- rbind(curr, new_studies)
+    active_data(combined)
+    active_source_label(paste0("Dataset Gabungan (k = ", nrow(combined), ")"))
+    showNotification(paste("Berhasil menambahkan", nrow(new_studies), "studi baru ke dataset aktif."), type = "message")
+  })
+  
+  observeEvent(input$btn_load_calc_sample, {
+    calc_compiled_data(create_calc_sample_batch())
+    showNotification("Contoh batch studi kalkulator (k = 5) berhasil dimuat.", type = "message")
+  })
+  
+  observeEvent(input$btn_clear_calc_compiled, {
+    calc_compiled_data(data.frame())
+    showNotification("Matriks kompilasi kalkulator telah dikosongkan.", type = "warning")
+  })
+  
+  output$btn_download_calc_csv <- downloadHandler(
+    filename = function() paste0("Compiled_Calculator_Effects_", Sys.Date(), ".csv"),
+    content = function(file) write.csv(calc_compiled_data(), file, row.names = FALSE)
+  )
+  
   output$table_calc_compiled <- renderDT({
     df <- calc_compiled_data()
     if (nrow(df) == 0) return(NULL)
-    
     inv_var <- 1 / df$vi
     df$Bobot_Persen <- round((inv_var / sum(inv_var)) * 100, 2)
-    
-    datatable(
-      df,
-      options = list(pageLength = 10, autoWidth = TRUE, scrollX = TRUE),
-      rownames = FALSE,
-      class = "display compact cell-border"
-    ) %>%
+    datatable(df, options = list(pageLength = 10, autoWidth = TRUE, scrollX = TRUE), rownames = FALSE, class = "display compact cell-border") %>%
       formatRound(columns = c("yi", "vi", "sei"), digits = 4) %>%
       formatRound(columns = "Bobot_Persen", digits = 2)
   })
   
-  # Value Boxes in Calculator Tab
-  output$vb_calc_es <- renderText({
-    res <- calc_result()
-    if (is.null(res)) return("-")
-    sprintf("%.4f", res$es)
-  })
-  
-  output$vb_calc_var <- renderText({
-    res <- calc_result()
-    if (is.null(res)) return("-")
-    sprintf("%.5f", res$var)
-  })
-  
-  output$vb_calc_se <- renderText({
-    res <- calc_result()
-    if (is.null(res)) return("-")
-    sprintf("%.4f", res$se)
-  })
-  
-  # Calculator Summary Table
-  output$calc_summary_table <- renderTable({
-    res <- calc_result()
-    if (is.null(res)) {
-      return(data.frame(Status = "Belum ada hasil perhitungan. Masukkan parameter dan klik 'Hitung Effect Size'."))
+  # Tab 4: Dataset Sintesis Bukti Server Handlers
+  observeEvent(input$dataset_source_choice, {
+    src <- input$dataset_source_choice
+    if (src == "benchmark") {
+      active_data(benchmark_storage())
+      active_source_label("Benchmark RCT (k = 14)")
+    } else if (src == "calculator") {
+      df_calc <- calc_compiled_data()
+      if (nrow(df_calc) > 0) {
+        active_data(df_calc)
+        active_source_label(paste0("Kompilasi Kalkulator (k = ", nrow(df_calc), ")"))
+      } else {
+        showNotification("Matriks kompilasi kalkulator masih kosong. Menggunakan data aktif sebelumnya.", type = "warning")
+      }
     }
-    
-    data.frame(
-      Parameter = c("Metrik Besaran Efek", "Batas Bawah 95% CI", "Batas Atas 95% CI", "Bobot Varians Terbalik (wi = 1/vi)", "Kategori Besaran Efek (Cohen)"),
-      Nilai = c(
-        ifelse(input$es_metric == "g", "Hedges' g (Unbiased)", "Cohen's d"),
-        sprintf("%.4f", res$ci.lo),
-        sprintf("%.4f", res$ci.hi),
-        sprintf("%.2f", res$w),
-        ifelse(abs(res$es) < 0.2, "Dapat Diabaikan (< 0.20)",
-               ifelse(abs(res$es) < 0.5, "Efek Kecil (0.20 - 0.49)",
-                      ifelse(abs(res$es) < 0.8, "Efek Sedang (0.50 - 0.79)", "Efek Besar (>= 0.80)")))
-      )
-    )
-  }, striped = TRUE, hover = TRUE, bordered = TRUE)
+  })
   
-  # Active Dataset DT Table
+  observeEvent(input$btn_load_benchmark, {
+    active_data(create_benchmark_data())
+    benchmark_storage(create_benchmark_data())
+    active_source_label("Benchmark RCT (k = 14)")
+    updateRadioButtons(session, "dataset_source_choice", selected = "benchmark")
+    showNotification("Data benchmark intervensi klinis (k = 14) berhasil dimuat.", type = "message")
+  })
+  
+  observeEvent(input$btn_clear_data, {
+    empty_df <- data.frame(
+      Study = character(0), Year = numeric(0), Intervention = character(0), Format = character(0),
+      Control_Type = character(0), Active_Comparator = character(0), Population = character(0),
+      Age_Group = character(0), Therapist_Level = character(0), Risk_of_Bias = character(0),
+      Duration_Weeks = numeric(0), Total_Sessions = numeric(0), N_Intervention = numeric(0),
+      N_Control = numeric(0), yi = numeric(0), vi = numeric(0), sei = numeric(0), stringsAsFactors = FALSE
+    )
+    active_data(empty_df)
+    active_source_label("Kosong (k = 0)")
+    showNotification("Dataset analisis aktif telah direset.", type = "warning")
+  })
+  
+  observeEvent(input$upload_file, {
+    req(input$upload_file)
+    file_path <- input$upload_file$datapath
+    ext <- tools::file_ext(file_path)
+    
+    tryCatch({
+      if (ext == "csv") {
+        df_uploaded <- read.csv(file_path, stringsAsFactors = FALSE)
+      } else if (ext %in% c("xlsx", "xls")) {
+        if (!requireNamespace("readxl", quietly = TRUE)) stop("Paket 'readxl' diperlukan untuk membaca Excel.")
+        df_uploaded <- as.data.frame(readxl::read_excel(file_path))
+      } else {
+        stop("Format berkas tidak didukung. Harap unggah berkas .csv atau .xlsx.")
+      }
+      
+      colnames_lower <- tolower(colnames(df_uploaded))
+      yi_col <- which(colnames_lower %in% c("yi", "es", "hedges_g", "cohen_d", "effectsize", "g", "d"))[1]
+      if (is.na(yi_col)) stop("Kolom besaran efek (yi / es / g) tidak ditemukan.")
+      df_uploaded$yi <- as.numeric(df_uploaded[[yi_col]])
+      
+      vi_col <- which(colnames_lower %in% c("vi", "var", "variance", "samp_var"))[1]
+      sei_col <- which(colnames_lower %in% c("sei", "se", "standarderror", "std_err"))[1]
+      
+      if (!is.na(vi_col)) {
+        df_uploaded$vi <- as.numeric(df_uploaded[[vi_col]])
+        df_uploaded$sei <- sqrt(df_uploaded$vi)
+      } else if (!is.na(sei_col)) {
+        df_uploaded$sei <- as.numeric(df_uploaded[[sei_col]])
+        df_uploaded$vi <- (df_uploaded$sei)^2
+      } else {
+        stop("Kolom varians (vi) atau standard error (sei) wajib tersedia.")
+      }
+      
+      study_col <- which(colnames_lower %in% c("study", "author", "author_year", "peneliti", "label"))[1]
+      if (!is.na(study_col)) {
+        df_uploaded$Study <- as.character(df_uploaded[[study_col]])
+      } else {
+        df_uploaded$Study <- paste("Study", seq_len(nrow(df_uploaded)))
+      }
+      
+      df_valid <- df_uploaded[!is.na(df_uploaded$yi) & !is.na(df_uploaded$vi) & df_uploaded$vi > 0, ]
+      if (nrow(df_valid) == 0) stop("Tidak ditemukan baris data yang valid (yi numerik dan vi > 0).")
+      
+      active_data(df_valid)
+      active_source_label(paste0("Berkas Unggahan (k = ", nrow(df_valid), ")"))
+      showNotification(paste("Berhasil memuat", nrow(df_valid), "studi dari berkas kustom."), type = "message")
+    }, error = function(e) {
+      showNotification(paste("Gagal memuat berkas:", e$message), type = "error")
+    })
+  })
+  
   output$table_active_dataset <- renderDT({
     df <- active_data()
     if (nrow(df) == 0) return(NULL)
-    
-    # Calculate inverse-variance study weight
     inv_var <- 1 / df$vi
     df$Bobot_Persen <- round((inv_var / sum(inv_var)) * 100, 2)
-    
-    datatable(
-      df,
-      options = list(pageLength = 10, autoWidth = TRUE, scrollX = TRUE),
-      rownames = FALSE,
-      class = "display compact cell-border"
-    ) %>%
+    datatable(df, options = list(pageLength = 10, autoWidth = TRUE, scrollX = TRUE), rownames = FALSE, class = "display compact cell-border") %>%
       formatRound(columns = c("yi", "vi", "sei"), digits = 4) %>%
       formatRound(columns = "Bobot_Persen", digits = 2)
   })
   
-  # Download Dataset
   output$btn_download_csv <- downloadHandler(
-    filename = function() {
-      paste0("Intervention_Meta_Dataset_", Sys.Date(), ".csv")
-    },
-    content = function(file) {
-      write.csv(active_data(), file, row.names = FALSE)
-    }
+    filename = function() paste0("Intervention_Meta_Dataset_", Sys.Date(), ".csv"),
+    content = function(file) write.csv(active_data(), file, row.names = FALSE)
   )
   
-  # Reactive Meta-Analysis Model (metafor)
+  # Continuous Covariates Dropdown for Meta-Regression
+  observe({
+    df <- active_data()
+    if (nrow(df) > 0) {
+      num_cols <- names(df)[sapply(df, is.numeric)]
+      valid_covars <- setdiff(num_cols, c("yi", "vi", "sei", "Year", "N_Intervention", "N_Control"))
+      if (length(valid_covars) > 0) {
+        choices <- c("Tanpa Kovariat Kontinu" = "none", valid_covars)
+      } else {
+        choices <- c("Tanpa Kovariat Kontinu" = "none")
+      }
+      updateSelectInput(session, "meta_continuous_covar", choices = choices)
+    }
+  })
+  
+  # Reactive Meta-Analysis Model
   meta_model <- reactive({
     df <- active_data()
     req(nrow(df) >= 2)
-    
     method <- input$meta_estimator
     conf_level <- as.numeric(input$conf_level)
-    mod_var <- input$mod_variable
+    covar <- input$meta_continuous_covar
     
-    if (mod_var != "none" && mod_var %in% colnames(df)) {
-      form <- as.formula(paste("~", mod_var))
-      res <- rma(
-        yi = yi,
-        vi = vi,
-        mods = form,
-        data = df,
-        method = method,
-        level = conf_level * 100
-      )
+    if (!is.null(covar) && covar != "none" && covar %in% colnames(df)) {
+      form <- as.formula(paste("~", covar))
+      res <- rma(yi = yi, vi = vi, mods = form, data = df, method = method, level = conf_level * 100)
     } else {
-      res <- rma(
-        yi = yi,
-        vi = vi,
-        data = df,
-        method = method,
-        level = conf_level * 100
-      )
+      res <- rma(yi = yi, vi = vi, data = df, method = method, level = conf_level * 100)
     }
     res
   })
   
-  # Value Boxes in Meta-Analysis Tab
+  # Tab 5: Value Boxes
   output$vb_pooled_es <- renderText({
     res <- tryCatch(meta_model(), error = function(e) NULL)
     if (is.null(res)) return("-")
     sprintf("%.3f [%.3f, %.3f]", res$b[1], res$ci.lb[1], res$ci.ub[1])
   })
-  
   output$vb_hetero_i2 <- renderText({
     res <- tryCatch(meta_model(), error = function(e) NULL)
     if (is.null(res)) return("-")
-    if (input$meta_estimator == "FE") return("N/A (Fixed-Effect)")
+    if (input$meta_estimator == "FE") return("N/A (FE)")
     sprintf("%.1f%% (Q = %.2f, p = %.4f)", res$I2, res$QE, res$QEp)
   })
-  
   output$vb_hetero_tau2 <- renderText({
     res <- tryCatch(meta_model(), error = function(e) NULL)
     if (is.null(res)) return("-")
-    if (input$meta_estimator == "FE") return("0 (Fixed-Effect)")
+    if (input$meta_estimator == "FE") return("0 (FE)")
     sprintf("%.4f (tau = %.3f)", res$tau2, sqrt(res$tau2))
   })
-  
   output$vb_pred_interval <- renderText({
     res <- tryCatch(meta_model(), error = function(e) NULL)
     if (is.null(res) || input$meta_estimator == "FE") return("N/A (FE Model)")
@@ -2025,7 +2065,6 @@ server <- function(input, output, session) {
     sprintf("[%.3f, %.3f]", pred$pi.lb, pred$pi.ub)
   })
   
-  # Model Summary Output
   output$meta_model_summary <- renderPrint({
     res <- tryCatch(meta_model(), error = function(e) e)
     if (inherits(res, "error")) {
@@ -2035,37 +2074,20 @@ server <- function(input, output, session) {
     }
   })
   
-  # Academic Interpretation Narrative
   output$meta_interpretation_text <- renderUI({
     res <- tryCatch(meta_model(), error = function(e) NULL)
-    if (is.null(res)) {
-      return(p("Model belum tersedia atau data belum mencukupi."))
-    }
+    if (is.null(res)) return(p("Model belum tersedia."))
     
-    df <- active_data()
     k <- res$k
     pooled_val <- res$b[1]
     ci_lb <- res$ci.lb[1]
     ci_ub <- res$ci.ub[1]
     pval <- res$pval[1]
-    
-    # Clinical magnitude
-    mag <- ifelse(abs(pooled_val) < 0.2, "dapat diabaikan",
-                  ifelse(abs(pooled_val) < 0.5, "kecil",
-                         ifelse(abs(pooled_val) < 0.8, "sedang", "besar")))
-    
-    # Statistical significance
+    mag <- ifelse(abs(pooled_val) < 0.2, "dapat diabaikan", ifelse(abs(pooled_val) < 0.5, "kecil", ifelse(abs(pooled_val) < 0.8, "sedang", "besar")))
     sig_text <- ifelse(pval < 0.05, "signifikan secara statistik", "tidak signifikan secara statistik")
-    
-    # Heterogeneity interpretation
     i2_val <- ifelse(is.null(res$I2), 0, res$I2)
-    hetero_level <- ifelse(i2_val < 25, "rendah (low)",
-                           ifelse(i2_val < 50, "moderat (moderate)",
-                                  ifelse(i2_val < 75, "substansial (substantial)", "tinggi (considerable)")))
-    
+    hetero_level <- ifelse(i2_val < 25, "rendah (low)", ifelse(i2_val < 50, "moderat (moderate)", ifelse(i2_val < 75, "substansial (substantial)", "tinggi (considerable)")))
     pred <- predict(res)
-    pi_lb <- pred$pi.lb
-    pi_ub <- pred$pi.ub
     
     tagList(
       h5("Sintesis Temuan Klinis & Implikasi Metodologis", class = "text-primary fw-bold"),
@@ -2088,255 +2110,108 @@ server <- function(input, output, session) {
       if (input$meta_estimator != "FE") {
         p(
           "Lebih lanjut, estimasi ", tags$em("95% Prediction Interval"), " berada pada rentang ",
-          strong(sprintf("[%.3f, %.3f]", pi_lb, pi_ub)), ". Hal tersebut mengindikasikan bahwa efektivitas intervensi klinis pada populasi studi sebanding di masa mendatang diproyeksikan berkisar dalam interval tersebut, ",
-          ifelse(pi_lb > 0, "menunjukkan konsistensi kemanfaatan intervensi yang kokoh pada implementasi riil.",
-                 "dengan kemungkinan ditemukannya studi baru yang menghasilkan efek nol atau tidak efektif pada setting klinis tertentu.")
+          strong(sprintf("[%.3f, %.3f]", pred$pi.lb, pred$pi.ub)), ". Hal tersebut mengindikasikan bahwa efektivitas intervensi klinis pada populasi studi sebanding di masa mendatang diproyeksikan berkisar dalam interval tersebut, ",
+          ifelse(pred$pi.lb > 0, "menunjukkan konsistensi kemanfaatan intervensi yang kokoh pada implementasi riil.",
+                 "dengan kemungkinan ditemukannya studi baru yang menghasilkan efek nol pada setting klinis tertentu.")
         )
       }
     )
   })
   
-  # Moderator / Subgroup Analysis UI
-  output$meta_moderator_ui <- renderUI({
+  output$meta_continuous_covar_ui <- renderUI({
+    covar <- input$meta_continuous_covar
     df <- active_data()
-    mod_var <- input$mod_variable
-    
-    if (mod_var == "none" || !mod_var %in% colnames(df)) {
+    if (is.null(covar) || covar == "none" || !covar %in% colnames(df)) {
       return(
         div(
-          class = "alert alert-info border",
-          h6(class = "fw-bold", icon("info-circle"), " Analisis Moderator Belum Diaktifkan"),
-          p("Silakan pilih salah satu variabel moderator studi psikologi pada bilah konfigurasi samping."),
-          p(
-            class = "mb-0 text-muted small",
-            "Variabel moderator penting dalam studi psikologi klinis mencakup: ",
-            tags$strong("Format Penghantaran"), " (Individual vs Kelompok vs Digital), ",
-            tags$strong("Tipe Kelompok Kontrol"), " (Waitlist vs TAU vs Placebo), ",
-            tags$strong("Pendekatan Terapi"), " (CBT vs ACT vs BA vs iCBT), ",
-            tags$strong("Populasi Sasaran"), " (Klinis vs Subklinis), ",
-            tags$strong("Kualifikasi Terapis"), ", ",
-            tags$strong("Risiko Bias Metodologis (RoB 2.0)"), ", serta ",
-            tags$strong("Durasi Terapi"), " (Minggu / Sesi)."
-          )
+          class = "alert alert-light border my-2",
+          h6(class = "fw-bold text-primary", icon("info-circle"), " Meta-Regresi Kontinu"),
+          p("Pilih variabel kontinu (misal: ", tags$strong("Duration_Weeks"), " atau ", tags$strong("Total_Sessions"), ") pada bilah samping untuk memodelkan hubungan linear kovariat dengan besaran efek intervensi.")
         )
       )
     }
     
-    res <- tryCatch(meta_model(), error = function(e) NULL)
-    if (is.null(res)) {
-      return(div(class = "alert alert-danger", "Gagal mengestimasi model meta-regresi."))
-    }
-    
-    is_num <- is.numeric(df[[mod_var]])
-    
-    qm_val <- sprintf("%.2f (df = %d, p = %.4f)", res$QM, res$QMdf[1], res$QMp)
-    qe_val <- sprintf("%.2f (df = %d, p = %.4f)", res$QE, res$QEdf, res$QEp)
-    r2_val <- ifelse(!is.null(res$R2), sprintf("%.2f%%", res$R2), "N/A")
-    
     tagList(
-      layout_columns(
-        col_widths = c(4, 4, 4),
-        value_box(
-          title = "Uji Omnibus Moderator (QM)",
-          value = qm_val,
-          showcase = icon("balance-scale"),
-          theme = ifelse(res$QMp < 0.05, "success", "secondary")
-        ),
-        value_box(
-          title = "Heterogenitas Residual (QE)",
-          value = qe_val,
-          showcase = icon("wave-square"),
-          theme = "info"
-        ),
-        value_box(
-          title = "Varians Dijelaskan (R^2)",
-          value = r2_val,
-          showcase = icon("chart-pie"),
-          theme = "warning"
-        )
-      ),
+      plotOutput("meta_regplot_display", height = "420px"),
       hr(),
-      if (!is_num) {
-        tagList(
-          h6(class = "fw-bold text-primary", icon("table"), " 1. Rangkuman Efek Subkelompok (Subgroup Breakdown Table):"),
-          tableOutput("table_subgroup_summary"),
-          hr()
-        )
-      } else {
-        tagList(
-          h6(class = "fw-bold text-primary", icon("chart-line"), " 1. Meta-Regression Bubble Plot (Ukuran Titik = Bobot Presisi):"),
-          plotOutput("meta_regplot_display", height = "420px"),
-          hr()
-        )
-      },
-      h6(class = "fw-bold text-dark", icon("terminal"), " 2. Hasil Estimasi Model Meta-Regresi Formal (metafor):"),
-      verbatimTextOutput("meta_moderator_print")
+      verbatimTextOutput("meta_covar_print")
     )
   })
   
-  # Subgroup Summary Table
-  output$table_subgroup_summary <- renderTable({
-    df <- active_data()
-    mod_var <- input$mod_variable
-    req(mod_var != "none", mod_var %in% colnames(df))
-    
-    categories <- sort(unique(df[[mod_var]]))
-    method <- input$meta_estimator
-    
-    res_list <- lapply(categories, function(cat_name) {
-      sub_df <- df[df[[mod_var]] == cat_name, ]
-      k_sub <- nrow(sub_df)
-      if (k_sub >= 2) {
-        sub_mod <- tryCatch(
-          rma(yi = yi, vi = vi, data = sub_df, method = method),
-          error = function(e) NULL
-        )
-        if (!is.null(sub_mod)) {
-          data.frame(
-            Subkelompok = as.character(cat_name),
-            k = as.character(k_sub),
-            `Pooled Hedges' g` = sprintf("%.3f", sub_mod$b[1]),
-            SE = sprintf("%.3f", sub_mod$se[1]),
-            `95% CI` = sprintf("[%.3f, %.3f]", sub_mod$ci.lb[1], sub_mod$ci.ub[1]),
-            `z-score` = sprintf("%.3f", sub_mod$zval[1]),
-            `p-value` = sprintf("%.4f", sub_mod$pval[1]),
-            `I^2 (%)` = sprintf("%.1f%%", sub_mod$I2),
-            `tau^2` = sprintf("%.4f", sub_mod$tau2),
-            check.names = FALSE,
-            stringsAsFactors = FALSE
-          )
-        } else {
-          NULL
-        }
-      } else {
-        data.frame(
-          Subkelompok = as.character(cat_name),
-          k = as.character(k_sub),
-          `Pooled Hedges' g` = sprintf("%.3f", sub_df$yi[1]),
-          SE = sprintf("%.3f", sqrt(sub_df$vi[1])),
-          `95% CI` = sprintf("[%.3f, %.3f]", sub_df$yi[1] - 1.96 * sqrt(sub_df$vi[1]), sub_df$yi[1] + 1.96 * sqrt(sub_df$vi[1])),
-          `z-score` = "-",
-          `p-value` = "-",
-          `I^2 (%)` = "N/A (k=1)",
-          `tau^2` = "N/A",
-          check.names = FALSE,
-          stringsAsFactors = FALSE
-        )
-      }
-    })
-    do.call(rbind, res_list)
-  }, striped = TRUE, hover = TRUE, bordered = TRUE)
-  
-  # Meta-Regression Bubble Plot
   output$meta_regplot_display <- renderPlot({
     df <- active_data()
-    mod_var <- input$mod_variable
-    req(mod_var != "none", mod_var %in% colnames(df))
-    req(is.numeric(df[[mod_var]]))
-    
+    covar <- input$meta_continuous_covar
+    req(covar != "none", covar %in% colnames(df))
     res <- tryCatch(meta_model(), error = function(e) NULL)
     req(!is.null(res))
     
-    x_var <- df[[mod_var]]
+    x_var <- df[[covar]]
     weights <- 1 / res$vi
     cex_scaled <- 1.0 + 3.0 * (weights - min(weights)) / (max(weights) - min(weights) + 1e-5)
-    
     x_seq <- seq(min(x_var, na.rm = TRUE), max(x_var, na.rm = TRUE), length.out = 100)
     preds <- predict(res, newmods = x_seq)
     
-    par(mar = c(5, 5, 3, 2))
+    par(mar = c(5, 5, 3, 2), bg = "#FFFFFF")
     plot(
       x_var, res$yi,
       pch = 21,
-      bg = rgb(101 / 255, 9 / 255, 21 / 255, 0.65),
+      bg = rgb(101/255, 9/255, 21/255, 0.65),
       col = "#650915",
       cex = cex_scaled,
-      xlab = paste("Variabel Moderator:", mod_var),
+      xlab = paste("Kovariat Kontinu:", covar),
       ylab = "Besaran Efek Intervensi (Hedges' g)",
       main = paste("Meta-Regression Bubble Plot (Ukuran Titik = Presisi Studi 1/vi)"),
       las = 1,
       bty = "l",
       ylim = c(min(c(res$yi, preds$ci.lb)) - 0.1, max(c(res$yi, preds$ci.ub)) + 0.1)
     )
-    polygon(
-      c(x_seq, rev(x_seq)),
-      c(preds$ci.lb, rev(preds$ci.ub)),
-      col = rgb(197 / 255, 160 / 255, 89 / 255, 0.25),
-      border = NA
-    )
+    polygon(c(x_seq, rev(x_seq)), c(preds$ci.lb, rev(preds$ci.ub)), col = rgb(197/255, 160/255, 89/255, 0.25), border = NA)
     lines(x_seq, preds$pred, col = "#650915", lwd = 2.5)
     grid(nx = NULL, ny = NULL, lty = 2, col = "#E5D3B3")
-    points(
-      x_var, res$yi,
-      pch = 21,
-      bg = rgb(101 / 255, 9 / 255, 21 / 255, 0.65),
-      col = "#650915",
-      cex = cex_scaled
-    )
+    points(x_var, res$yi, pch = 21, bg = rgb(101/255, 9/255, 21/255, 0.65), col = "#650915", cex = cex_scaled)
     abline(h = 0, lty = 3, col = "gray40")
   })
   
-  # Printout Meta-Regression
-  output$meta_moderator_print <- renderPrint({
+  output$meta_covar_print <- renderPrint({
     res <- tryCatch(meta_model(), error = function(e) e)
-    if (inherits(res, "error")) {
-      cat("Gagal menjalankan meta-regresi:\n", res$message)
-    } else {
-      print(res)
-    }
+    if (inherits(res, "error")) cat("Gagal menjalankan meta-regresi:\n", res$message) else print(res)
   })
   
-  # Tab 5: Analisis Subkelompok (Subgroup Analysis) Handlers
-  
-  # Subgroup Model Reactive
+  # Tab 6: Analisis Subkelompok (Subgroup Analysis)
   subgroup_models <- reactive({
     df <- active_data()
     req(nrow(df) >= 2)
     grp_var <- input$subgroup_var_select
     req(grp_var %in% colnames(df))
     
-    # Filter valid rows
     df_clean <- df[!is.na(df[[grp_var]]) & df[[grp_var]] != "", ]
     req(nrow(df_clean) >= 2)
     
     method <- input$meta_estimator
-    
-    # Overall pooled model
     res_all <- tryCatch(rma(yi = yi, vi = vi, data = df_clean, method = method), error = function(e) NULL)
     
-    # Omnibus moderator test (QB and QE)
     form <- as.formula(paste("~ factor(", grp_var, ")"))
     res_mod <- tryCatch(rma(yi = yi, vi = vi, mods = form, data = df_clean, method = method), error = function(e) NULL)
     
-    list(
-      data = df_clean,
-      grp_var = grp_var,
-      res_all = res_all,
-      res_mod = res_mod,
-      method = method
-    )
+    list(data = df_clean, grp_var = grp_var, res_all = res_all, res_mod = res_mod, method = method)
   })
   
-  # Value Boxes in Subgroup Analysis Tab
   output$vb_sub_qb <- renderText({
     m <- tryCatch(subgroup_models(), error = function(e) NULL)
     if (is.null(m) || is.null(m$res_mod)) return("-")
     sprintf("%.2f (df = %d, p = %.4f)", m$res_mod$QM, m$res_mod$QMdf[1], m$res_mod$QMp)
   })
-  
   output$vb_sub_qe <- renderText({
     m <- tryCatch(subgroup_models(), error = function(e) NULL)
     if (is.null(m) || is.null(m$res_mod)) return("-")
     sprintf("%.2f (df = %d, p = %.4f)", m$res_mod$QE, m$res_mod$QEdf, m$res_mod$QEp)
   })
-  
   output$vb_sub_r2 <- renderText({
     m <- tryCatch(subgroup_models(), error = function(e) NULL)
     if (is.null(m) || is.null(m$res_mod)) return("-")
     if (input$meta_estimator == "FE") return("N/A (FE)")
     if (!is.null(m$res_mod$R2) && !is.na(m$res_mod$R2)) sprintf("%.1f%%", m$res_mod$R2) else "0.0%"
   })
-  
   output$vb_sub_k_cats <- renderText({
     m <- tryCatch(subgroup_models(), error = function(e) NULL)
     if (is.null(m)) return("-")
@@ -2344,7 +2219,7 @@ server <- function(input, output, session) {
     sprintf("%d Kategori (k = %d)", length(cats), nrow(m$data))
   })
   
-  # Subgroup Forest Plot Rendering Helper
+  # Subgroup Forest Plot Internal Renderer
   render_subgroup_forest_internal <- function() {
     m <- subgroup_models()
     req(!is.null(m), !is.null(m$res_all))
@@ -2353,8 +2228,8 @@ server <- function(input, output, session) {
     grp_var <- m$grp_var
     method <- m$method
     
-    # Sort by group then effect size
-    df <- df[order(df[[grp_var]], df$yi, decreasing = FALSE), ]
+    ord_idx <- order(df[[grp_var]], df$yi, decreasing = FALSE)
+    df <- df[ord_idx, ]
     cats <- unique(df[[grp_var]])
     
     row_cursor <- 3
@@ -2362,9 +2237,9 @@ server <- function(input, output, session) {
     cat_header_rows <- list()
     study_rows <- numeric(nrow(df))
     
-    for (cat in rev(cats)) {
-      idx <- which(df[[grp_var]] == cat)
-      cat_poly_rows[[cat]] <- row_cursor
+    for (g_name in rev(cats)) {
+      idx <- which(df[[grp_var]] == g_name)
+      cat_poly_rows[[g_name]] <- row_cursor
       row_cursor <- row_cursor + 1
       
       for (i in seq_along(idx)) {
@@ -2372,13 +2247,12 @@ server <- function(input, output, session) {
         row_cursor <- row_cursor + 1
       }
       
-      cat_header_rows[[cat]] <- row_cursor
+      cat_header_rows[[g_name]] <- row_cursor
       row_cursor <- row_cursor + 2
     }
     
     top_row <- row_cursor
     
-    # Slabs
     if (grp_var == "Control_Type") {
       slabs <- paste0(df$Study, " (", df$Year, ") [", ifelse(df$Control_Type == "Active Control" & !is.na(df$Active_Comparator), df$Active_Comparator, df$Control_Type), "]")
     } else {
@@ -2387,12 +2261,13 @@ server <- function(input, output, session) {
     
     cex_val <- input$subgroup_forest_cex
     
+    par(mar = c(5, 5, 3, 2), bg = "#FFFFFF")
     forest(
       df$yi,
       df$vi,
       slab = slabs,
       rows = study_rows,
-      ylim = c(-1.5, top_row + 1),
+      ylim = c(-3.0, top_row + 1.5),
       xlab = "Besaran Efek Intervensi (Hedges' g)",
       header = c("Studi Primer & Subkelompok", "Hedges' g [95% CI]"),
       cex = cex_val,
@@ -2401,7 +2276,6 @@ server <- function(input, output, session) {
       alim = c(min(-0.5, min(df$yi - 1.96 * sqrt(df$vi)) - 0.2), max(1.5, max(df$yi + 1.96 * sqrt(df$vi)) + 0.2))
     )
     
-    # Add Overall Summary Diamond
     addpoly(
       m$res_all,
       row = 1,
@@ -2411,16 +2285,15 @@ server <- function(input, output, session) {
       border = "#650915"
     )
     
-    # Add Subgroup Summary Diamonds & Headers
-    for (cat in cats) {
-      idx <- which(df[[grp_var]] == cat)
+    for (g_name in cats) {
+      idx <- which(df[[grp_var]] == g_name)
       k_cat <- length(idx)
       sub_res <- rma(df$yi[idx], df$vi[idx], method = method)
       
       addpoly(
         sub_res,
-        row = cat_poly_rows[[cat]],
-        mlab = paste0("Subtotal: ", cat, " (k = ", k_cat, ")"),
+        row = cat_poly_rows[[g_name]],
+        mlab = paste0("Subtotal: ", g_name, " (k = ", k_cat, ")"),
         cex = cex_val,
         col = "#C5A059",
         border = "#650915"
@@ -2428,25 +2301,25 @@ server <- function(input, output, session) {
       
       text(
         par("usr")[1],
-        cat_header_rows[[cat]],
-        paste0("Subkelompok: ", cat, " (k = ", k_cat, ")"),
+        cat_header_rows[[g_name]],
+        paste0("Subkelompok: ", g_name, " (k = ", k_cat, ")"),
         font = 2,
         pos = 4,
-        cex = cex_val
+        cex = cex_val,
+        col = "#650915"
       )
     }
     
-    # Footer annotation
     if (!is.null(m$res_mod)) {
-      usr <- par("usr")
       text(
-        usr[1],
-        -0.8,
-        sprintf("Uji Beda Subkelompok (QB): QM = %.2f, df = %d, p = %.4f  |  Heterogenitas Residual (QE): QE = %.2f, p = %.4f",
+        par("usr")[1],
+        -1.8,
+        sprintf("Uji Beda Subkelompok (QB): QM = %.2f, df = %d, p = %.4f  |  Heterogenitas Residual: QE = %.2f, p = %.4f",
                 m$res_mod$QM, m$res_mod$QMdf[1], m$res_mod$QMp, m$res_mod$QE, m$res_mod$QEp),
         pos = 4,
         cex = cex_val * 0.85,
-        font = 3
+        font = 3,
+        col = "#5A4B4C"
       )
     }
   }
@@ -2455,11 +2328,8 @@ server <- function(input, output, session) {
     render_subgroup_forest_internal()
   })
   
-  # Download Subgroup Forest Plot PNG
   output$btn_dl_subgroup_png <- downloadHandler(
-    filename = function() {
-      paste0("Subgroup_Forest_Plot_", input$subgroup_var_select, "_", Sys.Date(), ".png")
-    },
+    filename = function() paste0("Subgroup_Forest_Plot_", input$subgroup_var_select, "_", Sys.Date(), ".png"),
     content = function(file) {
       png(file, width = 3000, height = 2400, res = 300)
       render_subgroup_forest_internal()
@@ -2467,11 +2337,8 @@ server <- function(input, output, session) {
     }
   )
   
-  # Download Subgroup Forest Plot PDF
   output$btn_dl_subgroup_pdf <- downloadHandler(
-    filename = function() {
-      paste0("Subgroup_Forest_Plot_", input$subgroup_var_select, "_", Sys.Date(), ".pdf")
-    },
+    filename = function() paste0("Subgroup_Forest_Plot_", input$subgroup_var_select, "_", Sys.Date(), ".pdf"),
     content = function(file) {
       pdf(file, width = 11, height = 8.5)
       render_subgroup_forest_internal()
@@ -2479,7 +2346,6 @@ server <- function(input, output, session) {
     }
   )
   
-  # Table Subgroup Comprehensive
   output$table_subgroup_comprehensive <- renderTable({
     m <- tryCatch(subgroup_models(), error = function(e) NULL)
     if (is.null(m)) return(data.frame(Status = "Data tidak mencukupi untuk analisis subkelompok."))
@@ -2497,7 +2363,6 @@ server <- function(input, output, session) {
       } else {
         "-"
       }
-      
       sub_res <- tryCatch(rma(yi = yi, vi = vi, data = sub_df, method = method), error = function(e) NULL)
       if (is.null(sub_res)) return(NULL)
       pred <- predict(sub_res)
@@ -2519,23 +2384,19 @@ server <- function(input, output, session) {
         stringsAsFactors = FALSE
       )
     })
-    
     do.call(rbind, res_list)
   }, striped = TRUE, hover = TRUE, bordered = TRUE)
   
-  # Subgroup Interpretation Narrative
   output$subgroup_interpretation_narrative <- renderUI({
     m <- tryCatch(subgroup_models(), error = function(e) NULL)
-    if (is.null(m) || is.null(m$res_mod)) {
-      return(p("Model subkelompok belum tersedia."))
-    }
+    if (is.null(m) || is.null(m$res_mod)) return(p("Model subkelompok belum tersedia."))
     
     df <- m$data
     grp_var <- m$grp_var
     res_mod <- m$res_mod
     cats <- sort(unique(df[[grp_var]]))
-    
     qb_sig <- res_mod$QMp < 0.05
+    
     qb_text <- if (qb_sig) {
       paste0(
         "Hasil uji omnibus moderator membuktikan adanya variasi besaran efek antar-subkelompok yang bermakna secara statistik (",
@@ -2558,11 +2419,7 @@ server <- function(input, output, session) {
       k_sub <- nrow(sub_df)
       sub_res <- tryCatch(rma(yi = yi, vi = vi, data = sub_df, method = m$method), error = function(e) NULL)
       if (is.null(sub_res)) return(NULL)
-      
-      mag <- ifelse(abs(sub_res$b[1]) < 0.2, "dapat diabaikan",
-                    ifelse(abs(sub_res$b[1]) < 0.5, "kecil",
-                           ifelse(abs(sub_res$b[1]) < 0.8, "sedang", "besar")))
-      
+      mag <- ifelse(abs(sub_res$b[1]) < 0.2, "dapat diabaikan", ifelse(abs(sub_res$b[1]) < 0.5, "kecil", ifelse(abs(sub_res$b[1]) < 0.8, "sedang", "besar")))
       tags$li(
         strong(paste0(cat, " (k = ", k_sub, "): ")),
         sprintf("Pooled Hedges' g = %.3f [%.3f, %.3f], p = %.4f (kategori efek %s). ", sub_res$b[1], sub_res$ci.lb[1], sub_res$ci.ub[1], sub_res$pval[1], mag),
@@ -2605,12 +2462,11 @@ server <- function(input, output, session) {
     )
   })
   
-  # Helper to Prepare Forest Plot Data & Object
+  # Tab 7: Forest Plot Internal Renderer
   render_forest_internal <- function() {
     df <- active_data()
     req(nrow(df) >= 2)
     
-    # Ordering
     if (input$forest_sort == "yi_asc") {
       df <- df[order(df$yi), ]
     } else if (input$forest_sort == "yi_desc") {
@@ -2627,23 +2483,14 @@ server <- function(input, output, session) {
       df <- df[order(df$Risk_of_Bias), ]
     }
     
-    # Fit model for ordered dataset
-    res <- rma(
-      yi = yi,
-      vi = vi,
-      data = df,
-      method = input$meta_estimator,
-      level = as.numeric(input$conf_level) * 100
-    )
+    res <- rma(yi = yi, vi = vi, data = df, method = input$meta_estimator, level = as.numeric(input$conf_level) * 100)
     
-    # Study labels
     if (input$forest_sort %in% c("format", "control", "interv", "rob")) {
       mod_tag <- switch(
         input$forest_sort,
         "format" = df$Format,
         "control" = ifelse(df$Control_Type == "Active Control" & "Active_Comparator" %in% colnames(df) & !is.na(df$Active_Comparator),
-                           paste0("Active: ", df$Active_Comparator),
-                           df$Control_Type),
+                           paste0("Active: ", df$Active_Comparator), df$Control_Type),
         "interv" = df$Intervention,
         "rob" = df$Risk_of_Bias
       )
@@ -2654,6 +2501,7 @@ server <- function(input, output, session) {
       slabs <- df$Study
     }
     
+    par(mar = c(5, 5, 3, 2), bg = "#FFFFFF")
     forest(
       res,
       slab = slabs,
@@ -2664,26 +2512,23 @@ server <- function(input, output, session) {
       showweights = input$forest_show_weights,
       cex = input$forest_cex,
       col = "#650915",
+      ylim = c(-3.0, nrow(df) + 3.5),
       alim = c(min(-0.5, min(df$yi - 1.96 * sqrt(df$vi)) - 0.2), max(1.5, max(df$yi + 1.96 * sqrt(df$vi)) + 0.2)),
       refline = 0
     )
     
-    # Axis sub-labels
+    # Safe Axis labels positioned inside plot bounds
     usr <- par("usr")
-    text(usr[1] + 0.2, usr[3] - 0.8, input$forest_label_left, pos = 4, cex = input$forest_cex * 0.85, font = 3)
-    text(usr[2] - 0.2, usr[3] - 0.8, input$forest_label_right, pos = 2, cex = input$forest_cex * 0.85, font = 3)
+    text(usr[1] + 0.1, -2.0, input$forest_label_left, pos = 4, cex = input$forest_cex * 0.85, font = 3, col = "#650915")
+    text(usr[2] - 0.1, -2.0, input$forest_label_right, pos = 2, cex = input$forest_cex * 0.85, font = 3, col = "#650915")
   }
   
-  # Render Forest Plot
   output$forest_plot_display <- renderPlot({
     render_forest_internal()
   })
   
-  # Download Forest Plot PNG
   output$btn_dl_forest_png <- downloadHandler(
-    filename = function() {
-      paste0("Forest_Plot_", Sys.Date(), ".png")
-    },
+    filename = function() paste0("Forest_Plot_", Sys.Date(), ".png"),
     content = function(file) {
       png(file, width = 2800, height = 2000, res = 300)
       render_forest_internal()
@@ -2691,11 +2536,8 @@ server <- function(input, output, session) {
     }
   )
   
-  # Download Forest Plot PDF
   output$btn_dl_forest_pdf <- downloadHandler(
-    filename = function() {
-      paste0("Forest_Plot_", Sys.Date(), ".pdf")
-    },
+    filename = function() paste0("Forest_Plot_", Sys.Date(), ".pdf"),
     content = function(file) {
       pdf(file, width = 10, height = 7.5)
       render_forest_internal()
@@ -2703,13 +2545,13 @@ server <- function(input, output, session) {
     }
   )
   
-  # Helper to Render Funnel Plot
+  # Tab 8: Funnel Plot Internal Renderer
   render_funnel_internal <- function() {
     df <- active_data()
     req(nrow(df) >= 2)
-    
     res <- rma(yi = yi, vi = vi, data = df, method = input$meta_estimator)
     
+    par(mar = c(5, 5, 3, 2), bg = "#FFFFFF")
     if (input$funnel_type == "contour") {
       funnel(
         res,
@@ -2729,16 +2571,12 @@ server <- function(input, output, session) {
     }
   }
   
-  # Render Funnel Plot
   output$funnel_plot_display <- renderPlot({
     render_funnel_internal()
   })
   
-  # Download Funnel PNG
   output$btn_dl_funnel_png <- downloadHandler(
-    filename = function() {
-      paste0("Funnel_Plot_", Sys.Date(), ".png")
-    },
+    filename = function() paste0("Funnel_Plot_", Sys.Date(), ".png"),
     content = function(file) {
       png(file, width = 2400, height = 1800, res = 300)
       render_funnel_internal()
@@ -2746,11 +2584,8 @@ server <- function(input, output, session) {
     }
   )
   
-  # Download Funnel PDF
   output$btn_dl_funnel_pdf <- downloadHandler(
-    filename = function() {
-      paste0("Funnel_Plot_", Sys.Date(), ".pdf")
-    },
+    filename = function() paste0("Funnel_Plot_", Sys.Date(), ".pdf"),
     content = function(file) {
       pdf(file, width = 8, height = 6)
       render_funnel_internal()
@@ -2758,20 +2593,17 @@ server <- function(input, output, session) {
     }
   )
   
-  # Egger's Test Table
+  # Publication Bias Tables
   output$table_egger_test <- renderTable({
     df <- active_data()
     req(nrow(df) >= 3)
     res <- tryCatch(rma(yi = yi, vi = vi, data = df, method = input$meta_estimator), error = function(e) NULL)
     if (is.null(res)) return(NULL)
-    
     eg <- tryCatch(regtest(res, model = "rma", predictor = "sei"), error = function(e) NULL)
-    if (is.null(eg)) {
-      return(data.frame(Status = "Uji Egger tidak dapat dikomputasi (k terlalu kecil)."))
-    }
+    if (is.null(eg)) return(data.frame(Status = "Uji Egger tidak dapat dikomputasi (k terlalu kecil)."))
     
     data.frame(
-      Metrik = c("Statistik Uji Asimetri (z)", "Nilai p (p-value)", "Estimasi Intersep / Limit (b0)", "Batas 95% CI Intersep", "Kesimpulan Bias Publikasi"),
+      Metrik = c("Statistik Uji Asimetri (z)", "Nilai p (p-value)", "Estimasi Intersep (b0)", "Batas 95% CI Intersep", "Kesimpulan Bias Publikasi"),
       Nilai = c(
         sprintf("%.3f", eg$zval),
         sprintf("%.4f", eg$pval),
@@ -2782,17 +2614,13 @@ server <- function(input, output, session) {
     )
   }, striped = TRUE, hover = TRUE, bordered = TRUE)
   
-  # Begg's Rank Test Table
   output$table_begg_test <- renderTable({
     df <- active_data()
     req(nrow(df) >= 3)
     res <- tryCatch(rma(yi = yi, vi = vi, data = df, method = input$meta_estimator), error = function(e) NULL)
     if (is.null(res)) return(NULL)
-    
     bg <- tryCatch(ranktest(res), error = function(e) NULL)
-    if (is.null(bg)) {
-      return(data.frame(Status = "Uji Begg tidak dapat dikomputasi."))
-    }
+    if (is.null(bg)) return(data.frame(Status = "Uji Begg tidak dapat dikomputasi."))
     
     data.frame(
       Metrik = c("Statistik Kendall's Tau", "Nilai p (p-value)", "Kesimpulan"),
@@ -2804,23 +2632,19 @@ server <- function(input, output, session) {
     )
   }, striped = TRUE, hover = TRUE, bordered = TRUE)
   
-  # Trim-and-Fill Summary Table
   output$table_trimfill_summary <- renderTable({
     df <- active_data()
     req(nrow(df) >= 3)
     res <- tryCatch(rma(yi = yi, vi = vi, data = df, method = input$meta_estimator), error = function(e) NULL)
     if (is.null(res)) return(NULL)
-    
     tf <- tryCatch(trimfill(res), error = function(e) NULL)
-    if (is.null(tf)) {
-      return(data.frame(Status = "Analisis Trim-and-Fill tidak dapat dijalankan."))
-    }
+    if (is.null(tf)) return(data.frame(Status = "Analisis Trim-and-Fill tidak dapat dijalankan."))
     
     data.frame(
       Parameter = c(
-        "Estimasi Jumlah Studi Hilang (k0)",
+        "Estimasi Studi Hilang (k0)",
         "Sisi Asimetri Imputasi",
-        "Pooled Effect Asli (Sebelum Disesuaikan)",
+        "Pooled Effect Asli (Sebelum Imputasi)",
         "Adjusted Pooled Effect (Setelah Imputasi)",
         "Pergeseran Besaran Efek"
       ),
