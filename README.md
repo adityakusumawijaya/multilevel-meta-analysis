@@ -8,7 +8,8 @@ Repositori ini menyediakan kerangka kerja analitis dan aplikasi interaktif berba
 
 ### A. Kalkulator Parameter Besaran Efek Intervensi (`esc`)
 Mendukung konversi langsung berbagai format pelaporan studi primer ke dalam metrik *standardized mean difference* (**Hedges' g** dengan koreksi bias sampel kecil, atau **Cohen's d**):
-- **Means & SDs**: Rata-rata dan standar deviasi kelompok intervensi vs kontrol.
+- **Pre-Post Eksperimen vs Kontrol (`esc_mean_gain`)**: Mendukung desain pengukuran berulang ganda (*mixed within-between design*): *pretest* dan *posttest* (mean & SD) untuk kelompok eksperimen dan kontrol, atau skor perolehan (*gain score*), disesuaikan dengan korelasi pre-post $r$.
+- **Means & SDs**: Rata-rata dan standar deviasi pascates kelompok intervensi vs kontrol.
 - **Means & SE**: Rata-rata dan standar error kelompok intervensi vs kontrol.
 - **Independent t-test**: Nilai statistik $t$ beserta ukuran sampel ($n_1, n_2$).
 - **Nilai p & Sampel**: Nilai signifikansi $p$ dua arah beserta arah efektivitas.

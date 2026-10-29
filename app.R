@@ -55,7 +55,8 @@ ui <- page_navbar(
           "input_type",
           "Bentuk Laporan Data Studi Primer:",
           choices = c(
-            "Rata-rata & Standar Deviasi (Means & SDs)" = "mean_sd",
+            "Pre-Post Eksperimen vs Kontrol (esc_mean_gain)" = "mean_gain",
+            "Rata-rata & Standar Deviasi Pascates (Means & SDs)" = "mean_sd",
             "Rata-rata & Standar Error (Means & SE)" = "mean_se",
             "Uji-t Dua Kelompok Independen" = "t_test",
             "Nilai p Dua Kelompok & Sampel" = "p_val",
@@ -63,10 +64,93 @@ ui <- page_navbar(
             "Tabel Kontingensi 2x2 (Biner/Proporsi)" = "table_2x2",
             "Koefisien Korelasi (r)" = "correlation"
           ),
-          selected = "mean_sd"
+          selected = "mean_gain"
         ),
         
         hr(),
+        
+        # Panel Input: Pre-Post Control-Experiment (esc_mean_gain)
+        conditionalPanel(
+          condition = "input.input_type == 'mean_gain'",
+          radioButtons(
+            "gain_sub_type",
+            "Pola Pelaporan Data Studi:",
+            choices = c(
+              "Nilai Pre & Post Lengkap (Mean & SD per Fase)" = "pre_post_full",
+              "Skor Perubahan / Gain Score Langsung (Mean & SD Gain)" = "gain_direct"
+            ),
+            selected = "pre_post_full"
+          ),
+          selectInput(
+            "gain_outcome_dir",
+            "Orientasi Pengukuran Efektivitas Klinis:",
+            choices = c(
+              "Skor Menurun = Perbaikan (Depresi, Kecemasan, Stres)" = "decrease_better",
+              "Skor Meningkat = Perbaikan (Kesejahteraan, Efikasi, Resiliensi)" = "increase_better"
+            )
+          ),
+          
+          # Sub-panel 1: Full Pre & Post
+          conditionalPanel(
+            condition = "input.gain_sub_type == 'pre_post_full'",
+            h6("Kelompok Eksperimen / Intervensi (Treatment):", class = "text-primary fw-bold"),
+            layout_columns(
+              col_widths = c(4, 4, 4),
+              numericInput("pre1_m", "Pre Mean", value = 28.4, step = 0.1),
+              numericInput("pre1_sd", "Pre SD", value = 5.2, min = 0.01, step = 0.1),
+              numericInput("pre1_n", "Ukuran n1", value = 40, min = 2, step = 1)
+            ),
+            layout_columns(
+              col_widths = c(6, 6),
+              numericInput("post1_m", "Post Mean", value = 16.2, step = 0.1),
+              numericInput("post1_sd", "Post SD", value = 4.8, min = 0.01, step = 0.1)
+            ),
+            h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
+            layout_columns(
+              col_widths = c(4, 4, 4),
+              numericInput("pre2_m", "Pre Mean", value = 27.9, step = 0.1),
+              numericInput("pre2_sd", "Pre SD", value = 5.0, min = 0.01, step = 0.1),
+              numericInput("pre2_n", "Ukuran n2", value = 40, min = 2, step = 1)
+            ),
+            layout_columns(
+              col_widths = c(6, 6),
+              numericInput("post2_m", "Post Mean", value = 24.1, step = 0.1),
+              numericInput("post2_sd", "Post SD", value = 5.1, min = 0.01, step = 0.1)
+            )
+          ),
+          
+          # Sub-panel 2: Direct Gain Score
+          conditionalPanel(
+            condition = "input.gain_sub_type == 'gain_direct'",
+            h6("Kelompok Eksperimen / Intervensi (Treatment):", class = "text-primary fw-bold"),
+            layout_columns(
+              col_widths = c(4, 4, 4),
+              numericInput("gain1_m", "Gain Mean", value = 12.2, step = 0.1),
+              numericInput("gain1_sd", "Gain SD", value = 4.5, min = 0.01, step = 0.1),
+              numericInput("gain1_n", "Ukuran n1", value = 40, min = 2, step = 1)
+            ),
+            h6("Kelompok Kontrol / Komparator:", class = "text-secondary fw-bold mt-2"),
+            layout_columns(
+              col_widths = c(4, 4, 4),
+              numericInput("gain2_m", "Gain Mean", value = 3.8, step = 0.1),
+              numericInput("gain2_sd", "Gain SD", value = 4.2, min = 0.01, step = 0.1),
+              numericInput("gain2_n", "Ukuran n2", value = 40, min = 2, step = 1)
+            )
+          ),
+          
+          numericInput(
+            "gain_r",
+            "Estimasi Korelasi Pre-Post (r):",
+            value = 0.50,
+            min = -0.99,
+            max = 0.99,
+            step = 0.05
+          ),
+          div(
+            class = "text-muted small mb-2",
+            "Korelasi pre-post diasumsikan r = 0.50 secara default (standar Rosenthal / Cochrane Handbook jika tidak dilaporkan pada artikel primer)."
+          )
+        ),
         
         # Panel Input: Means & SDs
         conditionalPanel(
@@ -262,6 +346,13 @@ ui <- page_navbar(
               tags$code("J(df) = 1 - (3 / (4*df - 1))"), " dengan derajat kebebasan ",
               tags$code("df = n1 + n2 - 2"), " guna menghasilkan ", tags$em("Hedges' g"),
               " sebagai estimator besaran efek yang tidak bias (", tags$em("unbiased estimator"), ")."
+            ),
+            p(
+              strong("Desain Eksperimen-Kontrol Pretest-Posttest (esc_mean_gain): "),
+              "Pada desain pengukuran berulang (", tags$em("mixed within-between design"), "), varians perubahan skor sangat bergantung pada korelasi antar-waktu (", tags$em("pre-post correlation r"), "). ",
+              "Fungsi ", tags$code("esc_mean_gain()"), " menghitung selisih perolehan rata-rata terstandarisasi (", tags$em("standardized mean gain difference"), ") ",
+              "yang disesuaikan dengan korelasi pre-post ", tags$code("r"), " (standar Morris, 2008 / Becker, 1988), ",
+              "sehingga varians sampling ", tags$code("vi"), " terestimasi secara presisi tanpa distorsi kovarians residual."
             )
           )
         )
@@ -682,7 +773,73 @@ server <- function(input, output, session) {
       itype <- input$input_type
       metric <- input$es_metric
       
-      if (itype == "mean_sd") {
+      if (itype == "mean_gain") {
+        gsub <- input$gain_sub_type
+        gdir <- input$gain_outcome_dir
+        r_val <- input$gain_r
+        
+        if (gsub == "pre_post_full") {
+          p1_m <- input$pre1_m
+          p1_sd <- input$pre1_sd
+          po1_m <- input$post1_m
+          po1_sd <- input$post1_sd
+          n1 <- input$pre1_n
+          
+          p2_m <- input$pre2_m
+          p2_sd <- input$pre2_sd
+          po2_m <- input$post2_m
+          po2_sd <- input$post2_sd
+          n2 <- input$pre2_n
+          
+          if (gdir == "decrease_better") {
+            # Reduksi simtom: pre - post adalah arah kemajuan positif
+            g1_m <- p1_m - po1_m
+            g2_m <- p2_m - po2_m
+          } else {
+            # Peningkatan atribut: post - pre adalah arah kemajuan positif
+            g1_m <- po1_m - p1_m
+            g2_m <- po2_m - p2_m
+          }
+          
+          res <- esc_mean_gain(
+            pre1mean = p1_m,
+            pre1sd = p1_sd,
+            post1mean = po1_m,
+            post1sd = po1_sd,
+            gain1mean = g1_m,
+            grp1n = n1,
+            pre2mean = p2_m,
+            pre2sd = p2_sd,
+            post2mean = po2_m,
+            post2sd = po2_sd,
+            gain2mean = g2_m,
+            grp2n = n2,
+            r = r_val,
+            es.type = metric
+          )
+        } else {
+          g1_m <- input$gain1_m
+          g1_sd <- input$gain1_sd
+          n1 <- input$gain1_n
+          
+          g2_m <- input$gain2_m
+          g2_sd <- input$gain2_sd
+          n2 <- input$gain2_n
+          
+          res <- esc_mean_gain(
+            gain1mean = g1_m,
+            gain1sd = g1_sd,
+            grp1n = n1,
+            gain2mean = g2_m,
+            gain2sd = g2_sd,
+            grp2n = n2,
+            grp1r = r_val,
+            grp2r = r_val,
+            r = r_val,
+            es.type = metric
+          )
+        }
+      } else if (itype == "mean_sd") {
         res <- esc_mean_sd(
           grp1m = input$grp1m_sd,
           grp1sd = input$grp1sd_sd,
@@ -764,14 +921,48 @@ server <- function(input, output, session) {
     }
     
     current_df <- active_data()
+    itype <- input$input_type
+    n1_val <- 50
+    n2_val <- 50
+    if (itype == "mean_gain") {
+      if (input$gain_sub_type == "pre_post_full") {
+        n1_val <- input$pre1_n
+        n2_val <- input$pre2_n
+      } else {
+        n1_val <- input$gain1_n
+        n2_val <- input$gain2_n
+      }
+    } else if (itype == "mean_sd") {
+      n1_val <- input$grp1n_sd
+      n2_val <- input$grp2n_sd
+    } else if (itype == "mean_se") {
+      n1_val <- input$grp1n_se
+      n2_val <- input$grp2n_se
+    } else if (itype == "t_test") {
+      n1_val <- input$t_n1
+      n2_val <- input$t_n2
+    } else if (itype == "p_val") {
+      n1_val <- input$p_n1
+      n2_val <- input$p_n2
+    } else if (itype == "f_test") {
+      n1_val <- input$f_n1
+      n2_val <- input$f_n2
+    } else if (itype == "table_2x2") {
+      n1_val <- input$tab_n1
+      n2_val <- input$tab_n2
+    } else if (itype == "correlation") {
+      n1_val <- round(input$corr_n / 2)
+      n2_val <- round(input$corr_n / 2)
+    }
+
     new_row <- data.frame(
       Study = input$study_name,
       Year = input$study_year,
       Intervention = input$study_interv,
       Format = input$study_format,
       Duration_Weeks = input$study_dur,
-      N_Intervention = ifelse(input$input_type == "mean_sd", input$grp1n_sd, 50),
-      N_Control = ifelse(input$input_type == "mean_sd", input$grp2n_sd, 50),
+      N_Intervention = n1_val,
+      N_Control = n2_val,
       yi = round(res$es, 4),
       vi = round(res$var, 5),
       sei = round(res$se, 4),
