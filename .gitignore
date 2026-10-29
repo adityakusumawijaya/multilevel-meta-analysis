@@ -1,0 +1,15 @@
+# History & workspace files
+.Rhistory
+.RData
+.Ruserdata
+
+# RStudio project files
+.Rproj.user/
+
+# Packages & builds
+*.tar.gz
+*.Rcheck/
+
+# OS specific
+.DS_Store
+Thumbs.db
