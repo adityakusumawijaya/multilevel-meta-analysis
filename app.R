@@ -65,7 +65,7 @@ ui <- page_navbar(
   id = "main_navbar",
   title = tags$div(
     class = "kawe-brand-horizontal",
-    tags$img(src = "kawe-icon-transparent.png", alt = "KAWE Icon", class = "kawe-icon"),
+    tags$img(src = "kawe-icon-light.png", alt = "KAWE Icon", class = "kawe-icon"),
     tags$div(class = "kawe-divider"),
     tags$div(
       class = "kawe-text-group",
@@ -153,20 +153,12 @@ ui <- page_navbar(
           margin: 1.25rem 0;
         }
 
-        /* Top Academic Press Banner */
-        .kawe-top-banner {
-          background-color: var(--kawe-maroon);
-          color: #FAF8F5;
-          border-bottom: 1px solid var(--kawe-gold);
-          font-size: 0.72rem;
-        }
-
-        /* Navbar Layout & Non-wrapping Protection */
+        /* Navbar Layout & Styling (Full Flat Maroon Header) */
         .navbar {
-          background-color: #FFFFFF !important;
-          border-bottom: 2px solid var(--kawe-maroon) !important;
-          box-shadow: 0 2px 8px rgba(101, 9, 21, 0.06);
-          padding: 0.35rem 1rem !important;
+          background-color: var(--kawe-maroon) !important;
+          border-bottom: 2px solid var(--kawe-gold) !important;
+          box-shadow: 0 4px 14px rgba(43, 24, 26, 0.25);
+          padding: 0.35rem 1.15rem !important;
         }
 
         /* Navbar Brand Horizontal (Icon Left, Divider, Text Right) */
@@ -174,7 +166,7 @@ ui <- page_navbar(
           display: inline-flex;
           align-items: center;
           gap: 0.75rem; /* Jarak proporsional antara ikon dan teks */
-          padding: 0.15rem 0.35rem;
+          padding: 0.10rem 0.25rem;
           background-color: transparent;
         }
 
@@ -182,14 +174,14 @@ ui <- page_navbar(
           height: 36px; /* Ukuran lebih kecil dan ramping untuk header navbar */
           width: auto;
           object-fit: contain;
-          filter: drop-shadow(0 1px 2px rgba(101, 9, 21, 0.15));
+          filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.40));
         }
 
         .kawe-divider {
           height: 28px;
           width: 1px;
           background-color: #C5A059; /* Antique Gold */
-          opacity: 0.50;
+          opacity: 0.60;
         }
 
         .kawe-text-group {
@@ -203,7 +195,7 @@ ui <- page_navbar(
           font-family: 'Cinzel', 'Cormorant Garamond', serif;
           font-size: 1.25rem;
           font-weight: 600;
-          color: #650915; /* Flat Maroon sesuai logo */
+          color: #FAF8F5 !important; /* Crisp Ivory White pada Maroon */
           letter-spacing: 0.20em;
           line-height: 1.0;
           margin-bottom: 0.05rem;
@@ -213,7 +205,7 @@ ui <- page_navbar(
           font-family: 'Cormorant Garamond', serif;
           font-size: 0.58rem;
           font-weight: 600;
-          color: #2B181A;
+          color: #E5D3B3 !important; /* Soft Antique Gold */
           letter-spacing: 0.12em;
           text-transform: uppercase;
           white-space: nowrap;
@@ -225,24 +217,30 @@ ui <- page_navbar(
           -webkit-overflow-scrolling: touch;
         }
 
-        .navbar .nav-link {
+        .navbar .nav-link, .navbar-nav .nav-link, .navbar-nav li a {
           font-family: var(--font-sans);
           font-size: 0.80rem !important;
           font-weight: 500;
-          color: var(--kawe-text-main) !important;
-          padding: 0.50rem 0.62rem !important;
+          color: #EAE0D8 !important; /* Soft ivory text pada latar marun */
+          padding: 0.50rem 0.65rem !important;
           border-bottom: 2px solid transparent;
           white-space: nowrap !important;
           transition: all 0.2s ease;
         }
 
-        .navbar .nav-link:hover {
-          color: var(--kawe-maroon) !important;
-          border-bottom: 2px solid var(--kawe-gold);
+        .navbar .nav-link:hover, .navbar-nav .nav-link:hover, .navbar-nav li a:hover {
+          color: #FFFFFF !important;
+          border-bottom: 2px solid var(--kawe-gold) !important;
+          background-color: rgba(255, 255, 255, 0.08) !important;
         }
 
-        .navbar .nav-link.active {
-          color: var(--kawe-maroon) !important;
+        .navbar .nav-link.active, .navbar-nav .nav-link.active, .navbar-nav li.active a {
+          color: #FFFFFF !important;
+          font-weight: 600;
+          border-bottom: 2px solid var(--kawe-gold) !important;
+          background-color: rgba(0, 0, 0, 0.20) !important;
+          border-radius: 3px 3px 0 0;
+        }
           font-weight: 600;
           border-bottom: 2px solid var(--kawe-maroon) !important;
           background-color: rgba(101, 9, 21, 0.04) !important;
@@ -425,19 +423,6 @@ ui <- page_navbar(
           letter-spacing: 0.05em;
         }
       "))
-    ),
-    tags$div(
-      class = "kawe-top-banner py-1 px-3 d-flex justify-content-between align-items-center flex-wrap",
-      tags$div(
-        class = "d-flex align-items-center",
-        tags$span(class = "text-uppercase fw-semibold me-2", style = "letter-spacing: 0.12em; font-size: 0.70rem; color: #C5A059;", "Evidence Synthesis & Psychometrics Laboratory"),
-        tags$span(class = "d-none d-md-inline", style = "font-size: 0.70rem; color: #E5D3B3;", "| Universitas Sanata Dharma · Universitas Gadjah Mada")
-      ),
-      tags$div(
-        class = "d-flex align-items-center",
-        tags$span(class = "active-data-pill me-3", uiOutput("top_active_data_pill", inline = TRUE)),
-        tags$span(style = "font-size: 0.70rem; letter-spacing: 0.08em; color: #FAF8F5;", "Aditya Kusumawijaya")
-      )
     )
   ),
   
