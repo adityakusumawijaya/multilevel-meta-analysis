@@ -101,7 +101,7 @@ forest(
   header = c("Studi Primer & Tahun", "Hedges' g [95% CI]"),
   addpred = TRUE,
   showweights = TRUE,
-  col = "#1e3a8a"
+  col = "#650915"
 )
 dev.off()
 
@@ -147,7 +147,7 @@ forest(
   xlab = "Besaran Efek Intervensi (Hedges' g)",
   header = c("Studi Primer & Subkelompok", "Hedges' g [95% CI]"),
   cex = 0.85,
-  col = "#1e3a8a",
+  col = "#650915",
   refline = 0,
   alim = c(min(-0.5, min(dat_ord$yi - 1.96 * sqrt(dat_ord$vi)) - 0.2), max(1.5, max(dat_ord$yi + 1.96 * sqrt(dat_ord$vi)) + 0.2))
 )
@@ -156,8 +156,8 @@ addpoly(
   row = 1,
   mlab = "Total Pooled (REML)",
   cex = 0.85,
-  col = "#1e3a8a",
-  border = "#1e3a8a"
+  col = "#650915",
+  border = "#650915"
 )
 for (cat in cats) {
   idx <- which(dat_ord$Control_Type == cat)
@@ -168,8 +168,8 @@ for (cat in cats) {
     row = cat_poly_rows[[cat]],
     mlab = paste0("Subtotal: ", cat, " (k = ", k_cat, ")"),
     cex = 0.85,
-    col = "#0284c7",
-    border = "#0284c7"
+    col = "#C5A059",
+    border = "#650915"
   )
   text(
     par("usr")[1],
@@ -201,7 +201,7 @@ png(
 funnel(
   mod.meta,
   level = c(90, 95, 99),
-  shade = c("white", "gray75", "gray90"),
+  shade = c("#FFFFFF", "#FAF8F5", "#F2EBE1"),
   refline = 0,
   legend = TRUE,
   xlab = "Besaran Efek Intervensi (Hedges' g)",
@@ -238,8 +238,8 @@ plot(
   dat$Duration_Weeks,
   mod.reg.dur$yi,
   pch = 21,
-  bg = rgb(30 / 255, 58 / 255, 138 / 255, 0.65),
-  col = "#1e3a8a",
+  bg = rgb(101 / 255, 9 / 255, 21 / 255, 0.70),
+  col = "#650915",
   cex = cex_scaled,
   xlab = "Durasi Intervensi (Minggu)",
   ylab = "Besaran Efek Intervensi (Hedges' g)",
@@ -250,30 +250,30 @@ plot(
 polygon(
   c(x_seq, rev(x_seq)),
   c(preds$ci.lb, rev(preds$ci.ub)),
-  col = rgb(219 / 255, 234 / 255, 254 / 255, 0.5),
-  border = NA
+  col = rgb(197 / 255, 160 / 255, 89 / 255, 0.25),
+  border = "#C5A059"
 )
 lines(
   x_seq,
   preds$pred,
-  col = "#dc2626",
+  col = "#650915",
   lwd = 2.5
 )
 grid(
   nx = NULL,
   ny = NULL,
   lty = 2,
-  col = "gray85"
+  col = "#E5D3B3"
 )
 points(
   dat$Duration_Weeks,
   mod.reg.dur$yi,
   pch = 21,
-  bg = rgb(30 / 255, 58 / 255, 138 / 255, 0.65),
-  col = "#1e3a8a",
+  bg = rgb(101 / 255, 9 / 255, 21 / 255, 0.70),
+  col = "#650915",
   cex = cex_scaled
 )
-abline(h = 0, lty = 3, col = "gray40")
+abline(h = 0, lty = 3, col = "#C5A059")
 dev.off()
 
 # Interactive plotting (VS Code / httpgd)

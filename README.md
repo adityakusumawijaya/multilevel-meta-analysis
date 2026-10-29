@@ -1,12 +1,33 @@
-# Multilevel & Intervention Meta-Analysis Platform
+# KAWE | Quantitative & Psychometric Research
+### Multilevel Clinical Meta-Analysis & Evidence Synthesis Studio
 
-Repositori ini menyediakan kerangka kerja analitis dan aplikasi interaktif berbasis **R Shiny** untuk estimasi besaran efek (*effect size*) studi primer dan sintesis bukti klinis (*meta-analysis*) pada uji coba intervensi psikologis/kesehatan mental. Platform ini mengintegrasikan paket `esc` untuk konversi metrik mikro, `metafor` untuk estimasi model meta-analisis efek acak (*random-effects*), serta antarmuka modern berbasis `bslib` dan visualisasi publikasi resolusi tinggi.
+Platform riset dan aplikasi interaktif berbasis **R Shiny** berstandar *academic research press* mewah (*Flat Maroon*, *Antique Gold*, dan *Crisp White*) untuk estimasi besaran efek (*effect size*) studi primer, rekayasa psikometrika, dan sintesis bukti klinis (*meta-analysis*) pada uji coba intervensi psikologis. Diarahkan oleh **Aditya Kusumawijaya, S.Psi** (Universitas Sanata Dharma · Universitas Gadjah Mada).
 
 ---
 
-## 1. Fitur Utama Aplikasi
+## 1. Identitas Visual & Estetika Akademis (KAWE Press Identity)
+Platform ini dibangun dengan mengadopsi estetika penerbitan akademik klasik (*luxury academic press*):
+- **Palet Warna Inti**:
+  - *Primary Brand (Flat Maroon)*: `#650915` (digunakan pada tajuk utama, tombol aksi primer, dan status aktif).
+  - *Secondary Accent (Antique Gold)*: `#C5A059` (aksen garis batas 1px, pembatas kurva psikometrika, lencana sekunder, dan efek hover).
+  - *Background Primary*: `#FFFFFF` (putih bersih) dan *Background Secondary*: `#FAF8F5` (nuansa kertas buku *warm ivory*).
+  - *Text Primary*: `#231618` (dark espresso/charcoal marun) dan *Text Muted*: `#5A4B4C`.
+- **Tipografi Klasik**:
+  - *Tajuk Utama & Logo Brand*: `Cinzel` & `Cormorant Garamond` (kapital penuh dengan spasi renggang *tracking-widest* `letter-spacing: 0.22em`).
+  - *Sub-tajuk & Tagline*: `Cormorant Garamond` & `EB Garamond` (`letter-spacing: 0.16em`).
+  - *Teks Tubuh*: `Inter` (sans-serif netral untuk keterbacaan tinggi).
+  - *Persamaan Matematika & Kode*: MathJax ($\LaTeX$) dan `JetBrains Mono`.
 
-### A. Kalkulator Parameter Besaran Efek Intervensi (`esc`)
+---
+
+## 2. Fitur Utama Studio
+
+### A. Portal Riset & Eksplorasi Psikometrika (Research Hub)
+- **Manifesto & Profil Laboratorium**: Memperkenalkan visi riset KAWE dalam rekayasa psikometrika terapan dan sintesis bukti berpresisi tinggi.
+- **Engine Distribusi Normal Interaktif**: Eksplorasi fungsi kerapatan probabilitas normal ($f(x)$ PDF) interaktif dengan visualisasi Flat Maroon & Antique Gold serta penyetaraan skala ($z$-score, $T$-score, Wechsler IQ).
+- **Empat Pilar Keunggulan Riset**: (1) Rekayasa Psikometrika & IRT; (2) Sintesis Bukti Klinis & IPD; (3) Invariansi Pengukuran & Deteksi Bias; (4) Komputasi Reproduksibel & Sains Terbuka.
+
+### B. Kalkulator Parameter Besaran Efek Intervensi (`esc`)
 Mendukung konversi langsung berbagai format pelaporan studi primer ke dalam metrik *standardized mean difference* (**Hedges' g** dengan koreksi bias sampel kecil, atau **Cohen's d**):
 - **Pre-Post Eksperimen vs Kontrol (`esc_mean_gain`)**: Mendukung desain pengukuran berulang ganda (*mixed within-between design*): *pretest* dan *posttest* (mean & SD) untuk kelompok eksperimen dan kontrol, atau skor perolehan (*gain score*), disesuaikan dengan korelasi pre-post $r$.
 - **Means & SDs**: Rata-rata dan standar deviasi pascates kelompok intervensi vs kontrol.

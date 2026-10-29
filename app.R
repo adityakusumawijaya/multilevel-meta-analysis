@@ -62,58 +62,515 @@ create_calc_sample_batch <- function() {
 
 # UI Definition
 ui <- page_navbar(
-  title = "Kawe Meta Analysis",
+  title = tags$div(
+    class = "d-flex align-items-center",
+    tags$img(src = "kawe-logo-transparent.png", height = "38px", class = "me-2", style = "filter: drop-shadow(0 1px 3px rgba(101,9,21,0.15));"),
+    tags$div(
+      tags$span(class = "brand-title-nav", "KAWE"),
+      tags$span(class = "brand-subtitle-nav", "QUANTITATIVE & PSYCHOMETRIC RESEARCH")
+    )
+  ),
   theme = bs_theme(
     version = 5,
-    bootswatch = "flatly",
-    primary = "#1e3a8a",
-    secondary = "#475569",
-    success = "#059669",
-    info = "#0284c7",
-    warning = "#d97706",
-    danger = "#dc2626"
+    bg = "#FFFFFF",
+    fg = "#231618",
+    primary = "#650915",
+    secondary = "#C5A059",
+    success = "#650915",
+    info = "#C5A059",
+    warning = "#800020",
+    danger = "#4A050D"
   ),
   header = tagList(
     tags$head(
       tags$link(rel = "shortcut icon", href = "favicon.svg", type = "image/svg+xml"),
       tags$style(HTML("
-        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
-        .lab-subtitle {
-          font-size: 0.72rem;
-          color: #94a3b8;
-          font-weight: 400;
+        /* Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        :root {
+          /* Palet Warna Exact dari Logo KAWE */
+          --kawe-maroon: #650915;       /* Warna merah marun gelap pada huruf KAWE & kurva */
+          --kawe-maroon-deep: #4A050D;  /* Untuk efek hover tombol */
+          --kawe-maroon-light: #7E0D1B; /* Aksen marun terang */
+          --kawe-gold: #C5A059;         /* Warna Antique Gold pada bayangan Psi & kurva */
+          --kawe-gold-light: #E5D3B3;   /* Untuk garis batas (border) tipis */
+          --kawe-gold-trans: rgba(197, 160, 89, 0.40); /* Transparan 40% */
+          --kawe-bg-white: #FFFFFF;     /* Latar belakang utama */
+          --kawe-bg-paper: #FAF8F5;     /* Latar sekunder (nuansa kertas buku / ivory) */
+          --kawe-text-main: #231618;    /* Warna teks paragraf (dark espresso) */
+          --kawe-text-muted: #5A4B4C;   /* Warna sub-teks */
+
+          /* Tipografi */
+          --font-logo: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+          --font-serif: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+          --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        body {
+          background-color: var(--kawe-bg-white);
+          color: var(--kawe-text-main);
+          font-family: var(--font-sans);
+          line-height: 1.7;
+        }
+
+        /* Headings */
+        h1, h2, h3, .brand-title {
+          font-family: var(--font-logo) !important;
+          color: var(--kawe-maroon) !important;
+          text-transform: uppercase;
+          letter-spacing: 0.20em;
+          font-weight: 600;
+        }
+
+        h4, h5, h6 {
+          font-family: var(--font-serif) !important;
+          color: var(--kawe-maroon) !important;
+          letter-spacing: 0.08em;
+          font-weight: 600;
+        }
+
+        /* Subtitles & Taglines */
+        .brand-subtitle {
+          font-family: var(--font-serif) !important;
+          color: var(--kawe-gold) !important;
+          text-transform: uppercase;
+          letter-spacing: 0.16em;
+          font-size: 0.90rem;
+          font-weight: 600;
+        }
+
+        /* Dividers */
+        hr, .gold-divider {
+          border: 0 !important;
+          border-top: 1px solid var(--kawe-gold) !important;
+          opacity: 0.55;
+          margin: 1.5rem 0;
+        }
+
+        /* Top Academic Press Banner */
+        .kawe-top-banner {
+          background-color: var(--kawe-maroon);
+          color: #FAF8F5;
+          border-bottom: 1px solid var(--kawe-gold);
+          font-size: 0.74rem;
+        }
+
+        /* Navbar Custom Styling */
+        .navbar {
+          background-color: #FFFFFF !important;
+          border-bottom: 2px solid var(--kawe-maroon) !important;
+          box-shadow: 0 2px 10px rgba(101, 9, 21, 0.05);
+          padding: 0.5rem 1.25rem !important;
+        }
+
+        .brand-title-nav {
+          font-family: var(--font-logo);
+          color: var(--kawe-maroon);
+          font-size: 1.22rem;
+          font-weight: 700;
+          letter-spacing: 0.22em;
+          line-height: 1.1;
+          display: block;
+        }
+
+        .brand-subtitle-nav {
+          font-family: var(--font-serif);
+          color: var(--kawe-gold);
+          font-size: 0.65rem;
+          letter-spacing: 0.16em;
+          font-weight: 600;
+          text-transform: uppercase;
           display: block;
           margin-top: 1px;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
         }
-        .nav-item a.nav-link { font-size: 0.88rem; }
-        .card-header { font-size: 0.92rem; }
-        .sidebar-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
-        .value-box-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .value-box-value { font-size: 1.25rem; }
+
+        .navbar .nav-link {
+          font-family: var(--font-sans);
+          font-size: 0.84rem;
+          font-weight: 500;
+          color: var(--kawe-text-main) !important;
+          padding: 0.55rem 0.80rem !important;
+          border-bottom: 2px solid transparent;
+          transition: all 0.2s ease;
+        }
+
+        .navbar .nav-link:hover {
+          color: var(--kawe-maroon) !important;
+          border-bottom: 2px solid var(--kawe-gold);
+        }
+
+        .navbar .nav-link.active {
+          color: var(--kawe-maroon) !important;
+          font-weight: 600;
+          border-bottom: 2px solid var(--kawe-maroon) !important;
+          background-color: rgba(101, 9, 21, 0.03) !important;
+        }
+
+        /* Cards & Containers */
+        .card {
+          background-color: var(--kawe-bg-paper) !important;
+          border: 1px solid var(--kawe-gold-trans) !important;
+          border-radius: 4px !important;
+          box-shadow: none !important;
+        }
+
+        .card-header {
+          background-color: #FAF8F5 !important;
+          border-bottom: 1px solid var(--kawe-gold-trans) !important;
+          color: var(--kawe-maroon) !important;
+          font-family: var(--font-serif);
+          font-weight: 600;
+          letter-spacing: 0.05em;
+        }
+
+        /* Buttons */
+        .btn-primary {
+          background-color: var(--kawe-maroon) !important;
+          border: 1px solid var(--kawe-gold) !important;
+          color: #FFFFFF !important;
+          font-weight: 500;
+          letter-spacing: 0.04em;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+          background-color: var(--kawe-maroon-deep) !important;
+          border-color: #FFFFFF !important;
+          box-shadow: 0 0 0 0.2rem rgba(197, 160, 89, 0.25);
+        }
+
+        .btn-outline-primary {
+          color: var(--kawe-maroon) !important;
+          border-color: var(--kawe-maroon) !important;
+          background-color: transparent !important;
+          border-radius: 4px;
+        }
+
+        .btn-outline-primary:hover {
+          background-color: var(--kawe-maroon) !important;
+          color: #FFFFFF !important;
+        }
+
+        .btn-success {
+          background-color: var(--kawe-maroon) !important;
+          border: 1px solid var(--kawe-gold) !important;
+          color: #FFFFFF !important;
+          border-radius: 4px;
+        }
+
+        .btn-success:hover {
+          background-color: var(--kawe-maroon-deep) !important;
+        }
+
+        /* Value Boxes */
+        .value-box {
+          border: 1px solid var(--kawe-gold-trans) !important;
+          border-radius: 4px !important;
+        }
+
+        .value-box.bg-primary {
+          background-color: var(--kawe-maroon) !important;
+          color: #FAF8F5 !important;
+        }
+
+        .value-box.bg-secondary, .value-box.bg-info, .value-box.bg-warning {
+          background-color: var(--kawe-bg-paper) !important;
+          color: var(--kawe-maroon) !important;
+          border: 1px solid var(--kawe-gold) !important;
+        }
+
+        .value-box-title {
+          font-family: var(--font-serif) !important;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-size: 0.74rem;
+          color: var(--kawe-gold) !important;
+        }
+
+        .value-box-value {
+          font-family: var(--font-logo) !important;
+          font-weight: 600;
+          color: #FAF8F5 !important;
+        }
+
+        .value-box.bg-secondary .value-box-value, 
+        .value-box.bg-info .value-box-value,
+        .value-box.bg-warning .value-box-value {
+          color: var(--kawe-maroon) !important;
+        }
+
+        /* Badges */
+        .badge.bg-primary {
+          background-color: var(--kawe-maroon) !important;
+          color: #FFFFFF !important;
+          border: 1px solid var(--kawe-gold);
+        }
+
+        .badge.bg-secondary {
+          background-color: #FAF8F5 !important;
+          color: var(--kawe-maroon) !important;
+          border: 1px solid var(--kawe-gold);
+        }
+
+        /* Code & Pre */
+        code, pre {
+          font-family: var(--font-mono);
+          background-color: #F4EFEB;
+          color: var(--kawe-maroon);
+          border-radius: 3px;
+        }
+
+        /* Tables */
+        table.dataTable thead th {
+          background-color: var(--kawe-maroon) !important;
+          color: #FFFFFF !important;
+          font-family: var(--font-serif) !important;
+          letter-spacing: 0.05em;
+          border-bottom: 2px solid var(--kawe-gold) !important;
+        }
+
+        table.dataTable tbody tr:hover {
+          background-color: #F7F3EE !important;
+        }
+
+        /* Research Portal Specific Styling */
+        .kawe-hero-card {
+          background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);
+          border: 1px solid var(--kawe-gold-trans);
+          border-radius: 4px;
+          padding: 2.5rem 2rem;
+          text-align: center;
+        }
+
+        .kawe-pillar-card {
+          background-color: #FFFFFF;
+          border: 1px solid var(--kawe-gold-trans);
+          border-top: 3px solid var(--kawe-maroon);
+          border-radius: 4px;
+          padding: 1.5rem;
+          height: 100%;
+          transition: all 0.25s ease;
+        }
+
+        .kawe-pillar-card:hover {
+          border-top-color: var(--kawe-gold);
+          box-shadow: 0 4px 14px rgba(101, 9, 21, 0.08);
+        }
       "))
     ),
     tags$div(
-      class = "bg-primary text-white py-1 px-3 d-flex justify-content-between align-items-center",
-      tags$span(
-        class = "fw-bold",
-        style = "font-size: 0.82rem; letter-spacing: 1px;",
-        "KAWE",
-        tags$span(
-          class = "ms-2",
-          style = "font-size: 0.7rem; font-weight: 400; color: #bfdbfe;",
-          "| Quantitative & Psychometric Research"
-        )
+      class = "kawe-top-banner py-1 px-4 d-flex justify-content-between align-items-center",
+      tags$div(
+        tags$span(class = "text-uppercase fw-semibold me-2", style = "letter-spacing: 0.15em; font-size: 0.72rem; color: #C5A059;", "Evidence Synthesis & Psychometrics Laboratory"),
+        tags$span(style = "font-size: 0.72rem; color: #E5D3B3;", "| Universitas Sanata Dharma · Universitas Gadjah Mada")
       ),
-      tags$span(
-        style = "font-size: 0.7rem; color: #bfdbfe;",
-        "Meta-Analysis & Effect Size Estimation Studio"
+      tags$div(
+        tags$span(style = "font-size: 0.72rem; letter-spacing: 0.1em; color: #FAF8F5;", "Aditya Kusumawijaya, S.Psi — Principal Investigator")
       )
     )
   ),
   
-  # Tab 1: Kalkulator Effect Size
+  # Tab 1: Research Hub & Academic Portal
+  nav_panel(
+    icon = icon("university"),
+    title = "Research Hub & Portal",
+    withMathJax(),
+    
+    # Hero Section
+    div(
+      class = "kawe-hero-card my-3",
+      img(src = "kawe-logo-transparent.png", style = "max-height: 150px; margin-bottom: 1.5rem; filter: drop-shadow(0 2px 8px rgba(101, 9, 21, 0.08));"),
+      h1(class = "brand-title display-5 mb-2", "KAWE"),
+      div(class = "brand-subtitle mb-3", "QUANTITATIVE & PSYCHOMETRIC RESEARCH"),
+      div(
+        class = "text-uppercase fw-semibold",
+        style = "letter-spacing: 0.18em; font-size: 0.85rem; color: #231618;",
+        "Aditya Kusumawijaya, S.Psi — Principal Investigator"
+      ),
+      div(
+        style = "font-family: var(--font-serif); font-size: 1rem; color: #5A4B4C; font-style: italic; margin-top: 0.25rem;",
+        "Universitas Sanata Dharma · Universitas Gadjah Mada"
+      ),
+      div(class = "gold-divider w-50 mx-auto my-4"),
+      p(
+        class = "lead mx-auto text-dark",
+        style = "max-width: 860px; font-size: 1.05rem; line-height: 1.8;",
+        "Laboratorium riset independen yang mendedikasikan diri pada pengembangan metodologi psikometrika terapan, pemodelan variabel laten tingkat lanjut, evaluasi invariansi pengukuran, serta sintesis bukti klinis berpresisi tinggi (",
+        tags$em("Individual Participant Data & Multilevel Meta-Analysis"),
+        ") guna memajukan praktik berbasis bukti (", tags$em("Evidence-Based Practice"), ") yang terbebas dari distorsi pengukuran."
+      )
+    ),
+    
+    # Interactive Psychometric Normal Engine Section
+    card(
+      class = "mb-4",
+      card_header(
+        class = "d-flex justify-content-between align-items-center",
+        span(icon("chart-area"), " Eksplorasi Teori Distribusi & Metrik Psikometrika"),
+        span(class = "badge bg-primary", "Interaktif · KAWE Psychometric Engine")
+      ),
+      card_body(
+        layout_columns(
+          col_widths = c(4, 8),
+          div(
+            h5("Parameter Kurva Normal:", class = "fw-bold text-primary mb-3"),
+            sliderInput("demo_mu", "Rata-rata Populasi (μ):", min = -2.0, max = 2.0, value = 0.0, step = 0.25),
+            sliderInput("demo_sigma", "Standar Deviasi (σ):", min = 0.5, max = 2.0, value = 1.0, step = 0.1),
+            checkboxInput("demo_show_zones", "Tampilkan Zona Standar Deviasi (±1σ & ±2σ)", value = TRUE),
+            checkboxInput("demo_show_scales", "Tampilkan Skala Penyetaraan (z, T-score, IQ)", value = TRUE),
+            hr(class = "my-3"),
+            h6("Fungsi Kerapatan Probabilitas Normal (PDF):", class = "fw-bold text-dark"),
+            div(
+              class = "p-3 bg-white rounded border",
+              style = "border-color: #E5D3B3 !important; font-size: 0.95rem;",
+              "$$f(x) = \\frac{1}{\\sigma \\sqrt{2\\pi}} \\exp\\left( -\\frac{1}{2}\\left( \\frac{x - \\mu}{\\sigma} \\right)^2 \\right)$$"
+            ),
+            p(
+              class = "text-muted small mt-2",
+              "Kurva normal bell-curve di atas menjadi fondasi teoritis penyetaraan skor laten (", tags$em("latent trait theta"), ") pada pemodelan IRT dan metrik besaran efek terstandarisasi (", tags$em("Hedges' g"), ")."
+            )
+          ),
+          div(
+            plotOutput("kawe_normal_demo_plot", height = "390px")
+          )
+        )
+      )
+    ),
+    
+    # Four Pillars of Research Section
+    div(
+      class = "mb-4",
+      div(
+        class = "text-center mb-4",
+        h3("Pilar Keunggulan Riset & Paradigma Keilmuan", class = "brand-title"),
+        div(class = "brand-subtitle", "RESEARCH PILLARS & METHODOLOGICAL FOUNDATIONS")
+      ),
+      layout_columns(
+        col_widths = c(3, 3, 3, 3),
+        div(
+          class = "kawe-pillar-card",
+          h5("I. Rekayasa Psikometrika & IRT", class = "fw-bold text-primary mb-2"),
+          p(
+            class = "small text-muted mb-0",
+            "Pemodelan Rasch dikotomi dan politomi (RSM/PCM), pengujian asumsi unidimensionalitas (Martin-Löf Test), evaluasi kesesuaian responden (person-fit), dan kalibrasi parameter butir berbasis Conditional Maximum Likelihood (CML)."
+          )
+        ),
+        div(
+          class = "kawe-pillar-card",
+          h5("II. Sintesis Bukti Klinis & IPD", class = "fw-bold text-primary mb-2"),
+          p(
+            class = "small text-muted mb-0",
+            "Sintesis bukti intervensi psikologis berpresisi tinggi berbasis Individual Participant Data (IPD), pemodelan efek acak multilevel (metafor), dan pelaporan Prediction Interval (PI) guna memproyeksikan rentang efektivitas riil."
+          )
+        ),
+        div(
+          class = "kawe-pillar-card",
+          h5("III. Invariansi & Deteksi Bias", class = "fw-bold text-primary mb-2"),
+          p(
+            class = "small text-muted mb-0",
+            "Identifikasi keberfungsian butir diferensial (DIF), evaluasi asimetri corong melalui Contour-Enhanced Funnel Plot, uji formal Egger/Begg, serta koreksi pemotongan studi melalui algoritma Trim and Fill."
+          )
+        ),
+        div(
+          class = "kawe-pillar-card",
+          h5("IV. Komputasi Reproduksibel", class = "fw-bold text-primary mb-2"),
+          p(
+            class = "small text-muted mb-0",
+            "Penerapan standar open science dengan kode R modular, lingkungan analisis interaktif (radian/httpgd), struktur repositori terstandarisasi SSH, serta ekspor visualisasi resolusi tinggi (300 DPI)."
+          )
+        )
+      )
+    ),
+    
+    # Studio Workflow & Gateway Table
+    card(
+      class = "mb-4",
+      card_header(
+        span(icon("compass"), " Panduan Alur Kerja Meta-Analysis Studio")
+      ),
+      card_body(
+        p("Gunakan bilah navigasi di atas untuk mengakses seluruh modul analitis terintegrasi:"),
+        tags$div(
+          class = "table-responsive",
+          tags$table(
+            class = "table table-hover align-middle",
+            style = "font-size: 0.9rem;",
+            tags$thead(
+              tags$tr(
+                tags$th(style = "width: 25%;", "Modul Studio"),
+                tags$th(style = "width: 45%;", "Fungsi Metodologis & Landasan Teori"),
+                tags$th(style = "width: 30%;", "Luaran Analitis Utama")
+              )
+            ),
+            tags$tbody(
+              tags$tr(
+                tags$td(strong(icon("calculator"), " Kalkulator Effect Size")),
+                tags$td("Mengkonversi berbagai format laporan data primer (pre-post ganda esc_mean_gain, means/SD, uji-t, data biner) ke Hedges' g tidak bias."),
+                tags$td(span(class = "badge bg-primary", "Estimasi Hedges' g & vi"))
+              ),
+              tags$tr(
+                tags$td(strong(icon("layer-group"), " Gabungan Hasil Kalkulator")),
+                tags$td("Mengkompilasi hasil perhitungan studi primer dari kalkulator ke dalam satu matriks untuk langsung dikirim dan dianalisis."),
+                tags$td(span(class = "badge bg-secondary", "Matriks Kompilasi & Ekspor CSV"))
+              ),
+              tags$tr(
+                tags$td(strong(icon("table"), " Dataset Sintesis Bukti")),
+                tags$td("Memuat benchmark 14 uji klinis acak (RCT) atau mengunggah data mandiri (.csv/.xlsx) lengkap dengan variabel moderator psikologi."),
+                tags$td(span(class = "badge bg-secondary", "Matriks Data Primer Aktif"))
+              ),
+              tags$tr(
+                tags$td(strong(icon("chart-pie"), " Pemodelan Meta-Analisis")),
+                tags$td("Estimasi model efek acak (REML, DL, ML, PM), uji heterogenitas Cochran Q, tau^2, I^2, dan 95% Prediction Interval."),
+                tags$td(span(class = "badge bg-primary", "Pooled Effect & Prediksi Klinis"))
+              ),
+              tags$tr(
+                tags$td(strong(icon("object-group"), " Analisis Subkelompok")),
+                tags$td("Komparasi efektivitas antar-kategori (Tipe Kontrol, Format, Intervensi, RoB) lengkap dengan uji QB, heterogenitas QE, dan R^2."),
+                tags$td(span(class = "badge bg-primary", "Subgroup Forest & Tabel Komparasi"))
+              ),
+              tags$tr(
+                tags$td(strong(icon("tree"), " Forest Plot Publikasi")),
+                tags$td("Visualisasi forest plot berstandar publikasi dengan intan efek gabungan, interval prediksi, dan pengurutan studi interaktif."),
+                tags$td(span(class = "badge bg-secondary", "Gambar Ekspor PNG 300 DPI & PDF"))
+              ),
+              tags$tr(
+                tags$td(strong(icon("shield-alt"), " Diagnostik Bias Corong")),
+                tags$td("Contour-enhanced funnel plot, uji regresi linier Egger, uji Begg, dan analisis imputasi Trim and Fill (Duval & Tweedie)."),
+                tags$td(span(class = "badge bg-primary", "Evaluasi Bias & Efek Disesuaikan"))
+              ),
+              tags$tr(
+                tags$td(strong(icon("book"), " Pedoman Metodologis")),
+                tags$td("Kaidah penulisan ilmiah dan sintesis bukti berstandar Cochrane Handbook, PRISMA 2020, dan APA 7th Edition."),
+                tags$td(span(class = "badge bg-secondary", "Dokumentasi & Referensi Baku"))
+              )
+            )
+          )
+        )
+      )
+    ),
+    
+    # Academic Press Footer
+    div(
+      class = "text-center py-4 my-2 border-top",
+      style = "border-color: #E5D3B3 !important;",
+      div(
+        class = "brand-title text-muted mb-1",
+        style = "font-size: 0.95rem; letter-spacing: 0.2em;",
+        "KAWE | QUANTITATIVE & PSYCHOMETRIC RESEARCH"
+      ),
+      div(
+        class = "small text-muted",
+        "Directed by Aditya Kusumawijaya, S.Psi · Evidence Synthesis & Psychometric Laboratory",
+        br(),
+        "Universitas Sanata Dharma · Universitas Gadjah Mada · Yogyakarta, Indonesia"
+      )
+    )
+  ),
+  
+  # Tab 2: Kalkulator Effect Size
   nav_panel(
     icon = icon("calculator"),
     title = "Kalkulator Effect Size",
@@ -904,6 +1361,79 @@ ui <- page_navbar(
 
 # Server Logic
 server <- function(input, output, session) {
+  
+  # Tab 1: Research Hub Normal Distribution Engine
+  output$kawe_normal_demo_plot <- renderPlot({
+    mu_val <- input$demo_mu
+    sigma_val <- input$demo_sigma
+    show_zones <- input$demo_show_zones
+    show_scales <- input$demo_show_scales
+    
+    x <- seq(mu_val - 4 * sigma_val, mu_val + 4 * sigma_val, length.out = 500)
+    y <- dnorm(x, mean = mu_val, sd = sigma_val)
+    
+    par(mar = c(4.8, 4.5, 2.8, 1.5), bg = "#FFFFFF")
+    plot(
+      x, y, type = "n",
+      xlab = "Psychometric Theta Scale / Latent Metric (x)",
+      ylab = "Probability Density f(x)",
+      main = "Normal Distribution Metric — KAWE Psychometric Engine",
+      bty = "l",
+      las = 1,
+      col.axis = "#231618",
+      col.lab = "#650915",
+      col.main = "#650915",
+      font.main = 2
+    )
+    
+    grid(col = "#E5D3B3", lty = 3)
+    
+    if (isTRUE(show_zones)) {
+      # +/- 2 sigma
+      idx2 <- x >= (mu_val - 2 * sigma_val) & x <= (mu_val + 2 * sigma_val)
+      polygon(
+        c(x[idx2], rev(x[idx2])),
+        c(y[idx2], rep(0, sum(idx2))),
+        col = rgb(197/255, 160/255, 89/255, 0.20),
+        border = NA
+      )
+      # +/- 1 sigma
+      idx1 <- x >= (mu_val - 1 * sigma_val) & x <= (mu_val + 1 * sigma_val)
+      polygon(
+        c(x[idx1], rev(x[idx1])),
+        c(y[idx1], rep(0, sum(idx1))),
+        col = rgb(197/255, 160/255, 89/255, 0.45),
+        border = NA
+      )
+    }
+    
+    # Main curve in Flat Maroon
+    lines(x, y, col = "#650915", lwd = 3.2)
+    # Center line in Antique Gold
+    abline(v = mu_val, col = "#C5A059", lty = 2, lwd = 1.8)
+    
+    # Annotations
+    usr <- par("usr")
+    text(
+      mu_val, usr[4] * 0.92,
+      sprintf("mu = %.2f, sigma = %.2f", mu_val, sigma_val),
+      col = "#650915",
+      font = 2,
+      pos = 4
+    )
+    
+    if (isTRUE(show_scales)) {
+      text(
+        usr[1] + 0.2, usr[4] * 0.85,
+        "Standard Psychometric Equivalences:\n• z-score = (x - mu) / sigma\n• T-score = 50 + 10z\n• Wechsler IQ = 100 + 15z",
+        adj = c(0, 1),
+        cex = 0.85,
+        col = "#5A4B4C",
+        font = 3
+      )
+    }
+  })
+
   
   # Reactive Data Storage
   active_data <- reactiveVal(create_benchmark_data())
@@ -1718,8 +2248,8 @@ server <- function(input, output, session) {
     plot(
       x_var, res$yi,
       pch = 21,
-      bg = rgb(30 / 255, 58 / 255, 138 / 255, 0.65),
-      col = "#1e3a8a",
+      bg = rgb(101 / 255, 9 / 255, 21 / 255, 0.65),
+      col = "#650915",
       cex = cex_scaled,
       xlab = paste("Variabel Moderator:", mod_var),
       ylab = "Besaran Efek Intervensi (Hedges' g)",
@@ -1731,16 +2261,16 @@ server <- function(input, output, session) {
     polygon(
       c(x_seq, rev(x_seq)),
       c(preds$ci.lb, rev(preds$ci.ub)),
-      col = rgb(219 / 255, 234 / 255, 254 / 255, 0.5),
+      col = rgb(197 / 255, 160 / 255, 89 / 255, 0.25),
       border = NA
     )
-    lines(x_seq, preds$pred, col = "#dc2626", lwd = 2.5)
-    grid(nx = NULL, ny = NULL, lty = 2, col = "gray85")
+    lines(x_seq, preds$pred, col = "#650915", lwd = 2.5)
+    grid(nx = NULL, ny = NULL, lty = 2, col = "#E5D3B3")
     points(
       x_var, res$yi,
       pch = 21,
-      bg = rgb(30 / 255, 58 / 255, 138 / 255, 0.65),
-      col = "#1e3a8a",
+      bg = rgb(101 / 255, 9 / 255, 21 / 255, 0.65),
+      col = "#650915",
       cex = cex_scaled
     )
     abline(h = 0, lty = 3, col = "gray40")
@@ -1866,7 +2396,7 @@ server <- function(input, output, session) {
       xlab = "Besaran Efek Intervensi (Hedges' g)",
       header = c("Studi Primer & Subkelompok", "Hedges' g [95% CI]"),
       cex = cex_val,
-      col = "#1e3a8a",
+      col = "#650915",
       refline = 0,
       alim = c(min(-0.5, min(df$yi - 1.96 * sqrt(df$vi)) - 0.2), max(1.5, max(df$yi + 1.96 * sqrt(df$vi)) + 0.2))
     )
@@ -1877,8 +2407,8 @@ server <- function(input, output, session) {
       row = 1,
       mlab = paste0("Total Pooled (", method, ")"),
       cex = cex_val,
-      col = "#1e3a8a",
-      border = "#1e3a8a"
+      col = "#650915",
+      border = "#650915"
     )
     
     # Add Subgroup Summary Diamonds & Headers
@@ -1892,8 +2422,8 @@ server <- function(input, output, session) {
         row = cat_poly_rows[[cat]],
         mlab = paste0("Subtotal: ", cat, " (k = ", k_cat, ")"),
         cex = cex_val,
-        col = "#0284c7",
-        border = "#0284c7"
+        col = "#C5A059",
+        border = "#650915"
       )
       
       text(
@@ -2133,7 +2663,7 @@ server <- function(input, output, session) {
       addpred = input$forest_show_pi && input$meta_estimator != "FE",
       showweights = input$forest_show_weights,
       cex = input$forest_cex,
-      col = "#1e3a8a",
+      col = "#650915",
       alim = c(min(-0.5, min(df$yi - 1.96 * sqrt(df$vi)) - 0.2), max(1.5, max(df$yi + 1.96 * sqrt(df$vi)) + 0.2)),
       refline = 0
     )
@@ -2184,7 +2714,7 @@ server <- function(input, output, session) {
       funnel(
         res,
         level = c(90, 95, 99),
-        shade = c("white", "gray75", "gray90"),
+        shade = c("#FFFFFF", "#FAF8F5", "#F2EBE1"),
         refline = 0,
         legend = TRUE,
         xlab = "Besaran Efek Intervensi (Hedges' g)",
