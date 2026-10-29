@@ -17,14 +17,20 @@ create_benchmark_data <- function() {
               "Butler et al.", "Kessler et al.", "Richards et al.", "Cuijpers & Reynolds",
               "Dimidjian et al.", "Andrews et al."),
     Year = c(2012, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2022, 2023, 2023, 2024, 2024),
-    Intervention = c("CBT", "CT", "iCBT", "CBT", "iCBT", "DBT", "CT", "UP", "CBT", "iCBT", "BA", "CBT", "BA", "iCBT"),
-    Format = c("Individual", "Individual", "Online", "Group", "Online", "Individual", "Individual", "Group", "Individual", "Online", "Individual", "Group", "Individual", "Online"),
+    Intervention = c("CBT", "CBT", "iCBT", "CBT", "iCBT", "ACT", "CBT", "ACT", "CBT", "iCBT", "BA", "CBT", "BA", "iCBT"),
+    Format = c("Individual", "Individual", "Guided Digital", "Group", "Guided Digital", "Individual", "Individual", "Group", "Individual", "Guided Digital", "Individual", "Group", "Individual", "Guided Digital"),
+    Control_Type = c("Waitlist", "TAU", "Waitlist", "TAU", "Placebo", "TAU", "Waitlist", "Placebo", "TAU", "Waitlist", "TAU", "Waitlist", "TAU", "Placebo"),
+    Population = c("Clinical (MDD)", "Clinical (MDD)", "Subclinical", "Clinical (MDD)", "Subclinical", "Clinical (MDD)", "Clinical (MDD)", "Clinical (Anxiety)", "Clinical (MDD)", "Subclinical", "Clinical (MDD)", "Clinical (MDD)", "Clinical (MDD)", "Subclinical"),
+    Age_Group = c("Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adolescents", "Adults", "Older Adults", "Adults", "Adults"),
+    Therapist_Level = c("Licensed Clinician", "Licensed Clinician", "Automated Digital", "Licensed Clinician", "Automated Digital", "Licensed Clinician", "Licensed Clinician", "Supervised Trainee", "Licensed Clinician", "Automated Digital", "Supervised Trainee", "Licensed Clinician", "Licensed Clinician", "Automated Digital"),
+    Risk_of_Bias = c("Low Risk", "Low Risk", "Some Concerns", "Low Risk", "Some Concerns", "Low Risk", "Low Risk", "Some Concerns", "Low Risk", "Some Concerns", "Low Risk", "Some Concerns", "Low Risk", "Low Risk"),
     Duration_Weeks = c(12, 16, 8, 12, 10, 24, 12, 16, 12, 8, 10, 14, 16, 8),
+    Total_Sessions = c(12, 16, 8, 12, 8, 24, 12, 14, 12, 8, 10, 14, 16, 8),
     N_Intervention = c(45, 52, 110, 60, 95, 40, 48, 55, 62, 120, 50, 70, 55, 115),
     N_Control = c(42, 50, 105, 58, 90, 38, 46, 52, 60, 115, 48, 68, 52, 110),
     yi = c(0.820, 0.640, 0.280, 0.540, 0.320, 0.880, 0.700, 0.460, 0.650, 0.240, 0.610, 0.480, 0.660, 0.290),
     vi = c(0.0499, 0.0412, 0.0188, 0.0351, 0.0219, 0.0563, 0.0452, 0.0384, 0.0345, 0.0172, 0.0427, 0.0298, 0.0394, 0.0180),
-    sei = c(0.2234, 0.2031, 0.1371, 0.1875, 0.1480, 0.2372, 0.2126, 0.1960, 0.1858, 0.1310, 0.2067, 0.1727, 0.1986, 0.1341),
+    sei = c(0.2234, 0.2030, 0.1371, 0.1873, 0.1480, 0.2373, 0.2126, 0.1960, 0.1857, 0.1311, 0.2066, 0.1726, 0.1985, 0.1342),
     stringsAsFactors = FALSE
   )
 }
@@ -265,18 +271,30 @@ ui <- page_navbar(
         
         hr(),
         
-        h6("Identitas & Moderator Studi:", class = "fw-bold"),
+        h6("Identitas & Moderator Studi Psikologi:", class = "fw-bold text-dark"),
         textInput("study_name", "Nama Peneliti / Studi:", value = "Studi Baru et al."),
         layout_columns(
           col_widths = c(6, 6),
-          numericInput("study_year", "Tahun:", value = 2024, min = 1950, max = 2035, step = 1),
-          numericInput("study_dur", "Durasi (Mg):", value = 12, min = 1, step = 1)
+          numericInput("study_year", "Tahun Publikasi:", value = 2024, min = 1950, max = 2035, step = 1),
+          selectInput("study_interv", "Pendekatan Terapi:", choices = c("CBT", "ACT", "BA", "iCBT", "Mindfulness", "IPT", "Psychodynamic", "Lainnya"))
         ),
         layout_columns(
           col_widths = c(6, 6),
-          textInput("study_interv", "Intervensi:", value = "CBT"),
-          selectInput("study_format", "Format:", choices = c("Individual", "Group", "Online"))
+          selectInput("study_format", "Format Penghantaran:", choices = c("Individual", "Group", "Guided Digital", "Unguided Self-Help")),
+          selectInput("study_ctrl", "Tipe Kelompok Kontrol:", choices = c("Waitlist", "TAU", "Placebo", "Active Control"))
         ),
+        layout_columns(
+          col_widths = c(6, 6),
+          selectInput("study_pop", "Populasi Sasaran:", choices = c("Clinical (MDD)", "Clinical (Anxiety)", "Clinical (PTSD / Trauma)", "Subclinical", "Community")),
+          selectInput("study_therapist", "Kualifikasi Terapis:", choices = c("Licensed Clinician", "Supervised Trainee", "Automated Digital"))
+        ),
+        layout_columns(
+          col_widths = c(4, 4, 4),
+          selectInput("study_rob", "Risiko Bias:", choices = c("Low Risk", "Some Concerns", "High Risk")),
+          numericInput("study_dur", "Durasi (Mg):", value = 12, min = 1, step = 1),
+          numericInput("study_sessions", "Total Sesi:", value = 12, min = 1, step = 1)
+        ),
+        selectInput("study_age", "Kelompok Usia:", choices = c("Adults", "Adolescents", "Older Adults")),
         
         radioButtons(
           "es_metric",
@@ -492,8 +510,8 @@ ui <- page_navbar(
               uiOutput("meta_interpretation_text")
             ),
             nav_panel(
-              title = "Analisis Moderator (Meta-Regresi)",
-              verbatimTextOutput("meta_moderator_summary")
+              title = "Analisis Moderator & Subkelompok (Meta-Regresi)",
+              uiOutput("meta_moderator_ui")
             )
           )
         )
@@ -516,7 +534,11 @@ ui <- page_navbar(
             "Sesuai Urutan Berkas Data" = "none",
             "Besaran Efek (Menaik / Ascending)" = "yi_asc",
             "Besaran Efek (Menurun / Descending)" = "yi_desc",
-            "Tahun Publikasi" = "year"
+            "Tahun Publikasi" = "year",
+            "Tipe Kelompok Kontrol (Control_Type)" = "control",
+            "Format Penghantaran (Format)" = "format",
+            "Pendekatan Terapi (Intervention)" = "interv",
+            "Risiko Bias (Risk_of_Bias)" = "rob"
           ),
           selected = "none"
         ),
@@ -759,7 +781,22 @@ server <- function(input, output, session) {
       potential_mods <- setdiff(colnames(df), c("Study", "yi", "vi", "sei"))
       valid_mods <- potential_mods[sapply(df[potential_mods], function(x) length(unique(x)) > 1 && length(unique(x)) < nrow(df))]
       if (length(valid_mods) > 0) {
-        choices <- c("Tanpa Moderator (Overall Pooled)" = "none", setNames(valid_mods, valid_mods))
+        mod_labels <- sapply(valid_mods, function(v) {
+          switch(
+            v,
+            "Control_Type" = "Tipe Kelompok Kontrol (Waitlist vs TAU vs Placebo)",
+            "Format" = "Format Penghantaran (Individual vs Group vs Digital)",
+            "Intervention" = "Pendekatan Terapi (CBT vs ACT vs BA vs iCBT)",
+            "Population" = "Populasi Sasaran (Klinis vs Subklinis)",
+            "Therapist_Level" = "Kualifikasi Terapis (Klinisi vs Trainee vs Digital)",
+            "Risk_of_Bias" = "Risiko Bias Metodologis (RoB 2.0)",
+            "Age_Group" = "Kelompok Usia (Dewasa vs Remaja vs Lansia)",
+            "Duration_Weeks" = "Durasi Terapi (Minggu - Kontinu)",
+            "Total_Sessions" = "Jumlah Total Sesi Terapi (Kontinu)",
+            v
+          )
+        })
+        choices <- c("Tanpa Moderator (Overall Pooled)" = "none", setNames(valid_mods, mod_labels))
       } else {
         choices <- c("Tanpa Moderator (Overall Pooled)" = "none")
       }
@@ -960,7 +997,13 @@ server <- function(input, output, session) {
       Year = input$study_year,
       Intervention = input$study_interv,
       Format = input$study_format,
+      Control_Type = input$study_ctrl,
+      Population = input$study_pop,
+      Age_Group = input$study_age,
+      Therapist_Level = input$study_therapist,
+      Risk_of_Bias = input$study_rob,
       Duration_Weeks = input$study_dur,
+      Total_Sessions = input$study_sessions,
       N_Intervention = n1_val,
       N_Control = n2_val,
       yi = round(res$es, 4),
@@ -1172,17 +1215,193 @@ server <- function(input, output, session) {
     )
   })
   
-  # Moderator Model Summary
-  output$meta_moderator_summary <- renderPrint({
-    if (input$mod_variable == "none") {
-      cat("Analisis moderator dinonaktifkan. Pilih salah satu variabel pada bilah konfigurasi samping.")
-    } else {
-      res <- tryCatch(meta_model(), error = function(e) e)
-      if (inherits(res, "error")) {
-        cat("Gagal menjalankan meta-regresi:\n", res$message)
+  # Moderator / Subgroup Analysis UI
+  output$meta_moderator_ui <- renderUI({
+    df <- active_data()
+    mod_var <- input$mod_variable
+    
+    if (mod_var == "none" || !mod_var %in% colnames(df)) {
+      return(
+        div(
+          class = "alert alert-info border",
+          h6(class = "fw-bold", icon("info-circle"), " Analisis Moderator Belum Diaktifkan"),
+          p("Silakan pilih salah satu variabel moderator studi psikologi pada bilah konfigurasi samping."),
+          p(
+            class = "mb-0 text-muted small",
+            "Variabel moderator penting dalam studi psikologi klinis mencakup: ",
+            tags$strong("Format Penghantaran"), " (Individual vs Kelompok vs Digital), ",
+            tags$strong("Tipe Kelompok Kontrol"), " (Waitlist vs TAU vs Placebo), ",
+            tags$strong("Pendekatan Terapi"), " (CBT vs ACT vs BA vs iCBT), ",
+            tags$strong("Populasi Sasaran"), " (Klinis vs Subklinis), ",
+            tags$strong("Kualifikasi Terapis"), ", ",
+            tags$strong("Risiko Bias Metodologis (RoB 2.0)"), ", serta ",
+            tags$strong("Durasi Terapi"), " (Minggu / Sesi)."
+          )
+        )
+      )
+    }
+    
+    res <- tryCatch(meta_model(), error = function(e) NULL)
+    if (is.null(res)) {
+      return(div(class = "alert alert-danger", "Gagal mengestimasi model meta-regresi."))
+    }
+    
+    is_num <- is.numeric(df[[mod_var]])
+    
+    qm_val <- sprintf("%.2f (df = %d, p = %.4f)", res$QM, res$QMdf[1], res$QMp)
+    qe_val <- sprintf("%.2f (df = %d, p = %.4f)", res$QE, res$QEdf, res$QEp)
+    r2_val <- ifelse(!is.null(res$R2), sprintf("%.2f%%", res$R2), "N/A")
+    
+    tagList(
+      layout_columns(
+        col_widths = c(4, 4, 4),
+        value_box(
+          title = "Uji Omnibus Moderator (QM)",
+          value = qm_val,
+          showcase = icon("balance-scale"),
+          theme = ifelse(res$QMp < 0.05, "success", "secondary")
+        ),
+        value_box(
+          title = "Heterogenitas Residual (QE)",
+          value = qe_val,
+          showcase = icon("wave-square"),
+          theme = "info"
+        ),
+        value_box(
+          title = "Varians Dijelaskan (R^2)",
+          value = r2_val,
+          showcase = icon("chart-pie"),
+          theme = "warning"
+        )
+      ),
+      hr(),
+      if (!is_num) {
+        tagList(
+          h6(class = "fw-bold text-primary", icon("table"), " 1. Rangkuman Efek Subkelompok (Subgroup Breakdown Table):"),
+          tableOutput("table_subgroup_summary"),
+          hr()
+        )
       } else {
-        print(res)
+        tagList(
+          h6(class = "fw-bold text-primary", icon("chart-line"), " 1. Meta-Regression Bubble Plot (Ukuran Titik = Bobot Presisi):"),
+          plotOutput("meta_regplot_display", height = "420px"),
+          hr()
+        )
+      },
+      h6(class = "fw-bold text-dark", icon("terminal"), " 2. Hasil Estimasi Model Meta-Regresi Formal (metafor):"),
+      verbatimTextOutput("meta_moderator_print")
+    )
+  })
+  
+  # Subgroup Summary Table
+  output$table_subgroup_summary <- renderTable({
+    df <- active_data()
+    mod_var <- input$mod_variable
+    req(mod_var != "none", mod_var %in% colnames(df))
+    
+    categories <- sort(unique(df[[mod_var]]))
+    method <- input$meta_estimator
+    
+    res_list <- lapply(categories, function(cat_name) {
+      sub_df <- df[df[[mod_var]] == cat_name, ]
+      k_sub <- nrow(sub_df)
+      if (k_sub >= 2) {
+        sub_mod <- tryCatch(
+          rma(yi = yi, vi = vi, data = sub_df, method = method),
+          error = function(e) NULL
+        )
+        if (!is.null(sub_mod)) {
+          data.frame(
+            Subkelompok = as.character(cat_name),
+            k = as.character(k_sub),
+            `Pooled Hedges' g` = sprintf("%.3f", sub_mod$b[1]),
+            SE = sprintf("%.3f", sub_mod$se[1]),
+            `95% CI` = sprintf("[%.3f, %.3f]", sub_mod$ci.lb[1], sub_mod$ci.ub[1]),
+            `z-score` = sprintf("%.3f", sub_mod$zval[1]),
+            `p-value` = sprintf("%.4f", sub_mod$pval[1]),
+            `I^2 (%)` = sprintf("%.1f%%", sub_mod$I2),
+            `tau^2` = sprintf("%.4f", sub_mod$tau2),
+            check.names = FALSE,
+            stringsAsFactors = FALSE
+          )
+        } else {
+          NULL
+        }
+      } else {
+        data.frame(
+          Subkelompok = as.character(cat_name),
+          k = as.character(k_sub),
+          `Pooled Hedges' g` = sprintf("%.3f", sub_df$yi[1]),
+          SE = sprintf("%.3f", sqrt(sub_df$vi[1])),
+          `95% CI` = sprintf("[%.3f, %.3f]", sub_df$yi[1] - 1.96 * sqrt(sub_df$vi[1]), sub_df$yi[1] + 1.96 * sqrt(sub_df$vi[1])),
+          `z-score` = "-",
+          `p-value` = "-",
+          `I^2 (%)` = "N/A (k=1)",
+          `tau^2` = "N/A",
+          check.names = FALSE,
+          stringsAsFactors = FALSE
+        )
       }
+    })
+    do.call(rbind, res_list)
+  }, striped = TRUE, hover = TRUE, bordered = TRUE)
+  
+  # Meta-Regression Bubble Plot
+  output$meta_regplot_display <- renderPlot({
+    df <- active_data()
+    mod_var <- input$mod_variable
+    req(mod_var != "none", mod_var %in% colnames(df))
+    req(is.numeric(df[[mod_var]]))
+    
+    res <- tryCatch(meta_model(), error = function(e) NULL)
+    req(!is.null(res))
+    
+    x_var <- df[[mod_var]]
+    weights <- 1 / res$vi
+    cex_scaled <- 1.0 + 3.0 * (weights - min(weights)) / (max(weights) - min(weights) + 1e-5)
+    
+    x_seq <- seq(min(x_var, na.rm = TRUE), max(x_var, na.rm = TRUE), length.out = 100)
+    preds <- predict(res, newmods = x_seq)
+    
+    par(mar = c(5, 5, 3, 2))
+    plot(
+      x_var, res$yi,
+      pch = 21,
+      bg = rgb(30 / 255, 58 / 255, 138 / 255, 0.65),
+      col = "#1e3a8a",
+      cex = cex_scaled,
+      xlab = paste("Variabel Moderator:", mod_var),
+      ylab = "Besaran Efek Intervensi (Hedges' g)",
+      main = paste("Meta-Regression Bubble Plot (Ukuran Titik = Presisi Studi 1/vi)"),
+      las = 1,
+      bty = "l",
+      ylim = c(min(c(res$yi, preds$ci.lb)) - 0.1, max(c(res$yi, preds$ci.ub)) + 0.1)
+    )
+    polygon(
+      c(x_seq, rev(x_seq)),
+      c(preds$ci.lb, rev(preds$ci.ub)),
+      col = rgb(219 / 255, 234 / 255, 254 / 255, 0.5),
+      border = NA
+    )
+    lines(x_seq, preds$pred, col = "#dc2626", lwd = 2.5)
+    grid(nx = NULL, ny = NULL, lty = 2, col = "gray85")
+    points(
+      x_var, res$yi,
+      pch = 21,
+      bg = rgb(30 / 255, 58 / 255, 138 / 255, 0.65),
+      col = "#1e3a8a",
+      cex = cex_scaled
+    )
+    abline(h = 0, lty = 3, col = "gray40")
+  })
+  
+  # Printout Meta-Regression
+  output$meta_moderator_print <- renderPrint({
+    res <- tryCatch(meta_model(), error = function(e) e)
+    if (inherits(res, "error")) {
+      cat("Gagal menjalankan meta-regresi:\n", res$message)
+    } else {
+      print(res)
     }
   })
   
@@ -1198,6 +1417,14 @@ server <- function(input, output, session) {
       df <- df[order(df$yi, decreasing = TRUE), ]
     } else if (input$forest_sort == "year" && "Year" %in% colnames(df)) {
       df <- df[order(df$Year), ]
+    } else if (input$forest_sort == "control" && "Control_Type" %in% colnames(df)) {
+      df <- df[order(df$Control_Type), ]
+    } else if (input$forest_sort == "format" && "Format" %in% colnames(df)) {
+      df <- df[order(df$Format), ]
+    } else if (input$forest_sort == "interv" && "Intervention" %in% colnames(df)) {
+      df <- df[order(df$Intervention), ]
+    } else if (input$forest_sort == "rob" && "Risk_of_Bias" %in% colnames(df)) {
+      df <- df[order(df$Risk_of_Bias), ]
     }
     
     # Fit model for ordered dataset
@@ -1210,7 +1437,16 @@ server <- function(input, output, session) {
     )
     
     # Study labels
-    if ("Year" %in% colnames(df)) {
+    if (input$forest_sort %in% c("format", "control", "interv", "rob")) {
+      mod_tag <- switch(
+        input$forest_sort,
+        "format" = df$Format,
+        "control" = df$Control_Type,
+        "interv" = df$Intervention,
+        "rob" = df$Risk_of_Bias
+      )
+      slabs <- paste0(df$Study, " (", df$Year, ") [", mod_tag, "]")
+    } else if ("Year" %in% colnames(df)) {
       slabs <- paste0(df$Study, " (", df$Year, ")")
     } else {
       slabs <- df$Study

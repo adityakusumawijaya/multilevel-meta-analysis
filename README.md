@@ -19,11 +19,11 @@ Mendukung konversi langsung berbagai format pelaporan studi primer ke dalam metr
 - **Injeksi Langsung**: Hasil estimasi parameter ($g$, $v_i$, $SE_i$) dapat langsung disuntikkan ke dalam dataset kerja meta-analisis aktif.
 
 ### B. Manajemen Dataset Sintesis Bukti
-- **Data Benchmark Bawaan**: Memuat 14 uji klinis acak (*RCT*) psikoterapi (CBT, ACT, BA, iCBT) dengan variasi format perlakuan (*Individual*, *Group*, *Online*).
+- **Data Benchmark Bawaan**: Memuat 14 uji klinis acak (*RCT*) psikoterapi (CBT, ACT, BA, iCBT) lengkap dengan variabel moderator substantif psikologi klinis (Tipe Kontrol, Format, Populasi, Kualifikasi Terapis, Risiko Bias RoB 2.0, Durasi, Total Sesi).
 - **Unggah Berkas Mandiri**: Mendukung format `.csv` dan `.xlsx` dengan pemetaan otomatis kolom efek ($y_i$), varians ($v_i$), atau standar error ($SE$).
 - **Tabel Interaktif**: Penyaringan data, evaluasi bobot studi (*inverse-variance weight %*), dan ekspor dataset ke `.csv`.
 
-### C. Pemodelan Meta-Analisis (`metafor`)
+### C. Pemodelan Meta-Analisis & Analisis Moderator Substantif (`metafor`)
 - **Pilihan Estimator Varians Antarstudi ($\tau^2$)**:
   - *Restricted Maximum Likelihood* (REML) — baku emas untuk model efek acak.
   - *DerSimonian-Laird* (DL), *Maximum Likelihood* (ML), *Paule-Mandel* (PM), *Empirical Bayes* (EB), dan *Fixed-Effect* (FE).
@@ -32,18 +32,27 @@ Mendukung konversi langsung berbagai format pelaporan studi primer ke dalam metr
   - Varians antarstudi ($\tau^2$ dan $\tau$).
   - Rasio variabilitas sejati ($I^2$) dan rasio variabilitas total ($H^2$).
   - **95% Prediction Interval (PI)**: Mengestimasi rentang dispersi efek klinis sejati pada studi masa mendatang (Borenstein et al., 2017).
-- **Analisis Moderator & Meta-Regresi**: Pengujian kovariat kategorikal (format intervensi) dan kontinu (durasi intervensi) melalui uji omnibus $Q_M$ dan heterogenitas residual $Q_E$.
+- **Analisis Moderator Substantif Psikologi**:
+  - **Tipe Komparator / Kelompok Kontrol** (`Control_Type`): *Waitlist Control* (WLC), *Treatment as Usual* (TAU), *Psychological Placebo*, *Active Control*.
+  - **Format Penghantaran Terapi** (`Format`): *Individual*, *Group*, *Guided Digital*, *Unguided Self-Help*.
+  - **Pendekatan Intervensi** (`Intervention`): CBT, ACT, BA, iCBT, Mindfulness, IPT.
+  - **Populasi Sasaran Klinis** (`Population`): *Clinical (MDD)*, *Clinical (Anxiety)*, *Clinical (PTSD)*, *Subclinical*, *Community*.
+  - **Kualifikasi Terapis** (`Therapist_Level`): *Licensed Clinician*, *Supervised Trainee*, *Automated Digital*.
+  - **Risiko Bias Metodologis** (`Risk_of_Bias`): RoB 2.0 (*Low Risk*, *Some Concerns*, *High Risk*).
+  - **Kelompok Usia Partisipan** (`Age_Group`): *Adults*, *Adolescents*, *Older Adults*.
+  - **Dosis & Durasi Intervensi Kontinu** (`Duration_Weeks`, `Total_Sessions`): Analisis meta-regresi linier lengkap dengan *Bubble Plot* (ukuran titik merepresentasikan bobot presisi $1/v_i$).
 
 ### D. Visualisasi Publikasi
 - **Forest Plot**:
   - Menampilkan nama studi, bobot studi (%), titik estimasi $g$ individual beserta 95% CI, ringkasan efek acak (*summary diamond*), dan batas interval prediksi (*prediction interval*).
-  - Pengurutan studi interaktif (berdasarkan besaran efek, tahun, atau data mentah).
+  - Pengurutan studi interaktif berdasarkan moderator klinis (`Control_Type`, `Format`, `Intervention`, `Risk_of_Bias`).
   - Ekspor resolusi tinggi: PNG (300 DPI) dan PDF vektor.
 - **Funnel Plot & Bias Publikasi**:
   - *Contour-Enhanced Funnel Plot* dengan zona signifikansi statistik ($p < .10, .05, .01$).
   - Uji regresi linier Egger (*Egger's test*) untuk mendeteksi asimetri corong.
   - Uji korelasi peringkat Begg & Mazumdar (*rank correlation test*).
   - Analisis imputasi *Trim and Fill* (Duval & Tweedie) untuk menghitung estimasi studi yang hilang ($k_0$) dan besaran efek yang telah disesuaikan (*adjusted pooled effect*).
+- **Meta-Regression Bubble Plot**: Memvisualisasikan relasi antara variabel kontinu (durasi/dosis) dan besaran efek intervensi.
 
 ---
 
@@ -63,7 +72,8 @@ multilevel-meta-analysis/
 ├── 03_Visuals/
 │   ├── Intervention-Forest_Plot.png          # Forest plot ekspor 300 DPI
 │   ├── Intervention-Funnel_Plot.png          # Contour-enhanced funnel plot ekspor 300 DPI
-│   └── Intervention-TrimFill.png             # Trim & Fill funnel plot ekspor 300 DPI
+│   ├── Intervention-TrimFill.png             # Trim & Fill funnel plot ekspor 300 DPI
+│   └── Intervention-Bubble_Plot.png          # Meta-regression bubble plot ekspor 300 DPI
 └── 04_Drafts&Outputs/
 ```
 
