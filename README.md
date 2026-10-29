@@ -1,7 +1,7 @@
 # KAWE | Quantitative & Psychometric Research
 ### Multilevel Clinical Meta-Analysis & Evidence Synthesis Studio
 
-Platform riset dan aplikasi interaktif berbasis **R Shiny** berstandar *academic research press* mewah (*Flat Maroon*, *Antique Gold*, dan *Crisp White*) untuk estimasi besaran efek (*effect size*) studi primer, rekayasa psikometrika, dan sintesis bukti klinis (*meta-analysis*) pada uji coba intervensi psikologis. Diarahkan oleh **Aditya Kusumawijaya, S.Psi** (Universitas Sanata Dharma · Universitas Gadjah Mada).
+Platform riset dan aplikasi interaktif berbasis **R Shiny** berstandar *academic research press* mewah (*Flat Maroon*, *Antique Gold*, dan *Crisp White*) untuk estimasi besaran efek (*effect size*) studi primer, rekayasa psikometrika, dan sintesis bukti klinis (*meta-analysis*) pada uji coba intervensi psikologis. Diarahkan oleh **Aditya Kusumawijaya** (Universitas Sanata Dharma · Universitas Gadjah Mada).
 
 ---
 

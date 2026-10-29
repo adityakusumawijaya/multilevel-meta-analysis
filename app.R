@@ -173,23 +173,23 @@ ui <- page_navbar(
         .kawe-brand-horizontal {
           display: inline-flex;
           align-items: center;
-          gap: 1.15rem; /* Jarak antara ikon di kiri dan teks di kanan */
-          padding: 0.25rem 0.6rem;
+          gap: 0.75rem; /* Jarak proporsional antara ikon dan teks */
+          padding: 0.15rem 0.35rem;
           background-color: transparent;
         }
 
         .kawe-icon {
-          height: 52px; /* Disesuaikan tinggi ikon agar serasi dengan navbar */
+          height: 36px; /* Ukuran lebih kecil dan ramping untuk header navbar */
           width: auto;
           object-fit: contain;
-          filter: drop-shadow(0 1px 3px rgba(101, 9, 21, 0.15));
+          filter: drop-shadow(0 1px 2px rgba(101, 9, 21, 0.15));
         }
 
         .kawe-divider {
-          height: 40px;
+          height: 28px;
           width: 1px;
           background-color: #C5A059; /* Antique Gold */
-          opacity: 0.55;
+          opacity: 0.50;
         }
 
         .kawe-text-group {
@@ -201,20 +201,20 @@ ui <- page_navbar(
 
         .kawe-title {
           font-family: 'Cinzel', 'Cormorant Garamond', serif;
-          font-size: 1.85rem;
-          font-weight: 500;
+          font-size: 1.25rem;
+          font-weight: 600;
           color: #650915; /* Flat Maroon sesuai logo */
-          letter-spacing: 0.24em;
-          line-height: 1.05;
-          margin-bottom: 0.12rem;
+          letter-spacing: 0.20em;
+          line-height: 1.0;
+          margin-bottom: 0.05rem;
         }
 
         .kawe-subtitle {
           font-family: 'Cormorant Garamond', serif;
-          font-size: 0.72rem;
+          font-size: 0.58rem;
           font-weight: 600;
           color: #2B181A;
-          letter-spacing: 0.14em;
+          letter-spacing: 0.12em;
           text-transform: uppercase;
           white-space: nowrap;
         }
@@ -436,7 +436,7 @@ ui <- page_navbar(
       tags$div(
         class = "d-flex align-items-center",
         tags$span(class = "active-data-pill me-3", uiOutput("top_active_data_pill", inline = TRUE)),
-        tags$span(style = "font-size: 0.70rem; letter-spacing: 0.08em; color: #FAF8F5;", "Aditya Kusumawijaya, S.Psi — Principal Investigator")
+        tags$span(style = "font-size: 0.70rem; letter-spacing: 0.08em; color: #FAF8F5;", "Aditya Kusumawijaya")
       )
     )
   ),
@@ -465,7 +465,7 @@ ui <- page_navbar(
       div(
         class = "text-uppercase fw-semibold",
         style = "letter-spacing: 0.18em; font-size: 0.85rem; color: #231618;",
-        "Aditya Kusumawijaya, S.Psi — Principal Investigator"
+        "Aditya Kusumawijaya"
       ),
       div(
         style = "font-family: var(--font-serif); font-size: 0.95rem; color: #5A4B4C; font-style: italic; margin-top: 0.2rem;",
@@ -646,7 +646,7 @@ ui <- page_navbar(
       ),
       div(
         class = "small text-muted",
-        "Directed by Aditya Kusumawijaya, S.Psi · Evidence Synthesis & Psychometric Laboratory",
+        "Aditya Kusumawijaya · Evidence Synthesis & Psychometrics Laboratory",
         br(),
         "Universitas Sanata Dharma · Universitas Gadjah Mada · Yogyakarta, Indonesia"
       )
