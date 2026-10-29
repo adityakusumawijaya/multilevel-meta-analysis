@@ -19,7 +19,8 @@ create_benchmark_data <- function() {
     Year = c(2012, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2022, 2023, 2023, 2024, 2024),
     Intervention = c("CBT", "CBT", "iCBT", "CBT", "iCBT", "ACT", "CBT", "ACT", "CBT", "iCBT", "BA", "CBT", "BA", "iCBT"),
     Format = c("Individual", "Individual", "Guided Digital", "Group", "Guided Digital", "Individual", "Individual", "Group", "Individual", "Guided Digital", "Individual", "Group", "Individual", "Guided Digital"),
-    Control_Type = c("Waitlist", "TAU", "Waitlist", "TAU", "Placebo", "TAU", "Waitlist", "Placebo", "TAU", "Waitlist", "TAU", "Waitlist", "TAU", "Placebo"),
+    Control_Type = c("Waitlist", "TAU", "Waitlist", "TAU", "Placebo", "TAU", "Waitlist", "Active Control", "TAU", "Waitlist", "TAU", "Waitlist", "Active Control", "Placebo"),
+    Active_Comparator = c("None (Waitlist)", "Treatment as Usual", "None (Waitlist)", "Treatment as Usual", "Attention Placebo", "Treatment as Usual", "None (Waitlist)", "Relaxation Training", "Treatment as Usual", "None (Waitlist)", "Treatment as Usual", "None (Waitlist)", "Supportive Counseling", "Attention Placebo"),
     Population = c("Clinical (MDD)", "Clinical (MDD)", "Subclinical", "Clinical (MDD)", "Subclinical", "Clinical (MDD)", "Clinical (MDD)", "Clinical (Anxiety)", "Clinical (MDD)", "Subclinical", "Clinical (MDD)", "Clinical (MDD)", "Clinical (MDD)", "Subclinical"),
     Age_Group = c("Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adults", "Adolescents", "Adults", "Older Adults", "Adults", "Adults"),
     Therapist_Level = c("Licensed Clinician", "Licensed Clinician", "Automated Digital", "Licensed Clinician", "Automated Digital", "Licensed Clinician", "Licensed Clinician", "Supervised Trainee", "Licensed Clinician", "Automated Digital", "Supervised Trainee", "Licensed Clinician", "Licensed Clinician", "Automated Digital"),
@@ -283,6 +284,15 @@ ui <- page_navbar(
           selectInput("study_format", "Format Penghantaran:", choices = c("Individual", "Group", "Guided Digital", "Unguided Self-Help")),
           selectInput("study_ctrl", "Tipe Kelompok Kontrol:", choices = c("Waitlist", "TAU", "Placebo", "Active Control"))
         ),
+        conditionalPanel(
+          condition = "input.study_ctrl == 'Active Control'",
+          textInput(
+            "study_active_comparator",
+            "Nama Terapi Pembanding (Active Comparator):",
+            value = "Supportive Counseling",
+            placeholder = "Misal: Supportive Counseling, Psikoedukasi, Terapi Relaksasi"
+          )
+        ),
         layout_columns(
           col_widths = c(6, 6),
           selectInput("study_pop", "Populasi Sasaran:", choices = c("Clinical (MDD)", "Clinical (Anxiety)", "Clinical (PTSD / Trauma)", "Subclinical", "Community")),
@@ -291,7 +301,7 @@ ui <- page_navbar(
         layout_columns(
           col_widths = c(4, 4, 4),
           selectInput("study_rob", "Risiko Bias:", choices = c("Low Risk", "Some Concerns", "High Risk")),
-          numericInput("study_dur", "Durasi (Mg):", value = 12, min = 1, step = 1),
+          numericInput("study_dur", "Durasi (Minggu):", value = 12, min = 1, step = 1),
           numericInput("study_sessions", "Total Sesi:", value = 12, min = 1, step = 1)
         ),
         selectInput("study_age", "Kelompok Usia:", choices = c("Adults", "Adolescents", "Older Adults")),
@@ -992,12 +1002,25 @@ server <- function(input, output, session) {
       n2_val <- round(input$corr_n / 2)
     }
 
+    active_comp_val <- if (input$study_ctrl == "Active Control") {
+      input$study_active_comparator
+    } else if (input$study_ctrl == "Waitlist") {
+      "None (Waitlist)"
+    } else if (input$study_ctrl == "TAU") {
+      "Treatment as Usual"
+    } else if (input$study_ctrl == "Placebo") {
+      "Attention Placebo"
+    } else {
+      "-"
+    }
+
     new_row <- data.frame(
       Study = input$study_name,
       Year = input$study_year,
       Intervention = input$study_interv,
       Format = input$study_format,
       Control_Type = input$study_ctrl,
+      Active_Comparator = active_comp_val,
       Population = input$study_pop,
       Age_Group = input$study_age,
       Therapist_Level = input$study_therapist,
@@ -1441,7 +1464,9 @@ server <- function(input, output, session) {
       mod_tag <- switch(
         input$forest_sort,
         "format" = df$Format,
-        "control" = df$Control_Type,
+        "control" = ifelse(df$Control_Type == "Active Control" & "Active_Comparator" %in% colnames(df) & !is.na(df$Active_Comparator),
+                           paste0("Active: ", df$Active_Comparator),
+                           df$Control_Type),
         "interv" = df$Intervention,
         "rob" = df$Risk_of_Bias
       )

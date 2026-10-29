@@ -1,15 +1,15 @@
-"Study","Year","Intervention","Format","Control_Type","Population","Age_Group","Therapist_Level","Risk_of_Bias","Duration_Weeks","Total_Sessions","N_Intervention","N_Control","yi","vi","sei"
-"Beck et al.",2012,"CBT","Individual","Waitlist","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,45,42,0.82,0.0499,0.2234
-"Clark & Wells",2014,"CBT","Individual","TAU","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",16,16,52,50,0.64,0.0412,0.203
-"Cuijpers et al.",2015,"iCBT","Guided Digital","Waitlist","Subclinical","Adults","Automated Digital","Some Concerns",8,8,110,105,0.28,0.0188,0.1371
-"Hofmann et al.",2017,"CBT","Group","TAU","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,60,58,0.54,0.0351,0.1873
-"Andersson et al.",2018,"iCBT","Guided Digital","Placebo","Subclinical","Adults","Automated Digital","Some Concerns",10,8,95,90,0.32,0.0219,0.148
-"Linehan et al.",2019,"ACT","Individual","TAU","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",24,24,40,38,0.88,0.0563,0.2373
-"Ehlers et al.",2020,"CBT","Individual","Waitlist","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,48,46,0.7,0.0452,0.2126
-"Barlow et al.",2021,"ACT","Group","Placebo","Clinical (Anxiety)","Adults","Supervised Trainee","Some Concerns",16,14,55,52,0.46,0.0384,0.196
-"Butler et al.",2022,"CBT","Individual","TAU","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,62,60,0.65,0.0345,0.1857
-"Kessler et al.",2022,"iCBT","Guided Digital","Waitlist","Subclinical","Adolescents","Automated Digital","Some Concerns",8,8,120,115,0.24,0.0172,0.1311
-"Richards et al.",2023,"BA","Individual","TAU","Clinical (MDD)","Adults","Supervised Trainee","Low Risk",10,10,50,48,0.61,0.0427,0.2066
-"Cuijpers & Reynolds",2023,"CBT","Group","Waitlist","Clinical (MDD)","Older Adults","Licensed Clinician","Some Concerns",14,14,70,68,0.48,0.0298,0.1726
-"Dimidjian et al.",2024,"BA","Individual","TAU","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",16,16,55,52,0.66,0.0394,0.1985
-"Andrews et al.",2024,"iCBT","Guided Digital","Placebo","Subclinical","Adults","Automated Digital","Low Risk",8,8,115,110,0.29,0.018,0.1342
+"Study","Year","Intervention","Format","Control_Type","Active_Comparator","Population","Age_Group","Therapist_Level","Risk_of_Bias","Duration_Weeks","Total_Sessions","N_Intervention","N_Control","yi","vi","sei"
+"Beck et al.",2012,"CBT","Individual","Waitlist","None (Waitlist)","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,45,42,0.82,0.0499,0.2234
+"Clark & Wells",2014,"CBT","Individual","TAU","Treatment as Usual","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",16,16,52,50,0.64,0.0412,0.203
+"Cuijpers et al.",2015,"iCBT","Guided Digital","Waitlist","None (Waitlist)","Subclinical","Adults","Automated Digital","Some Concerns",8,8,110,105,0.28,0.0188,0.1371
+"Hofmann et al.",2017,"CBT","Group","TAU","Treatment as Usual","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,60,58,0.54,0.0351,0.1873
+"Andersson et al.",2018,"iCBT","Guided Digital","Placebo","Attention Placebo","Subclinical","Adults","Automated Digital","Some Concerns",10,8,95,90,0.32,0.0219,0.148
+"Linehan et al.",2019,"ACT","Individual","TAU","Treatment as Usual","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",24,24,40,38,0.88,0.0563,0.2373
+"Ehlers et al.",2020,"CBT","Individual","Waitlist","None (Waitlist)","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,48,46,0.7,0.0452,0.2126
+"Barlow et al.",2021,"ACT","Group","Active Control","Relaxation Training","Clinical (Anxiety)","Adults","Supervised Trainee","Some Concerns",16,14,55,52,0.46,0.0384,0.196
+"Butler et al.",2022,"CBT","Individual","TAU","Treatment as Usual","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",12,12,62,60,0.65,0.0345,0.1857
+"Kessler et al.",2022,"iCBT","Guided Digital","Waitlist","None (Waitlist)","Subclinical","Adolescents","Automated Digital","Some Concerns",8,8,120,115,0.24,0.0172,0.1311
+"Richards et al.",2023,"BA","Individual","TAU","Treatment as Usual","Clinical (MDD)","Adults","Supervised Trainee","Low Risk",10,10,50,48,0.61,0.0427,0.2066
+"Cuijpers & Reynolds",2023,"CBT","Group","Waitlist","None (Waitlist)","Clinical (MDD)","Older Adults","Licensed Clinician","Some Concerns",14,14,70,68,0.48,0.0298,0.1726
+"Dimidjian et al.",2024,"BA","Individual","Active Control","Supportive Counseling","Clinical (MDD)","Adults","Licensed Clinician","Low Risk",16,16,55,52,0.66,0.0394,0.1985
+"Andrews et al.",2024,"iCBT","Guided Digital","Placebo","Attention Placebo","Subclinical","Adults","Automated Digital","Low Risk",8,8,115,110,0.29,0.018,0.1342
