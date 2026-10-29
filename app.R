@@ -62,7 +62,7 @@ create_calc_sample_batch <- function() {
 
 # UI Definition
 ui <- page_navbar(
-  title = "Intervention Meta-Analysis Studio",
+  title = "Kawe Meta Analysis",
   theme = bs_theme(
     version = 5,
     bootswatch = "flatly",
@@ -73,10 +73,50 @@ ui <- page_navbar(
     warning = "#d97706",
     danger = "#dc2626"
   ),
+  header = tagList(
+    tags$head(
+      tags$link(rel = "shortcut icon", href = "favicon.svg", type = "image/svg+xml"),
+      tags$style(HTML("
+        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
+        .lab-subtitle {
+          font-size: 0.72rem;
+          color: #94a3b8;
+          font-weight: 400;
+          display: block;
+          margin-top: 1px;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+        }
+        .nav-item a.nav-link { font-size: 0.88rem; }
+        .card-header { font-size: 0.92rem; }
+        .sidebar-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
+        .value-box-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .value-box-value { font-size: 1.25rem; }
+      "))
+    ),
+    tags$div(
+      class = "bg-primary text-white py-1 px-3 d-flex justify-content-between align-items-center",
+      tags$span(
+        class = "fw-bold",
+        style = "font-size: 0.82rem; letter-spacing: 1px;",
+        "KAWE",
+        tags$span(
+          class = "ms-2",
+          style = "font-size: 0.7rem; font-weight: 400; color: #bfdbfe;",
+          "| Quantitative & Psychometric Research"
+        )
+      ),
+      tags$span(
+        style = "font-size: 0.7rem; color: #bfdbfe;",
+        "Meta-Analysis & Effect Size Estimation Studio"
+      )
+    )
+  ),
   
   # Tab 1: Kalkulator Effect Size
   nav_panel(
-    title = "Kalkulator Effect Size (esc)",
+    icon = icon("calculator"),
+    title = "Kalkulator Effect Size",
     layout_sidebar(
       sidebar = sidebar(
         width = 380,
@@ -414,6 +454,7 @@ ui <- page_navbar(
   
   # Tab 2: Gabungan Hasil Kalkulator
   nav_panel(
+    icon = icon("layer-group"),
     title = "Gabungan Hasil Kalkulator",
     card(
       card_header(
@@ -471,6 +512,7 @@ ui <- page_navbar(
   
   # Tab 3: Dataset Meta-Analisis
   nav_panel(
+    icon = icon("table"),
     title = "Dataset Sintesis Bukti",
     card(
       card_header(
@@ -512,7 +554,8 @@ ui <- page_navbar(
   
   # Tab 3: Pemodelan Meta-Analisis
   nav_panel(
-    title = "Pemodelan Meta-Analisis (metafor)",
+    icon = icon("chart-pie"),
+    title = "Pemodelan Meta-Analisis",
     layout_sidebar(
       sidebar = sidebar(
         width = 340,
@@ -612,7 +655,8 @@ ui <- page_navbar(
   
   # Tab 5: Analisis Subkelompok (Subgroup Analysis)
   nav_panel(
-    title = "Analisis Subkelompok (Subgroup Analysis)",
+    icon = icon("object-group"),
+    title = "Analisis Subkelompok",
     layout_sidebar(
       sidebar = sidebar(
         width = 340,
@@ -698,7 +742,8 @@ ui <- page_navbar(
   
   # Tab 6: Forest Plot
   nav_panel(
-    title = "Forest Plot Publikasi",
+    icon = icon("tree"),
+    title = "Forest Plot",
     layout_sidebar(
       sidebar = sidebar(
         width = 340,
@@ -748,7 +793,8 @@ ui <- page_navbar(
   
   # Tab 5: Bias Publikasi
   nav_panel(
-    title = "Diagnostik Bias Publikasi & Funnel Plot",
+    icon = icon("shield-alt"),
+    title = "Diagnostik Bias & Funnel Plot",
     layout_sidebar(
       sidebar = sidebar(
         width = 340,
@@ -812,6 +858,7 @@ ui <- page_navbar(
   
   # Tab 6: Pedoman Konseptual
   nav_panel(
+    icon = icon("book"),
     title = "Pedoman Metodologis",
     card(
       card_header(class = "bg-light fw-bold text-primary", icon("book"), " Konvensi Metodologis Sintesis Bukti Intervensi"),
