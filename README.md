@@ -18,12 +18,20 @@ Mendukung konversi langsung berbagai format pelaporan studi primer ke dalam metr
 - **Korelasi**: Koefisien korelasi ($r$) dan total ukuran sampel ($N$).
 - **Injeksi Langsung**: Hasil estimasi parameter ($g$, $v_i$, $SE_i$) dapat langsung disuntikkan ke dalam dataset kerja meta-analisis aktif.
 
-### B. Manajemen Dataset Sintesis Bukti
+### B. Gabungan Hasil Kalkulator (Integrasi End-to-End Pipeline)
+- **Kompilasi Otomatis**: Setiap studi primer yang diestimasi pada modul kalkulator secara otomatis terakumulasi dalam matriks kompilasi kalkulator.
+- **Integrasi Modular ke Meta-Analisis**: Dilengkapi tombol aksi satu klik:
+  - *Kirim & Timpa ke Meta-Analisis*: Mengalirkan seluruh studi kalkulator menjadi dataset kerja utama guna menjalankan pemodelan efek acak, forest plot, dan analisis bias publikasi secara instan.
+  - *Gabungkan ke Dataset Aktif*: Menggabungkan studi-studi baru hasil kalkulator dengan studi yang telah ada.
+  - *Muat Contoh Batch Kalkulator*: Memuat 5 studi contoh uji klinis terkompilasi.
+  - *Unduh CSV Kompilasi*: Mengekspor seluruh parameter hasil kalkulator ke berkas CSV.
+
+### C. Manajemen Dataset Sintesis Bukti
 - **Data Benchmark Bawaan**: Memuat 14 uji klinis acak (*RCT*) psikoterapi (CBT, ACT, BA, iCBT) lengkap dengan variabel moderator substantif psikologi klinis (Tipe Kontrol, Format, Populasi, Kualifikasi Terapis, Risiko Bias RoB 2.0, Durasi, Total Sesi).
 - **Unggah Berkas Mandiri**: Mendukung format `.csv` dan `.xlsx` dengan pemetaan otomatis kolom efek ($y_i$), varians ($v_i$), atau standar error ($SE$).
 - **Tabel Interaktif**: Penyaringan data, evaluasi bobot studi (*inverse-variance weight %*), dan ekspor dataset ke `.csv`.
 
-### C. Pemodelan Meta-Analisis & Analisis Moderator Substantif (`metafor`)
+### D. Pemodelan Meta-Analisis & Analisis Moderator Substantif (`metafor`)
 - **Pilihan Estimator Varians Antarstudi ($\tau^2$)**:
   - *Restricted Maximum Likelihood* (REML) — baku emas untuk model efek acak.
   - *DerSimonian-Laird* (DL), *Maximum Likelihood* (ML), *Paule-Mandel* (PM), *Empirical Bayes* (EB), dan *Fixed-Effect* (FE).
@@ -42,8 +50,20 @@ Mendukung konversi langsung berbagai format pelaporan studi primer ke dalam metr
   - **Kelompok Usia Partisipan** (`Age_Group`): *Adults*, *Adolescents*, *Older Adults*.
   - **Dosis & Durasi Intervensi Kontinu** (`Duration_Weeks`, `Total_Sessions`): Analisis meta-regresi linier lengkap dengan *Bubble Plot* (ukuran titik merepresentasikan bobot presisi $1/v_i$).
 
-### D. Visualisasi Publikasi
-- **Forest Plot**:
+### E. Modul Analisis Subkelompok Klinis Dedikatif (Subgroup Analysis)
+- **Komparasi Kategori Klinis**: Membandingkan efektivitas intervensi antar-strata (Tipe Kontrol, Format, Pendekatan Terapi, Risiko Bias, Populasi, Kualifikasi Terapis, dan Kelompok Usia).
+- **Uji Beda Antar-Subkelompok ($Q_B$) & Heterogenitas Residual ($Q_E$)**:
+  - Uji omnibus moderator ($Q_B$, $df$, $p$-value).
+  - Evaluasi variabilitas residual yang belum terjelaskan ($Q_E$, $df$, $p$-value).
+  - Proporsi varians sejati antarstudi yang dijelaskan ($R^2$ %).
+- **Subgroup Forest Plot Multi-Intan**:
+  - Penataan bertingkat (*hierarchical layout*) dengan intan poligon terpisah untuk tiap subkelompok (`addpoly`) dan intan gabungan total (*overall pooled*).
+  - Ekspor gambar resolusi tinggi PNG (300 DPI) dan PDF vektor.
+- **Tabel Komparasi Subkelompok Komprehensif**: Menampilkan $k$, Total $N$, Pooled $g$, SE, 95% CI, 95% PI, $z$, $p$, $I^2$, $\tau^2$, dan $Q_w$.
+- **Naratif & Interpretasi Substantif Otomatis**: Analisis implikasi klinis berdasarkan kaidah pelaporan akademik baku (tanpa diksi kausal terlarang).
+
+### F. Visualisasi Publikasi
+- **Forest Plot Standar & Berstrata**:
   - Menampilkan nama studi, bobot studi (%), titik estimasi $g$ individual beserta 95% CI, ringkasan efek acak (*summary diamond*), dan batas interval prediksi (*prediction interval*).
   - Pengurutan studi interaktif berdasarkan moderator klinis (`Control_Type`, `Format`, `Intervention`, `Risk_of_Bias`).
   - Ekspor resolusi tinggi: PNG (300 DPI) dan PDF vektor.
@@ -71,6 +91,7 @@ multilevel-meta-analysis/
 │   └── Intervention_Benchmark_Data.csv       # Dataset benchmark 14 uji intervensi klinis
 ├── 03_Visuals/
 │   ├── Intervention-Forest_Plot.png          # Forest plot ekspor 300 DPI
+│   ├── Intervention-Subgroup_Forest.png      # Subgroup forest plot ekspor 300 DPI
 │   ├── Intervention-Funnel_Plot.png          # Contour-enhanced funnel plot ekspor 300 DPI
 │   ├── Intervention-TrimFill.png             # Trim & Fill funnel plot ekspor 300 DPI
 │   └── Intervention-Bubble_Plot.png          # Meta-regression bubble plot ekspor 300 DPI

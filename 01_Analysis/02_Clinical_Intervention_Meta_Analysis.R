@@ -101,8 +101,94 @@ forest(
   header = c("Studi Primer & Tahun", "Hedges' g [95% CI]"),
   addpred = TRUE,
   showweights = TRUE,
+  col = "#1e3a8a"
+)
+dev.off()
+
+# Subgroup Forest Plot (Control_Type)
+dat_ord <- dat[order(dat$Control_Type, dat$yi, decreasing = FALSE), ]
+cats <- unique(dat_ord$Control_Type)
+row_cursor <- 3
+cat_poly_rows <- list()
+cat_header_rows <- list()
+study_rows <- numeric(nrow(dat_ord))
+
+for (cat in rev(cats)) {
+  idx <- which(dat_ord$Control_Type == cat)
+  cat_poly_rows[[cat]] <- row_cursor
+  row_cursor <- row_cursor + 1
+  for (i in seq_along(idx)) {
+    study_rows[idx[i]] <- row_cursor
+    row_cursor <- row_cursor + 1
+  }
+  cat_header_rows[[cat]] <- row_cursor
+  row_cursor <- row_cursor + 2
+}
+top_row <- row_cursor
+
+slabs_sub <- paste0(
+  dat_ord$Study, " (", dat_ord$Year, ") [",
+  ifelse(dat_ord$Control_Type == "Active Control" & !is.na(dat_ord$Active_Comparator),
+         dat_ord$Active_Comparator, dat_ord$Control_Type), "]"
+)
+
+png(
+  "03_Visuals/Intervention-Subgroup_Forest.png",
+  width = 3000,
+  height = 2400,
+  res = 300
+)
+forest(
+  dat_ord$yi,
+  dat_ord$vi,
+  slab = slabs_sub,
+  rows = study_rows,
+  ylim = c(-1.5, top_row + 1),
+  xlab = "Besaran Efek Intervensi (Hedges' g)",
+  header = c("Studi Primer & Subkelompok", "Hedges' g [95% CI]"),
+  cex = 0.85,
+  col = "#1e3a8a",
+  refline = 0,
+  alim = c(min(-0.5, min(dat_ord$yi - 1.96 * sqrt(dat_ord$vi)) - 0.2), max(1.5, max(dat_ord$yi + 1.96 * sqrt(dat_ord$vi)) + 0.2))
+)
+addpoly(
+  mod.meta,
+  row = 1,
+  mlab = "Total Pooled (REML)",
+  cex = 0.85,
   col = "#1e3a8a",
   border = "#1e3a8a"
+)
+for (cat in cats) {
+  idx <- which(dat_ord$Control_Type == cat)
+  k_cat <- length(idx)
+  sub_res <- rma(dat_ord$yi[idx], dat_ord$vi[idx], method = "REML")
+  addpoly(
+    sub_res,
+    row = cat_poly_rows[[cat]],
+    mlab = paste0("Subtotal: ", cat, " (k = ", k_cat, ")"),
+    cex = 0.85,
+    col = "#0284c7",
+    border = "#0284c7"
+  )
+  text(
+    par("usr")[1],
+    cat_header_rows[[cat]],
+    paste0("Subkelompok: ", cat, " (k = ", k_cat, ")"),
+    font = 2,
+    pos = 4,
+    cex = 0.85
+  )
+}
+usr <- par("usr")
+text(
+  usr[1],
+  -0.8,
+  sprintf("Uji Beda Subkelompok (QB): QM = %.2f, df = %d, p = %.4f  |  Heterogenitas Residual (QE): QE = %.2f, p = %.4f",
+          mod.reg.ctrl$QM, mod.reg.ctrl$QMdf[1], mod.reg.ctrl$QMp, mod.reg.ctrl$QE, mod.reg.ctrl$QEp),
+  pos = 4,
+  cex = 0.75,
+  font = 3
 )
 dev.off()
 

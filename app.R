@@ -36,6 +36,30 @@ create_benchmark_data <- function() {
   )
 }
 
+# Compiled Calculator Batch Generator
+create_calc_sample_batch <- function() {
+  data.frame(
+    Study = c("Cuijpers et al. (Trial A)", "Hofmann & Smits", "Linehan et al. (Pre-Post)", "Beck & Freeman", "Andersson et al. (iCBT)"),
+    Year = c(2021, 2022, 2023, 2023, 2024),
+    Intervention = c("CBT", "CBT", "ACT", "CBT", "iCBT"),
+    Format = c("Individual", "Group", "Individual", "Individual", "Guided Digital"),
+    Control_Type = c("Waitlist", "TAU", "Active Control", "TAU", "Placebo"),
+    Active_Comparator = c("None (Waitlist)", "Treatment as Usual", "Supportive Counseling", "Treatment as Usual", "Attention Placebo"),
+    Population = c("Clinical (MDD)", "Clinical (Anxiety)", "Clinical (MDD)", "Clinical (MDD)", "Subclinical"),
+    Age_Group = c("Adults", "Adults", "Adults", "Older Adults", "Adults"),
+    Therapist_Level = c("Licensed Clinician", "Licensed Clinician", "Licensed Clinician", "Licensed Clinician", "Automated Digital"),
+    Risk_of_Bias = c("Low Risk", "Low Risk", "Low Risk", "Some Concerns", "Low Risk"),
+    Duration_Weeks = c(12, 14, 20, 16, 8),
+    Total_Sessions = c(12, 14, 20, 16, 8),
+    N_Intervention = c(40, 55, 38, 50, 100),
+    N_Control = c(40, 52, 36, 48, 95),
+    yi = c(0.720, 0.510, 0.840, 0.610, 0.310),
+    vi = c(0.0532, 0.0385, 0.0571, 0.0425, 0.0210),
+    sei = c(0.2307, 0.1962, 0.2390, 0.2062, 0.1449),
+    stringsAsFactors = FALSE
+  )
+}
+
 # UI Definition
 ui <- page_navbar(
   title = "Intervention Meta-Analysis Studio",
@@ -388,7 +412,64 @@ ui <- page_navbar(
     )
   ),
   
-  # Tab 2: Dataset Meta-Analisis
+  # Tab 2: Gabungan Hasil Kalkulator
+  nav_panel(
+    title = "Gabungan Hasil Kalkulator",
+    card(
+      card_header(
+        class = "bg-light d-flex justify-content-between align-items-center",
+        span(class = "fw-bold text-primary", icon("layer-group"), " Matriks Studi Hasil Kompilasi Kalkulator Effect Size"),
+        div(
+          actionButton("btn_push_calc_to_active", "Kirim & Timpa ke Meta-Analisis", class = "btn-sm btn-primary me-2", icon = icon("share-square")),
+          actionButton("btn_append_calc_to_active", "Gabungkan ke Dataset Aktif", class = "btn-sm btn-outline-primary me-2", icon = icon("plus")),
+          actionButton("btn_load_calc_sample", "Muat Contoh Batch Kalkulator", class = "btn-sm btn-outline-secondary me-2", icon = icon("magic")),
+          actionButton("btn_clear_calc_compiled", "Kosongkan Gabungan", class = "btn-sm btn-outline-danger me-2", icon = icon("trash")),
+          downloadButton("btn_download_calc_csv", "Unduh CSV Kompilasi", class = "btn-sm btn-outline-success")
+        )
+      ),
+      card_body(
+        layout_columns(
+          col_widths = c(3, 3, 3, 3),
+          value_box(
+            title = "Studi Terkompilasi (k)",
+            value = textOutput("vb_calc_comp_k"),
+            showcase = icon("database"),
+            theme = "primary"
+          ),
+          value_box(
+            title = "Rata-rata Effect Size (g)",
+            value = textOutput("vb_calc_comp_mean_g"),
+            showcase = icon("chart-bar"),
+            theme = "info"
+          ),
+          value_box(
+            title = "Rentang Besaran Efek",
+            value = textOutput("vb_calc_comp_range_g"),
+            showcase = icon("arrows-alt-h"),
+            theme = "secondary"
+          ),
+          value_box(
+            title = "Total Sampel Terkumpul",
+            value = textOutput("vb_calc_comp_n"),
+            showcase = icon("users"),
+            theme = "success"
+          )
+        ),
+        
+        div(
+          class = "alert alert-light border my-3 d-flex align-items-center justify-content-between",
+          div(
+            icon("check-circle", class = "text-success me-2 fs-5"),
+            span("Seluruh studi yang Anda hitung pada formulir kalkulator (termasuk konversi ", tags$em("esc_mean_gain"), ") secara otomatis terkumpul di tabel ini. Klik ", tags$strong("Kirim & Timpa ke Meta-Analisis"), " untuk langsung melakukan pemodelan penuh, analisis subkelompok, forest plot, dan uji bias publikasi.")
+          )
+        ),
+        
+        DTOutput("table_calc_compiled")
+      )
+    )
+  ),
+  
+  # Tab 3: Dataset Meta-Analisis
   nav_panel(
     title = "Dataset Sintesis Bukti",
     card(
@@ -529,7 +610,93 @@ ui <- page_navbar(
     )
   ),
   
-  # Tab 4: Forest Plot
+  # Tab 5: Analisis Subkelompok (Subgroup Analysis)
+  nav_panel(
+    title = "Analisis Subkelompok (Subgroup Analysis)",
+    layout_sidebar(
+      sidebar = sidebar(
+        width = 340,
+        title = "Konfigurasi Subkelompok",
+        
+        selectInput(
+          "subgroup_var_select",
+          "Pilih Variabel Subkelompok Klinis:",
+          choices = c(
+            "Tipe Kelompok Kontrol (Control_Type)" = "Control_Type",
+            "Format Penghantaran (Format)" = "Format",
+            "Pendekatan Terapi (Intervention)" = "Intervention",
+            "Risiko Bias (Risk_of_Bias)" = "Risk_of_Bias",
+            "Populasi Sasaran (Population)" = "Population",
+            "Kualifikasi Terapis (Therapist_Level)" = "Therapist_Level",
+            "Kelompok Usia (Age_Group)" = "Age_Group"
+          ),
+          selected = "Control_Type"
+        ),
+        
+        sliderInput("subgroup_forest_cex", "Skala Ukuran Teks / Titik:", min = 0.7, max = 1.3, value = 0.92, step = 0.05),
+        
+        hr(),
+        
+        downloadButton("btn_dl_subgroup_png", "Unduh Subgroup Forest Plot (PNG)", class = "btn-primary w-100 mb-2"),
+        downloadButton("btn_dl_subgroup_pdf", "Unduh Subgroup Forest Plot (PDF)", class = "btn-secondary w-100")
+      ),
+      
+      card(
+        card_header(
+          class = "bg-light fw-bold text-primary",
+          icon("object-group"), " Sintesis Bukti Komparatif Antar-Subkelompok"
+        ),
+        card_body(
+          layout_columns(
+            col_widths = c(3, 3, 3, 3),
+            value_box(
+              title = "Uji Beda Subkelompok (QB)",
+              value = textOutput("vb_sub_qb"),
+              showcase = icon("balance-scale"),
+              theme = "primary"
+            ),
+            value_box(
+              title = "Heterogenitas Residual (QE)",
+              value = textOutput("vb_sub_qe"),
+              showcase = icon("wave-square"),
+              theme = "info"
+            ),
+            value_box(
+              title = "Varians Dijelaskan (R^2)",
+              value = textOutput("vb_sub_r2"),
+              showcase = icon("chart-pie"),
+              theme = "warning"
+            ),
+            value_box(
+              title = "Jumlah Subkelompok",
+              value = textOutput("vb_sub_k_cats"),
+              showcase = icon("layer-group"),
+              theme = "secondary"
+            )
+          ),
+          
+          hr(),
+          
+          navset_card_tab(
+            nav_panel(
+              title = "Subgroup Forest Plot",
+              plotOutput("subgroup_forest_plot_display", height = "720px")
+            ),
+            nav_panel(
+              title = "Tabel Komparasi Subkelompok",
+              tableOutput("table_subgroup_comprehensive")
+            ),
+            nav_panel(
+              title = "Naratif & Interpretasi Substantif",
+              uiOutput("subgroup_interpretation_narrative")
+            )
+          )
+        )
+      )
+    )
+  ),
+  
+  # Tab 6: Forest Plot
   nav_panel(
     title = "Forest Plot Publikasi",
     layout_sidebar(
@@ -694,6 +861,7 @@ server <- function(input, output, session) {
   # Reactive Data Storage
   active_data <- reactiveVal(create_benchmark_data())
   calc_result <- reactiveVal(NULL)
+  calc_compiled_data <- reactiveVal(create_calc_sample_batch())
   
   # Observe Load Benchmark Button
   observeEvent(input$btn_load_benchmark, {
@@ -1036,7 +1204,120 @@ server <- function(input, output, session) {
     )
     
     active_data(rbind(current_df, new_row))
-    showNotification(paste("Studi '", input$study_name, "' berhasil ditambahkan ke dataset."), type = "message")
+    comp_df <- calc_compiled_data()
+    calc_compiled_data(rbind(comp_df, new_row))
+    showNotification(paste("Studi '", input$study_name, "' berhasil ditambahkan ke dataset aktif dan gabungan hasil kalkulator."), type = "message")
+  })
+  
+  # Tab 2: Gabungan Hasil Kalkulator Server Handlers
+  
+  # Push and Overwrite to Active Dataset
+  observeEvent(input$btn_push_calc_to_active, {
+    df_calc <- calc_compiled_data()
+    if (nrow(df_calc) == 0) {
+      showNotification("Matriks kompilasi kalkulator masih kosong.", type = "warning")
+      return()
+    }
+    active_data(df_calc)
+    showNotification(paste("Berhasil mengirim", nrow(df_calc), "studi hasil kalkulator ke dataset aktif meta-analisis."), type = "message")
+  })
+  
+  # Append to Active Dataset
+  observeEvent(input$btn_append_calc_to_active, {
+    df_calc <- calc_compiled_data()
+    if (nrow(df_calc) == 0) {
+      showNotification("Matriks kompilasi kalkulator masih kosong.", type = "warning")
+      return()
+    }
+    current_df <- active_data()
+    active_data(rbind(current_df, df_calc))
+    showNotification(paste("Berhasil menggabungkan", nrow(df_calc), "studi kompilasi ke dataset aktif."), type = "message")
+  })
+  
+  # Load Sample Batch
+  observeEvent(input$btn_load_calc_sample, {
+    calc_compiled_data(create_calc_sample_batch())
+    showNotification("Contoh batch studi kalkulator (k = 5) berhasil dimuat.", type = "message")
+  })
+  
+  # Clear Compiled Data
+  observeEvent(input$btn_clear_calc_compiled, {
+    empty_df <- data.frame(
+      Study = character(0),
+      Year = numeric(0),
+      Intervention = character(0),
+      Format = character(0),
+      Control_Type = character(0),
+      Active_Comparator = character(0),
+      Population = character(0),
+      Age_Group = character(0),
+      Therapist_Level = character(0),
+      Risk_of_Bias = character(0),
+      Duration_Weeks = numeric(0),
+      Total_Sessions = numeric(0),
+      N_Intervention = numeric(0),
+      N_Control = numeric(0),
+      yi = numeric(0),
+      vi = numeric(0),
+      sei = numeric(0),
+      stringsAsFactors = FALSE
+    )
+    calc_compiled_data(empty_df)
+    showNotification("Matriks gabungan hasil kalkulator telah dikosongkan.", type = "warning")
+  })
+  
+  # Download Compiled Calculator CSV
+  output$btn_download_calc_csv <- downloadHandler(
+    filename = function() {
+      paste0("Compiled_Calculator_Effects_", Sys.Date(), ".csv")
+    },
+    content = function(file) {
+      write.csv(calc_compiled_data(), file, row.names = FALSE)
+    }
+  )
+  
+  # Value Boxes in Compiled Calculator Tab
+  output$vb_calc_comp_k <- renderText({
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) return("0")
+    paste(nrow(df), "Studi")
+  })
+  
+  output$vb_calc_comp_mean_g <- renderText({
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) return("-")
+    sprintf("%.3f", mean(df$yi, na.rm = TRUE))
+  })
+  
+  output$vb_calc_comp_range_g <- renderText({
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) return("-")
+    sprintf("%.3f s/d %.3f", min(df$yi, na.rm = TRUE), max(df$yi, na.rm = TRUE))
+  })
+  
+  output$vb_calc_comp_n <- renderText({
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) return("0")
+    total_n <- sum(df$N_Intervention + df$N_Control, na.rm = TRUE)
+    sprintf("%s Partisipan", format(total_n, big.mark = "."))
+  })
+  
+  # Compiled Calculator DT Table
+  output$table_calc_compiled <- renderDT({
+    df <- calc_compiled_data()
+    if (nrow(df) == 0) return(NULL)
+    
+    inv_var <- 1 / df$vi
+    df$Bobot_Persen <- round((inv_var / sum(inv_var)) * 100, 2)
+    
+    datatable(
+      df,
+      options = list(pageLength = 10, autoWidth = TRUE, scrollX = TRUE),
+      rownames = FALSE,
+      class = "display compact cell-border"
+    ) %>%
+      formatRound(columns = c("yi", "vi", "sei"), digits = 4) %>%
+      formatRound(columns = "Bobot_Persen", digits = 2)
   })
   
   # Value Boxes in Calculator Tab
@@ -1428,6 +1709,325 @@ server <- function(input, output, session) {
     }
   })
   
+  # Tab 5: Analisis Subkelompok (Subgroup Analysis) Handlers
+  
+  # Subgroup Model Reactive
+  subgroup_models <- reactive({
+    df <- active_data()
+    req(nrow(df) >= 2)
+    grp_var <- input$subgroup_var_select
+    req(grp_var %in% colnames(df))
+    
+    # Filter valid rows
+    df_clean <- df[!is.na(df[[grp_var]]) & df[[grp_var]] != "", ]
+    req(nrow(df_clean) >= 2)
+    
+    method <- input$meta_estimator
+    
+    # Overall pooled model
+    res_all <- tryCatch(rma(yi = yi, vi = vi, data = df_clean, method = method), error = function(e) NULL)
+    
+    # Omnibus moderator test (QB and QE)
+    form <- as.formula(paste("~ factor(", grp_var, ")"))
+    res_mod <- tryCatch(rma(yi = yi, vi = vi, mods = form, data = df_clean, method = method), error = function(e) NULL)
+    
+    list(
+      data = df_clean,
+      grp_var = grp_var,
+      res_all = res_all,
+      res_mod = res_mod,
+      method = method
+    )
+  })
+  
+  # Value Boxes in Subgroup Analysis Tab
+  output$vb_sub_qb <- renderText({
+    m <- tryCatch(subgroup_models(), error = function(e) NULL)
+    if (is.null(m) || is.null(m$res_mod)) return("-")
+    sprintf("%.2f (df = %d, p = %.4f)", m$res_mod$QM, m$res_mod$QMdf[1], m$res_mod$QMp)
+  })
+  
+  output$vb_sub_qe <- renderText({
+    m <- tryCatch(subgroup_models(), error = function(e) NULL)
+    if (is.null(m) || is.null(m$res_mod)) return("-")
+    sprintf("%.2f (df = %d, p = %.4f)", m$res_mod$QE, m$res_mod$QEdf, m$res_mod$QEp)
+  })
+  
+  output$vb_sub_r2 <- renderText({
+    m <- tryCatch(subgroup_models(), error = function(e) NULL)
+    if (is.null(m) || is.null(m$res_mod)) return("-")
+    if (input$meta_estimator == "FE") return("N/A (FE)")
+    if (!is.null(m$res_mod$R2) && !is.na(m$res_mod$R2)) sprintf("%.1f%%", m$res_mod$R2) else "0.0%"
+  })
+  
+  output$vb_sub_k_cats <- renderText({
+    m <- tryCatch(subgroup_models(), error = function(e) NULL)
+    if (is.null(m)) return("-")
+    cats <- unique(m$data[[m$grp_var]])
+    sprintf("%d Kategori (k = %d)", length(cats), nrow(m$data))
+  })
+  
+  # Subgroup Forest Plot Rendering Helper
+  render_subgroup_forest_internal <- function() {
+    m <- subgroup_models()
+    req(!is.null(m), !is.null(m$res_all))
+    
+    df <- m$data
+    grp_var <- m$grp_var
+    method <- m$method
+    
+    # Sort by group then effect size
+    df <- df[order(df[[grp_var]], df$yi, decreasing = FALSE), ]
+    cats <- unique(df[[grp_var]])
+    
+    row_cursor <- 3
+    cat_poly_rows <- list()
+    cat_header_rows <- list()
+    study_rows <- numeric(nrow(df))
+    
+    for (cat in rev(cats)) {
+      idx <- which(df[[grp_var]] == cat)
+      cat_poly_rows[[cat]] <- row_cursor
+      row_cursor <- row_cursor + 1
+      
+      for (i in seq_along(idx)) {
+        study_rows[idx[i]] <- row_cursor
+        row_cursor <- row_cursor + 1
+      }
+      
+      cat_header_rows[[cat]] <- row_cursor
+      row_cursor <- row_cursor + 2
+    }
+    
+    top_row <- row_cursor
+    
+    # Slabs
+    if (grp_var == "Control_Type") {
+      slabs <- paste0(df$Study, " (", df$Year, ") [", ifelse(df$Control_Type == "Active Control" & !is.na(df$Active_Comparator), df$Active_Comparator, df$Control_Type), "]")
+    } else {
+      slabs <- paste0(df$Study, " (", df$Year, ")")
+    }
+    
+    cex_val <- input$subgroup_forest_cex
+    
+    forest(
+      df$yi,
+      df$vi,
+      slab = slabs,
+      rows = study_rows,
+      ylim = c(-1.5, top_row + 1),
+      xlab = "Besaran Efek Intervensi (Hedges' g)",
+      header = c("Studi Primer & Subkelompok", "Hedges' g [95% CI]"),
+      cex = cex_val,
+      col = "#1e3a8a",
+      refline = 0,
+      alim = c(min(-0.5, min(df$yi - 1.96 * sqrt(df$vi)) - 0.2), max(1.5, max(df$yi + 1.96 * sqrt(df$vi)) + 0.2))
+    )
+    
+    # Add Overall Summary Diamond
+    addpoly(
+      m$res_all,
+      row = 1,
+      mlab = paste0("Total Pooled (", method, ")"),
+      cex = cex_val,
+      col = "#1e3a8a",
+      border = "#1e3a8a"
+    )
+    
+    # Add Subgroup Summary Diamonds & Headers
+    for (cat in cats) {
+      idx <- which(df[[grp_var]] == cat)
+      k_cat <- length(idx)
+      sub_res <- rma(df$yi[idx], df$vi[idx], method = method)
+      
+      addpoly(
+        sub_res,
+        row = cat_poly_rows[[cat]],
+        mlab = paste0("Subtotal: ", cat, " (k = ", k_cat, ")"),
+        cex = cex_val,
+        col = "#0284c7",
+        border = "#0284c7"
+      )
+      
+      text(
+        par("usr")[1],
+        cat_header_rows[[cat]],
+        paste0("Subkelompok: ", cat, " (k = ", k_cat, ")"),
+        font = 2,
+        pos = 4,
+        cex = cex_val
+      )
+    }
+    
+    # Footer annotation
+    if (!is.null(m$res_mod)) {
+      usr <- par("usr")
+      text(
+        usr[1],
+        -0.8,
+        sprintf("Uji Beda Subkelompok (QB): QM = %.2f, df = %d, p = %.4f  |  Heterogenitas Residual (QE): QE = %.2f, p = %.4f",
+                m$res_mod$QM, m$res_mod$QMdf[1], m$res_mod$QMp, m$res_mod$QE, m$res_mod$QEp),
+        pos = 4,
+        cex = cex_val * 0.85,
+        font = 3
+      )
+    }
+  }
+  
+  output$subgroup_forest_plot_display <- renderPlot({
+    render_subgroup_forest_internal()
+  })
+  
+  # Download Subgroup Forest Plot PNG
+  output$btn_dl_subgroup_png <- downloadHandler(
+    filename = function() {
+      paste0("Subgroup_Forest_Plot_", input$subgroup_var_select, "_", Sys.Date(), ".png")
+    },
+    content = function(file) {
+      png(file, width = 3000, height = 2400, res = 300)
+      render_subgroup_forest_internal()
+      dev.off()
+    }
+  )
+  
+  # Download Subgroup Forest Plot PDF
+  output$btn_dl_subgroup_pdf <- downloadHandler(
+    filename = function() {
+      paste0("Subgroup_Forest_Plot_", input$subgroup_var_select, "_", Sys.Date(), ".pdf")
+    },
+    content = function(file) {
+      pdf(file, width = 11, height = 8.5)
+      render_subgroup_forest_internal()
+      dev.off()
+    }
+  )
+  
+  # Table Subgroup Comprehensive
+  output$table_subgroup_comprehensive <- renderTable({
+    m <- tryCatch(subgroup_models(), error = function(e) NULL)
+    if (is.null(m)) return(data.frame(Status = "Data tidak mencukupi untuk analisis subkelompok."))
+    
+    df <- m$data
+    grp_var <- m$grp_var
+    method <- m$method
+    cats <- sort(unique(df[[grp_var]]))
+    
+    res_list <- lapply(cats, function(cat) {
+      sub_df <- df[df[[grp_var]] == cat, ]
+      k_sub <- nrow(sub_df)
+      total_n <- if ("N_Intervention" %in% colnames(sub_df) && "N_Control" %in% colnames(sub_df)) {
+        as.character(sum(sub_df$N_Intervention + sub_df$N_Control, na.rm = TRUE))
+      } else {
+        "-"
+      }
+      
+      sub_res <- tryCatch(rma(yi = yi, vi = vi, data = sub_df, method = method), error = function(e) NULL)
+      if (is.null(sub_res)) return(NULL)
+      pred <- predict(sub_res)
+      
+      data.frame(
+        Subkelompok = as.character(cat),
+        `k (Studi)` = as.character(k_sub),
+        `Total N` = total_n,
+        `Pooled Hedges' g` = sprintf("%.3f", sub_res$b[1]),
+        SE = sprintf("%.3f", sub_res$se[1]),
+        `95% CI` = sprintf("[%.3f, %.3f]", sub_res$ci.lb[1], sub_res$ci.ub[1]),
+        `95% PI` = if (method != "FE" && k_sub >= 3) sprintf("[%.3f, %.3f]", pred$pi.lb, pred$pi.ub) else "-",
+        `z-score` = sprintf("%.3f", sub_res$zval[1]),
+        `p-value` = sprintf("%.4f", sub_res$pval[1]),
+        `I^2 (%)` = sprintf("%.1f%%", sub_res$I2),
+        `tau^2` = sprintf("%.4f", sub_res$tau2),
+        `Heterogenitas Qw` = sprintf("%.2f (df = %d, p = %.4f)", sub_res$QE, sub_res$QEdf, sub_res$QEp),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
+      )
+    })
+    
+    do.call(rbind, res_list)
+  }, striped = TRUE, hover = TRUE, bordered = TRUE)
+  
+  # Subgroup Interpretation Narrative
+  output$subgroup_interpretation_narrative <- renderUI({
+    m <- tryCatch(subgroup_models(), error = function(e) NULL)
+    if (is.null(m) || is.null(m$res_mod)) {
+      return(p("Model subkelompok belum tersedia."))
+    }
+    
+    df <- m$data
+    grp_var <- m$grp_var
+    res_mod <- m$res_mod
+    cats <- sort(unique(df[[grp_var]]))
+    
+    qb_sig <- res_mod$QMp < 0.05
+    qb_text <- if (qb_sig) {
+      paste0(
+        "Hasil uji omnibus moderator membuktikan adanya variasi besaran efek antar-subkelompok yang bermakna secara statistik (",
+        "<em>QB</em> = ", sprintf("%.2f, df = %d, p = %.4f", res_mod$QM, res_mod$QMdf[1], res_mod$QMp), "). ",
+        "Temuan ini mengindikasikan bahwa karakteristik <strong>", grp_var,
+        "</strong> berperan sebagai moderator substantif yang menjelaskan heterogenitas efektivitas intervensi antarstudi klinis, ",
+        "dengan proporsi varians sejati antarstudi yang berhasil dijelaskan mencapai <strong>",
+        sprintf("%.1f%%", ifelse(!is.null(res_mod$R2) && !is.na(res_mod$R2), res_mod$R2, 0)), "</strong>."
+      )
+    } else {
+      paste0(
+        "Hasil uji omnibus moderator mengindikasikan bahwa perbedaan besaran efek antar-subkelompok belum mencapai signifikansi statistik konvensional (",
+        "<em>QB</em> = ", sprintf("%.2f, df = %d, p = %.4f", res_mod$QM, res_mod$QMdf[1], res_mod$QMp), "). ",
+        "Meskipun demikian, variasi parameter deskriptif antar-kategori tetap memberikan gambaran diferensial yang penting secara klinis."
+      )
+    }
+    
+    sub_details <- lapply(cats, function(cat) {
+      sub_df <- df[df[[grp_var]] == cat, ]
+      k_sub <- nrow(sub_df)
+      sub_res <- tryCatch(rma(yi = yi, vi = vi, data = sub_df, method = m$method), error = function(e) NULL)
+      if (is.null(sub_res)) return(NULL)
+      
+      mag <- ifelse(abs(sub_res$b[1]) < 0.2, "dapat diabaikan",
+                    ifelse(abs(sub_res$b[1]) < 0.5, "kecil",
+                           ifelse(abs(sub_res$b[1]) < 0.8, "sedang", "besar")))
+      
+      tags$li(
+        strong(paste0(cat, " (k = ", k_sub, "): ")),
+        sprintf("Pooled Hedges' g = %.3f [%.3f, %.3f], p = %.4f (kategori efek %s). ", sub_res$b[1], sub_res$ci.lb[1], sub_res$ci.ub[1], sub_res$pval[1], mag),
+        sprintf("Tingkat heterogenitas internal I^2 = %.1f%% (tau^2 = %.4f).", sub_res$I2, sub_res$tau2)
+      )
+    })
+    
+    psy_context <- if (grp_var == "Control_Type") {
+      p(
+        "Secara khusus pada telaah tipe kelompok kontrol, variasi besaran efek mencerminkan fenomena atenuasi akibat komparator aktif: ",
+        "uji coba dengan kelompok pembanding ", tags$em("Waitlist"), " secara konsisten menghasilkan estimasi besaran efek intervensi yang paling tinggi. ",
+        "Sebaliknya, pengujian terhadap ", tags$em("Active Control"), " (misal: ", tags$em("Relaxation Training"), " atau ", tags$em("Supportive Counseling"), ") ",
+        "menghasilkan estimasi besaran efek yang lebih teratenuasi secara substansial. ",
+        "Hal tersebut menegaskan bahwa kelompok kontrol aktif berhasil mengendalikan faktor-faktor terapeutik non-spesifik seperti ekspektasi pemulihan dan kontak relasional terapis (Cuijpers et al., 2023)."
+      )
+    } else if (grp_var == "Format") {
+      p(
+        "Secara khusus pada telaah format penghantaran intervensi, format ", tags$em("Individual"), " dan ", tags$em("Group"), " tatap muka ",
+        "memperlihatkan besaran efek yang relatif lebih tinggi dibandingkan format ", tags$em("Guided Digital"), ". ",
+        "Meskipun intervensi digital terpandu menawarkan skalabilitas implementasi yang luas, perbedaan intensitas relasi terapeutik (", tags$em("therapeutic alliance"), ") ",
+        "memberikan kontribusi nyata terhadap variabilitas respon klinis partisipan."
+      )
+    } else {
+      NULL
+    }
+    
+    tagList(
+      h5("Sintesis Komparatif Subkelompok & Implikasi Klinis", class = "text-primary fw-bold"),
+      p(HTML(qb_text)),
+      h6("Rincian Estimasi per Subkelompok:", class = "fw-bold mt-3"),
+      tags$ul(sub_details),
+      psy_context,
+      p(
+        "Evaluasi terhadap heterogenitas residual menghasilkan ",
+        strong(sprintf("QE = %.2f (df = %d, p = %.4f)", res_mod$QE, res_mod$QEdf, res_mod$QEp)), ". ",
+        ifelse(res_mod$QEp < 0.05,
+               "Heterogenitas residual yang masih signifikan mengindikasikan adanya faktor perancu atau karakteristik metodologis lain yang belum sepenuhnya terakomodasi dalam pengelompokan ini.",
+               "Nilai p residual yang tidak signifikan mengindikasikan bahwa sebagian besar heterogenitas antarstudi telah berhasil dieliminasi melalui stratifikasi subkelompok ini.")
+      )
+    )
+  })
+  
   # Helper to Prepare Forest Plot Data & Object
   render_forest_internal <- function() {
     df <- active_data()
@@ -1487,7 +2087,6 @@ server <- function(input, output, session) {
       showweights = input$forest_show_weights,
       cex = input$forest_cex,
       col = "#1e3a8a",
-      border = "#1e3a8a",
       alim = c(min(-0.5, min(df$yi - 1.96 * sqrt(df$vi)) - 0.2), max(1.5, max(df$yi + 1.96 * sqrt(df$vi)) + 0.2)),
       refline = 0
     )
